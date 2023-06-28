@@ -1,0 +1,13 @@
+FROM rust:1.67
+
+WORKDIR /Authentication
+
+COPY ./auth-service /Authentication
+
+WORKDIR /Authentication/auth-service
+
+RUN cargo build
+
+EXPOSE 8083
+
+CMD ["cargo", "run", "--release"]
