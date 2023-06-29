@@ -4,6 +4,10 @@ Thank you for exploring this repository! This is an open invitation to fellow Co
 
 At the moment (as of June 28), there is no specific project goal defined. However, we encourage everyone to participate in the voting process to determine the project's direction.
 
+[Click me to file an idea](https://github.com/danielmc02/Project-Coast-Edu/discussions/categories/ideas)
+
+[Click me to vote](https://github.com/danielmc02/Project-Coast-Edu/discussions/1)
+
 The quality and success of this repository depend on the contributions of its members. As a sole contributor, my capabilities are limited. Therefore, the involvement of others is crucial. To get an overview of the current status of the repository, please refer to the following "Status Board":
 
 ## Status Board
