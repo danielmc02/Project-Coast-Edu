@@ -19,11 +19,12 @@ class RootApp extends StatelessWidget {
         ),
         body: Container(
           width: MediaQuery.of(context).size.width,
-          child: Column(
+          child: Column(mainAxisAlignment: MainAxisAlignment.center,crossAxisAlignment: CrossAxisAlignment.center,mainAxisSize: MainAxisSize.max,
             children: [
               Center(
                 child: Text("This is the mobile application"),
-              )
+              ),
+              TextButton(onPressed: (){}, child: Text("Sign Up"))
             ],
           ),
         ),
