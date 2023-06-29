@@ -1,5 +1,5 @@
 /*
-  Mobile Leader: Daniel (digity63@gmail.com)
+  Mobile Leader: DanielAtOcc (digity63@gmail.com)
 */
 import 'package:flutter/material.dart';
 
