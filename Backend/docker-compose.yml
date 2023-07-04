@@ -1,0 +1,13 @@
+
+services:
+  auth:
+    build: ./Authentication/
+
+  database:
+    container_name: postgress-database
+    image: postgres
+    ports:
+      - 5432:5432
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: 123123
