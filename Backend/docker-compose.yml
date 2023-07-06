@@ -2,6 +2,8 @@
 services:
   auth:
     build: ./Authentication/
+    ports:
+      - 8083:8083
 
   database:
     container_name: postgress-database

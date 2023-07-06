@@ -8,6 +8,6 @@ WORKDIR /Authentication/auth-service
 
 RUN cargo build
 
-EXPOSE 8083
+#EXPOSE 8083:8083
 
 CMD ["cargo", "run", "--release"]
