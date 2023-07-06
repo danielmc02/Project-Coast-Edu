@@ -1,5 +1,8 @@
 /*
-  Mobile Leader: DanielAtOcc (digity63@gmail.com)
+  Mobile Leaders: 
+  DanielAtOcc (dmccray3@student.cccd.edu)
+  danielmc02 (digity63@gmail.com)
+
 */
 import 'package:flutter/material.dart';
 import 'package:frontend_mobile_app/onboarding_screen/onboard_provider.dart';
