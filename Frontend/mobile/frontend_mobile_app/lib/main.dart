@@ -14,6 +14,7 @@ class RootApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return const MaterialApp(home: OnboardingPage());
   }
 }
@@ -86,6 +87,21 @@ class _OnboardingPageState extends State<OnboardingPage> {
                         child: const Text("Sign Up")))
               ],
             ),
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text("Project Coast Edu"),
+        ),
+        body: Container(
+          width: MediaQuery.of(context).size.width,
+          child: Column(mainAxisAlignment: MainAxisAlignment.center,crossAxisAlignment: CrossAxisAlignment.center,mainAxisSize: MainAxisSize.max,
+            children: [
+              Center(
+                child: Text("This is the mobile application"),
+              ),
+              TextButton(onPressed: (){}, child: Text("Sign Up"))
+            ],
+
           ),
         ),
       ),
