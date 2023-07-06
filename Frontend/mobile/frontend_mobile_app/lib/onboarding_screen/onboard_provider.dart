@@ -1,8 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:frontend_mobile_app/api_service.dart';
-import 'package:frontend_mobile_app/databases.dart';
 import 'package:http/http.dart' as http;
 
 class OnboardingProvider extends ChangeNotifier {
@@ -18,7 +16,7 @@ class OnboardingProvider extends ChangeNotifier {
     final response = await http.post(uri,
         headers: {'Content-Type': 'application/json'}, body: jsonEncode(body));
 
-    print(response.statusCode);
-    print(response.body);
+    debugPrint(response.statusCode.toString());
+    debugPrint(response.body);
   }
 }
