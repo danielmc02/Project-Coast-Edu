@@ -1,0 +1,13 @@
+FROM rust:1.67
+
+WORKDIR /Database
+
+COPY ./db-service /Database
+
+WORKDIR /Database/db-service
+
+RUN cargo build
+
+EXPOSE 8084
+
+CMD ["cargo", "run", "--release"]
