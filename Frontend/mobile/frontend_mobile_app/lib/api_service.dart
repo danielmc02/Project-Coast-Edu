@@ -2,7 +2,6 @@
 A singleton class.
 Ensures a single instance throughout the entire app
 */
-import 'dart:io';
 import 'package:http/http.dart' as http;
 
 class ApiService
