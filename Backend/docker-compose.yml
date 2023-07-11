@@ -1,9 +1,5 @@
 
 services:
-  auth:
-    build: ./Authentication/
-    ports:
-      - 8083:8083
 
   database:
     container_name: postgress-database
@@ -13,3 +9,17 @@ services:
     restart: always
     environment:
       POSTGRES_PASSWORD: 123123
+      POSTGRES_DB: users
+
+
+  auth:
+    container_name: auth-service
+    build: ./Authentication/
+    ports:
+      - 8083:8083
+
+  db:
+    container_name: db-service
+    build: ./Database/
+    ports:
+      - 8084:8084

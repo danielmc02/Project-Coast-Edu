@@ -3,6 +3,7 @@ use std::fmt::format;
 use actix_web::{get, post, web::Json, App, HttpResponse, HttpServer, Responder};
 use bcrypt::{hash, hash_with_salt, verify, DEFAULT_COST};
 use serde::Deserialize;
+
 #[derive(Deserialize)]
 struct RegistrationInfo {
     email: String,
