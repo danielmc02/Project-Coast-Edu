@@ -1,7 +1,6 @@
 /*
   Mobile Leaders: 
-  DanielAtOcc (dmccray3@student.cccd.edu)
-  danielmc02 (digity63@gmail.com)
+ 
 
 */
 import 'package:flutter/material.dart';
