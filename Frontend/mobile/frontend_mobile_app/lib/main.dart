@@ -17,7 +17,7 @@ class RootApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(home: OnboardingPage());
+    return const MaterialApp(debugShowCheckedModeBanner: false,home: OnboardingPage());
   }
 }
 
@@ -44,50 +44,93 @@ class _OnboardingPageState extends State<OnboardingPage> {
     passwordField.dispose();
     super.dispose();
   }
+  final _fromKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => OnboardingProvider(),
       builder: (context, child) => Consumer<OnboardingProvider>(
         builder: (context, algo, child) => Scaffold(
-          appBar: AppBar(),
+         appBar: AppBar(
+          backgroundColor: Color.fromARGB(0, 255, 255, 255),
+          shadowColor: Colors.transparent,
+          foregroundColor:Colors.transparent,
+          surfaceTintColor: Colors.transparent,
+         ),
           body: SizedBox(
             width: MediaQuery.of(context).size.width,
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                SizedBox(
-                    width: 300,
-                    child: TextFormField(
-                      controller: emailField,
-                      style: const TextStyle(),
-                      decoration: const InputDecoration(
-                          hintText: "Email",
-                          border: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.black))),
-                    )),
-                SizedBox(
-                    width: 300,
-                    child: TextFormField(
-                      controller: passwordField,
-                      style: const TextStyle(),
-                      decoration: const InputDecoration(
-                          hintText: "Password",
-                          border: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.black))),
-                    )),
-                SizedBox(
-                    width: 100,
-                    height: 50,
-                    child: TextButton(
-                        style: const ButtonStyle(
-                            backgroundColor:
-                                MaterialStatePropertyAll(Colors.black)),
-                        onPressed: () async{
-                         await algo.registerUser(emailField.text,passwordField.text);
+            child: Form(
+              key: _fromKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Text("Edulink",style: TextStyle(fontSize: 42,fontWeight: FontWeight.bold),),
+                  SizedBox(height: 16,),
+                  SizedBox(
+                      width: 300,
+                      child: TextFormField(
+                        validator: (value) {
+                          
+                                                  return  value!.length < 5  ?  "Email is to short" : algo.parseEmail(value) == false? "Invalid Email" :null;
+
                         },
-                        child: const Text("Sign Up")))
-              ],
+                        controller: emailField,
+                        style: const TextStyle(),
+                        decoration: const InputDecoration(
+                            hintText: "Email",
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black))),
+                      )),
+                                          SizedBox(height: 16,),
+            
+                  SizedBox(
+                      width: 300,
+                      child: TextFormField(obscureText: algo.defaultPasswordVisibilityState,
+                        
+                    validator: (value)  {
+  if (value!.length < 8) {
+    return "Password must be greater than 8 characters";
+  }
+  
+  String feedback =  algo.parsePassword(value);
+  if (feedback != "Password meets all requirements.") {
+    return feedback;
+  }
+  
+  return null;
+},
+                        controller: passwordField,
+                        style: const TextStyle(),
+                        decoration:  InputDecoration(errorMaxLines: 3,suffixIcon: GestureDetector(onTap: () {
+                          algo.changePasswordVisibility();
+                        },child: algo.defaultPasswordVisibilityState ? Icon(Icons.visibility) : Icon(Icons.visibility_off)),
+                          
+                            hintText: "Password",
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black))),
+                      )),
+                      SizedBox(height: 24,),
+                  SizedBox(
+                      width: MediaQuery.of(context).size.width/1.2,
+                      height: 50,
+                      child: TextButton(
+                        
+                          style: const ButtonStyle(
+                            foregroundColor: MaterialStatePropertyAll(Colors.white),
+                              backgroundColor:
+                                  MaterialStatePropertyAll(Colors.black)),
+                          onPressed: () async{
+                            if(_fromKey.currentState!.validate())
+                            {
+                                                       await algo.registerUser(emailField.text,passwordField.text);
+
+                            }
+                          },
+                          child: const Text("Sign Up")))
+                ],
+              ),
             ),
           ),
         ),
