@@ -9,3 +9,4 @@ edition = "2021"
 actix-web = "4.3.1"
 serde = {features = ["derive"]}
 bcrypt = "0.15.0"
+awc = "3.1.1"
