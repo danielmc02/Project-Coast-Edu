@@ -5,9 +5,12 @@ import 'package:http/http.dart' as http;
 
 class OnboardingProvider extends ChangeNotifier {
   OnboardingProvider() {
-    print("Onboarding init");
+    debugPrint("Onboarding init");
   }
-  List<String> supportedEmails = [
+
+
+  Future<bool> parseEmail(String email) async {
+      List<String> supportedEmails = [
     "gmail.com",
     "yahoo.com",
     "outlook.com",
@@ -15,7 +18,17 @@ class OnboardingProvider extends ChangeNotifier {
     "aol.com",
     " icloud.com"
   ];
-  List<String> specialCharacters = [
+    bool hasValidEmail = false;
+    for (String e in supportedEmails) {
+      if (email.contains(e)) {
+        hasValidEmail = true;
+        break;
+      }
+    }
+    return hasValidEmail;
+  }
+String parsePassword(String password)  {
+    List<String> specialCharacters = [
     "!",
     "\"",
     "#",
@@ -60,17 +73,6 @@ List<String> lowercaseLetters = [
   "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o",
   "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"
 ];
-  Future<bool> parseEmail(String email) async {
-    bool hasValidEmail = false;
-    for (String e in supportedEmails) {
-      if (email.contains(e)) {
-        hasValidEmail = true;
-        break;
-      }
-    }
-    return hasValidEmail;
-  }
-String parsePassword(String password)  {
   bool hasSpecialCharacter = false;
   bool hasCapitalCharacter = false;
   bool hasLowerCharacter = false;
@@ -132,17 +134,27 @@ String parsePassword(String password)  {
 }
   //http stuff
   Future<void> registerUser(String email, String password) async {
-    final Uri uri = Uri.parse('http://localhost:8083/register_user');
+    print("in it");
+    final Uri uri = Uri.parse('http://localhost:8084/register_user');
     final Map<String, String> body = {
       'email': email,
       'password': password,
     };
 
-    final response = await http.post(uri,
+    try
+    {
+          final response = await http.post(uri,
         headers: {'Content-Type': 'application/json'}, body: jsonEncode(body));
 
-    debugPrint(response.statusCode.toString());
-    debugPrint(response.body);
+    debugPrint(" ahhh ${response.statusCode.toString()}");
+   debugPrint(" ahhh ${response.body}");
+    }
+    catch(e)
+    {
+      debugPrint("error in connection ${e}");
+     //igit6 return "Uh Oh, there was an error in connecting to the db";
+    }
+
   }
 
   bool defaultPasswordVisibilityState = true;

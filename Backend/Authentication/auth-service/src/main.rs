@@ -20,7 +20,7 @@ async fn hello() -> impl Responder {
 async fn register_user(info: Json<RegistrationInfo>,app_state: Data<AppState>) -> HttpResponse {
     //call to the db process_new_user
     println!("1");
-   let res = app_state.auth_client_access.get("localhost:8084/process_new_user").send().await;
+  // let res = app_state.auth_client_access.get("localhost:8084/process_new_user").send().await;
 
 
     println!("2");
