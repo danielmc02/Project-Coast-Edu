@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class OnboardingProvider extends ChangeNotifier {
+  bool wantsToSignUp = true;
   OnboardingProvider() {
     debugPrint("Onboarding init");
   }
@@ -134,7 +135,8 @@ List<String> lowercaseLetters = [
 }
   //http stuff
   Future<void> registerUser(String email, String password) async {
-    print("in it");
+    print("registering user");
+    
     final Uri uri = Uri.parse('http://localhost:8084/register_user');
     final Map<String, String> body = {
       'email': email,
@@ -147,7 +149,7 @@ List<String> lowercaseLetters = [
         headers: {'Content-Type': 'application/json'}, body: jsonEncode(body));
 
     debugPrint(" ahhh ${response.statusCode.toString()}");
-   debugPrint(" ahhh ${response.body}");
+  
     }
     catch(e)
     {
@@ -161,5 +163,38 @@ List<String> lowercaseLetters = [
   void changePasswordVisibility() {
     defaultPasswordVisibilityState = !defaultPasswordVisibilityState;
     notifyListeners();
+  }
+
+  Future<void> changeIntention()async 
+  {
+    wantsToSignUp = !wantsToSignUp;
+    notifyListeners();
+  }
+
+  Future<void> signInUser(String email, String password) async
+  {
+    print("sign in");
+    
+    final Uri uri = Uri.parse('http://localhost:8084/sign_in_user');
+      final Map<String, String> body = {
+      'email': email,
+      'password': password,
+    };
+        try
+    {
+          final response = await http.post(uri,
+        headers: {'Content-Type': 'application/json'}, body: jsonEncode(body));
+
+    debugPrint(" ahhh ${response.statusCode.toString()}");
+        debugPrint(" ahhh ${response.body}");
+
+
+    }
+    catch(e)
+    {
+      debugPrint("error in connection ${e}");
+     //igit6 return "Uh Oh, there was an error in connecting to the db";
+     
+    }
   }
 }

@@ -9,3 +9,5 @@ edition = "2021"
 sqlx = { version = "0.6", features = [ "runtime-actix-native-tls" , "postgres" ] }
 actix-web = "4.3.1"
 serde = {features = ["derive"]}
+dotenvy = "0.15.7"
+
