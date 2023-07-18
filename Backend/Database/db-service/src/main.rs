@@ -3,6 +3,7 @@ use serde::Deserialize;
 use sqlx::{postgres::PgPoolOptions, Pool, Postgres};
 use std::env;
 
+
 #[derive(Deserialize)]
 struct SignUpJsonForm {
     email: String,
@@ -20,6 +21,7 @@ async fn register_user(
 ) -> HttpResponse {
     println!("WH");
     // let pool: &Pool<Postgres> = &data;
+
     let formated_query = format!(
         "INSERT INTO users (email, password)
     VALUES ('{}','{}');",
@@ -47,6 +49,7 @@ sqlx::query(&formated_query).execute(&app_state.db_pool).await.expect("THERE WAS
 //execute function
 HttpResponse::Ok().body("SIGNED IN")
 
+
 }
 
 #[actix_web::main]
@@ -54,6 +57,7 @@ async fn main() -> std::io::Result<()> {
     dotenvy::dotenv().expect("ERROR loading .env file");
 
     println!("START");
+
 
     let pool = PgPoolOptions::new()
         .max_connections(2)
@@ -69,6 +73,7 @@ async fn main() -> std::io::Result<()> {
 
     sqlx::query_file!("queries/temp_init.sql")
         .execute(&pool)
+
         .await
         .expect("Something went wrong with creating creating user table");
     println!("DONE With Db stuff");

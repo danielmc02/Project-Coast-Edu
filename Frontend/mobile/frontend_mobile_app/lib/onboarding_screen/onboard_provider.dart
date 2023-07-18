@@ -137,6 +137,7 @@ List<String> lowercaseLetters = [
   Future<void> registerUser(String email, String password) async {
     print("registering user");
     
+
     final Uri uri = Uri.parse('http://localhost:8084/register_user');
     final Map<String, String> body = {
       'email': email,
@@ -150,6 +151,7 @@ List<String> lowercaseLetters = [
 
     debugPrint(" ahhh ${response.statusCode.toString()}");
   
+
     }
     catch(e)
     {
