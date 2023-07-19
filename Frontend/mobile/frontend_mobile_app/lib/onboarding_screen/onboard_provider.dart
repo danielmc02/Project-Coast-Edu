@@ -134,7 +134,7 @@ List<String> lowercaseLetters = [
   return feedback;
 }
   //http stuff
-  Future<void> registerUser(String email, String password) async {
+  Future<dynamic> registerUser(String email, String password) async {
     print("registering user");
     
 
@@ -150,7 +150,13 @@ List<String> lowercaseLetters = [
         headers: {'Content-Type': 'application/json'}, body: jsonEncode(body));
 
     debugPrint(" ahhh ${response.statusCode.toString()}");
-  
+      debugPrint(" ahhh ${response.body.toString()}");
+      if(response.statusCode != 200)
+      {
+        Map report = {'code':response.body.toString(), 'body': response.body};
+        return report;
+      }
+
 
     }
     catch(e)

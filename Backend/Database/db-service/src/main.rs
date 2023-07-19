@@ -1,7 +1,6 @@
-use actix_web::{post, web, App, HttpResponse, HttpServer, Responder, http};
+use actix_web::{ post, web, App, HttpResponse, HttpServer};
 use serde::Deserialize;
 use sqlx::{postgres::PgPoolOptions, Pool, Postgres};
-use std::env;
 
 
 #[derive(Deserialize)]
@@ -19,18 +18,25 @@ async fn register_user(
     sign_up_form: web::Json<SignUpJsonForm>,
     app_state: web::Data<AppState>,
 ) -> HttpResponse {
-    println!("WH");
     // let pool: &Pool<Postgres> = &data;
 
-    let formated_query = format!(
-        "INSERT INTO users (email, password)
-    VALUES ('{}','{}');",
+    let formated_query: String = format!(
+        r#"INSERT INTO users(email,password)
+    VALUES ('{}', '{}');"#,
         sign_up_form.email, sign_up_form.password
     );
-    sqlx::query(&formated_query)
+    let res = sqlx::query(&formated_query)
         .execute(&app_state.db_pool)
-        .await
-        .expect("SOMETHING WENT WRONG");
+        .await;
+
+    match res {
+        Ok(res) => println!("No error, {:?}", res),
+        Err(_e) => {
+            println!("ERROR");
+            return HttpResponse::Conflict().body("User already exists dumb ass");
+        }
+    }
+
     println!("DB WAS TRIGGERED");
     println!(
         "GOT IN HERE {} {}",
@@ -40,16 +46,11 @@ async fn register_user(
     HttpResponse::Ok().body("woop woop")
 }
 #[post("/sign_in_user")]
-async fn sign_in_user(sign_up_form: web::Json<SignUpJsonForm>,app_state: web::Data<AppState>) -> HttpResponse
-{
-//check if a user exists
-println!("SIGN IN SCOPPED");
-let formated_query: String = format!("SELECT * FROM users WHERE email = '{}';",sign_up_form.email);
-sqlx::query(&formated_query).execute(&app_state.db_pool).await.expect("THERE WAS AN ERROR IN SIGNING UP");
-//execute function
-HttpResponse::Ok().body("SIGNED IN")
-
-
+async fn sign_in_user(
+    _sign_up_form: web::Json<SignUpJsonForm>,
+    _app_state: web::Data<AppState>,
+) -> HttpResponse {
+    HttpResponse::Ok().body("SIGNED IN")
 }
 
 #[actix_web::main]
@@ -58,13 +59,11 @@ async fn main() -> std::io::Result<()> {
 
     println!("START");
 
-
     let pool = PgPoolOptions::new()
         .max_connections(2)
         .connect("postgres://postgres:123123@localhost:5432/users")
         .await
         .expect("Failed to establish db connection");
-   
 
     sqlx::query_file!("queries/two.sql")
         .execute(&pool)
@@ -73,7 +72,6 @@ async fn main() -> std::io::Result<()> {
 
     sqlx::query_file!("queries/temp_init.sql")
         .execute(&pool)
-
         .await
         .expect("Something went wrong with creating creating user table");
     println!("DONE With Db stuff");

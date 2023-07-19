@@ -139,8 +139,19 @@ class _OnboardingPageState extends State<OnboardingPage> {
                                   MaterialStatePropertyAll(Colors.black)),
                           onPressed: () async {
                             if (_fromKey.currentState!.validate()) {
-                             algo.wantsToSignUp ? await algo.registerUser(
-                                  emailField.text, passwordField.text) : await algo.signInUser(emailField.text, passwordField.text);
+                              if( algo.wantsToSignUp)
+                              {
+                                print("SCOPE");
+                                var res = await algo.registerUser(
+                                  emailField.text, passwordField.text);
+                                  print(  res.runtimeType.toString());
+                                  res.runtimeType != Null ? showDialog(context: context, builder: (context) {
+                                 return   AlertDialog(title: Text(res['body']),);
+                                  },) : null;
+                              }
+                             else{
+                            var res =  await algo.signInUser(emailField.text, passwordField.text);
+                             }
                             }
                           },
                           child:  Text(algo.wantsToSignUp ? "Sign Up" : "Log in"))),
