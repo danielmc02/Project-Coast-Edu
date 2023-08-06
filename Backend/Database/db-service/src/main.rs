@@ -36,12 +36,10 @@ async fn register_user(
             return HttpResponse::Conflict().body("User already exists dumb ass");
         }
     }
-
-    println!("DB WAS TRIGGERED");
-    println!(
-        "GOT IN HERE {} {}",
-        sign_up_form.email, sign_up_form.password
-    );
+/*
+1. Needs hash
+2. Needs to get auth token
+*/
 
     HttpResponse::Ok().body("woop woop")
 }

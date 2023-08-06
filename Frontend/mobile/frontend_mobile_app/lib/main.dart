@@ -139,31 +139,40 @@ class _OnboardingPageState extends State<OnboardingPage> {
                                   MaterialStatePropertyAll(Colors.black)),
                           onPressed: () async {
                             if (_fromKey.currentState!.validate()) {
-                              if( algo.wantsToSignUp)
-                              {
+                              if (algo.wantsToSignUp) {
                                 print("SCOPE");
                                 var res = await algo.registerUser(
-                                  emailField.text, passwordField.text);
-                                  print(  res.runtimeType.toString());
-                                  res.runtimeType != Null ? showDialog(context: context, builder: (context) {
-                                 return   AlertDialog(title: Text(res['body']),);
-                                  },) : null;
+                                    emailField.text, passwordField.text);
+                                print(res.runtimeType.toString());
+                                res.runtimeType != Null
+                                    ? showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: Text(res['body']),
+                                          );
+                                        },
+                                      )
+                                    : null;
+                              } else {
+                                var res = await algo.signInUser(
+                                    emailField.text, passwordField.text);
                               }
-                             else{
-                            var res =  await algo.signInUser(emailField.text, passwordField.text);
-                             }
                             }
                           },
-                          child:  Text(algo.wantsToSignUp ? "Sign Up" : "Log in"))),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: GestureDetector(
-                              onTap: () async{
-                               await algo.changeIntention();
-                              },
-                              child: Text(algo.wantsToSignUp ? "Already have an account?" : "Dont have an account? Sign Up!"),
-                            ),
-                          )
+                          child:
+                              Text(algo.wantsToSignUp ? "Sign Up" : "Log in"))),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: GestureDetector(
+                      onTap: () async {
+                        await algo.changeIntention();
+                      },
+                      child: Text(algo.wantsToSignUp
+                          ? "Already have an account?"
+                          : "Dont have an account? Sign Up!"),
+                    ),
+                  )
                 ],
               ),
             ),
