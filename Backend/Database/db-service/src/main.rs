@@ -1,6 +1,6 @@
 use actix_web::{ post, web, App, HttpResponse, HttpServer};
 use serde::Deserialize;
-use sqlx::{postgres::PgPoolOptions, Pool, Postgres};
+use sqlx::{postgres::{PgPoolOptions, PgQueryResult}, Pool, Postgres};
 
 
 #[derive(Deserialize)]
@@ -12,43 +12,34 @@ struct SignUpJsonForm {
 struct AppState {
     db_pool: Pool<Postgres>,
 }
-
-#[post("/register_user")]
-async fn register_user(
-    sign_up_form: web::Json<SignUpJsonForm>,
-    app_state: web::Data<AppState>,
-) -> HttpResponse {
-    // let pool: &Pool<Postgres> = &data;
-
-    let formated_query: String = format!(
-        r#"INSERT INTO users(email,password)
-    VALUES ('{}', '{}');"#,
-        sign_up_form.email, sign_up_form.password
-    );
-    let res = sqlx::query(&formated_query)
-        .execute(&app_state.db_pool)
-        .await;
-
-    match res {
-        Ok(res) => println!("No error, {:?}", res),
-        Err(_e) => {
-            println!("ERROR");
-            return HttpResponse::Conflict().body("User already exists dumb ass");
-        }
-    }
-/*
-1. Needs hash
-2. Needs to get auth token
-*/
-
-    HttpResponse::Ok().body("woop woop")
+#[derive(Deserialize)]
+struct UserCredForm
+{
+    email : String,
+    password : String
 }
-#[post("/sign_in_user")]
-async fn sign_in_user(
-    _sign_up_form: web::Json<SignUpJsonForm>,
-    _app_state: web::Data<AppState>,
-) -> HttpResponse {
-    HttpResponse::Ok().body("SIGNED IN")
+
+#[post("/create_user")]
+async fn create_user(appstate: web::Data<AppState>, json : web::Json<UserCredForm>) -> HttpResponse
+{
+   let result = sqlx::query(r"INSERT INTO users (email, password);
+   VALUES (email, password);
+   ").execute(&appstate.db_pool).await;
+
+   match result {
+    Ok(PgQueryResult) =>{
+       return HttpResponse::Ok().body("User has been registered sucesffuly");
+    },
+    Err(Error) => {
+        return HttpResponse::Conflict().body("The user may already exist. Try signing in.");
+    },
+    _ => {
+        return HttpResponse::InternalServerError().body("Something went wrong, please try again later");
+    }
+       
+   }
+
+   HttpResponse::Ok().body("body")
 }
 
 #[actix_web::main]
@@ -79,8 +70,8 @@ async fn main() -> std::io::Result<()> {
             .app_data(web::Data::new(AppState {
                 db_pool: pool.clone(),
             }))
-            .service(register_user)
-            .service(sign_in_user)
+            .service(create_user)
+
     })
     .bind(("0.0.0.0", 8084))?
     .run()

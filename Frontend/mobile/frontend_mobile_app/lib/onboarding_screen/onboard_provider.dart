@@ -138,7 +138,7 @@ List<String> lowercaseLetters = [
     print("registering user");
     
 
-    final Uri uri = Uri.parse('http://localhost:8084/register_user');
+    final Uri uri = Uri.parse('http://localhost:8084/create_user');
     final Map<String, String> body = {
       'email': email,
       'password': password,
@@ -153,7 +153,7 @@ List<String> lowercaseLetters = [
       debugPrint(" ahhh ${response.body.toString()}");
       if(response.statusCode != 200)
       {
-        Map report = {'code':response.body.toString(), 'body': response.body};
+        Map report = {'code':response.statusCode.toString(), 'body': response.body};
         return report;
       }
 

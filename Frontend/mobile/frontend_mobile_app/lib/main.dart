@@ -140,7 +140,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                           onPressed: () async {
                             if (_fromKey.currentState!.validate()) {
                               if (algo.wantsToSignUp) {
-                                print("SCOPE");
+                               
                                 var res = await algo.registerUser(
                                     emailField.text, passwordField.text);
                                 print(res.runtimeType.toString());
@@ -149,7 +149,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
                                         context: context,
                                         builder: (context) {
                                           return AlertDialog(
-                                            title: Text(res['body']),
+                                            content:Text(res['body']) ,
+                                            title: Text(res['code']),
                                           );
                                         },
                                       )
