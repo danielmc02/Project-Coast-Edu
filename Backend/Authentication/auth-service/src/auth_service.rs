@@ -8,6 +8,7 @@ pub mod Auth {
     use sqlx::{FromRow, Pool, Postgres};
 
 
+
     #[derive(Deserialize)]
     pub struct UserForm {
         pub email: String,
@@ -21,6 +22,7 @@ pub mod Auth {
     #[derive(FromRow)]
     struct PayLoad {
 
+
         password_hash: String,
     }
 
@@ -28,6 +30,7 @@ pub mod Auth {
     struct Claims {
         exp: usize,
         sub: String,
+
     }
 
 
@@ -38,6 +41,7 @@ pub mod Auth {
     ) -> HttpResponse {
         println!("{}", user_form.password);
 
+
         let formated_query = format!(
             "INSERT INTO Users(email,password_hash) VALUES('{}','{}');",
             user_form.email, user_form.password,
@@ -46,6 +50,7 @@ pub mod Auth {
 
         match result {
             Ok(_) => {
+
 
                 return shared_login_logic(user_form, data).await;
             }
@@ -72,6 +77,7 @@ pub mod Auth {
         data: web::Data<AppData>,
     ) -> HttpResponse {
 
+
         let formated_query = format!(
             r"SELECT password_hash FROM users WHERE email = '{}'",
             user_form.email
@@ -83,6 +89,7 @@ pub mod Auth {
                 .fetch_one(&data.db_pool)
                 .await;
         println!("STEP 3");
+
 
 
         //  println!("Hash: {}",result.password_hash );
@@ -136,6 +143,7 @@ pub mod Auth {
         publicKey: String,
 
         email: String
+
     }
 
 }
