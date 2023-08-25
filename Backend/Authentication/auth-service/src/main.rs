@@ -1,36 +1,38 @@
-
-use actix_web::{get, post, web::Json, App, HttpResponse, HttpServer,web::Data};
-use awc::Client;
-use bcrypt::{hash, hash_with_salt, verify, DEFAULT_COST};
-use serde::Deserialize;
+/*
+    Daniel McCray
+*/
 
 
 
 
 
-struct AppState {
-    auth_client_access: Client,
-}
+mod auth_service;
+use auth_service::Auth::{register_user,log_in, AppData};
+use actix_web::{web, App, HttpServer};
 
-#[post("/register_user")]
-async fn register_user() -> HttpResponse
-{
-    //create a new user via db service and pass back a JWT
-    HttpResponse::Ok().body("")
-}
+use sqlx::{postgres::PgPoolOptions, Pool,};
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    //create client to communicate with other services
+    // std::env::set_var("RUST_LOG", "debug");
+    //  env_logger::init();
 
-    HttpServer::new(  || App::new()
-    .app_data(
-        Data::new(AppState{
-            auth_client_access: Client::default()
-        })
-    )
-    .service(register_user))
-        .bind(("0.0.0.0",8083))?
-        .run()
+    let postgress_pool: Pool<sqlx::Postgres> = PgPoolOptions::new()
+        .max_connections(2)
+        .connect("postgres://postgres:123@localhost:5432/users")
         .await
+        .expect("Error connecting to db");
+    HttpServer::new(move || {
+        App::new()
+            .app_data(web::Data::new({
+                AppData {
+                    db_pool: postgress_pool.clone(),
+                }
+            }))
+            .service(register_user)
+            .service(log_in)
+    })
+    .bind(("0.0.0.0", 8080))?
+    .run()
+    .await
 }
