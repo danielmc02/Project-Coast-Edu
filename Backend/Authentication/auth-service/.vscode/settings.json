@@ -1,0 +1,16 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "database": "users",
+            "name": "test",
+            "username": "postgres"
+        }
+    ],
+    "rust-analyzer.linkedProjects": [
+        "./Cargo.toml"
+    ]
+}
