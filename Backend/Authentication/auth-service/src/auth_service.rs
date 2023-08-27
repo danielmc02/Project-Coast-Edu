@@ -104,7 +104,7 @@ pub mod Auth {
                 println!("JJJWWWTTT: {}", jwt_res);
                 if res.password_hash == user_form.password {
                     println!("SUCESFUL");
-                    let data = JsonCallBack{shortLifeJwt: include_bytes!("./"),publicKey:jwt_res,email: "NIG".to_string()};
+                    let data = JsonCallBack{shortLifeJwt: "TEST".to_string() ,publicKey:jwt_res,email: "NIG".to_string()};
                     return HttpResponse::Ok().json(data);
                 } else {
                     println!("NOT SUCESFUL SIGN IN");
@@ -124,7 +124,7 @@ pub mod Auth {
 #[derive(Serialize,Deserialize)]
     struct JsonCallBack
     {
-        shortLifeJwt: String
+        shortLifeJwt: String,
         publicKey: String,
 
         email: String
