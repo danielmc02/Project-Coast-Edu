@@ -3,20 +3,14 @@
 */
 
 
-mod models;
-use models::global_structs::AppData;
-
-
 
 use actix_web::{web, App, HttpServer};
 
 
 mod auth_service;
-use auth_service::Auth::{register_user,log_in};
-
+use auth_service::Auth::{register_user,log_in, AppData};
 
 use sqlx::{postgres::PgPoolOptions, Pool,};
-
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {

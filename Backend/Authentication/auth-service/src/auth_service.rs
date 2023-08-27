@@ -7,6 +7,7 @@ pub mod Auth {
     use serde::{Deserialize, Serialize};
     use sqlx::{FromRow, Pool, Postgres};
 
+
     #[derive(Deserialize)]
     pub struct UserForm {
         pub email: String,
@@ -19,6 +20,7 @@ pub mod Auth {
 
     #[derive(FromRow)]
     struct PayLoad {
+
         password_hash: String,
     }
 
@@ -28,12 +30,14 @@ pub mod Auth {
         sub: String,
     }
 
+
     #[post("/register_user")]
     pub async fn register_user(
         user_form: Json<UserForm>,
         data: web::Data<AppData>,
     ) -> HttpResponse {
         println!("{}", user_form.password);
+
         let formated_query = format!(
             "INSERT INTO Users(email,password_hash) VALUES('{}','{}');",
             user_form.email, user_form.password,
@@ -42,6 +46,7 @@ pub mod Auth {
 
         match result {
             Ok(_) => {
+
                 return shared_login_logic(user_form, data).await;
             }
             Err(error) => {
@@ -66,6 +71,7 @@ pub mod Auth {
         user_form: Json<UserForm>,
         data: web::Data<AppData>,
     ) -> HttpResponse {
+
         let formated_query = format!(
             r"SELECT password_hash FROM users WHERE email = '{}'",
             user_form.email
@@ -78,9 +84,11 @@ pub mod Auth {
                 .await;
         println!("STEP 3");
 
+
         //  println!("Hash: {}",result.password_hash );
         match result {
             Ok(res) => {
+
                 // RSA JWT
                 let current_time_duration = SystemTime::now()
                     .duration_since(UNIX_EPOCH)
@@ -129,4 +137,5 @@ pub mod Auth {
 
         email: String
     }
+
 }
