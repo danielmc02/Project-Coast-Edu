@@ -9,5 +9,6 @@
             "database": "users",
             "username": "postgres"
         }
+
     ]
 }

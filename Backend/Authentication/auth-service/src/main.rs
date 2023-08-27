@@ -3,8 +3,12 @@
 */
 
 
+mod models;
+use models::global_structs::AppData;
 
 
+
+use actix_web::{web, App, HttpServer};
 
 
 mod auth_service;
@@ -12,6 +16,7 @@ use auth_service::Auth::{register_user,log_in, AppData};
 use actix_web::{web, App, HttpServer};
 
 use sqlx::{postgres::PgPoolOptions, Pool,};
+
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -32,6 +37,7 @@ async fn main() -> std::io::Result<()> {
             }))
             .service(register_user)
             .service(log_in)
+
     })
     .bind(("0.0.0.0", 8080))?
     .run()
