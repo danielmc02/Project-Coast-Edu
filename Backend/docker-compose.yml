@@ -8,19 +8,22 @@ services:
       - 5432:5432
     restart: always
     environment:
-      POSTGRES_PASSWORD: 123123
+      POSTGRES_PASSWORD: 123
       POSTGRES_DB: users
+    volumes:
+      - ./init_users.sql:/docker-entrypoint-initdb.d/init.sql
+      
 
 
-
-  auth:
-    container_name: auth-service
-    build: ./Authentication/
-    ports:
-      - 8083:8083
-
-  db:
-    container_name: db-service
-    build: ./Database/
-    ports:
-      - 8084:8084
+#auth:
+#  container_name: auth-service
+#  build: ./Authentication/
+#  ports:
+#    - 8083:8083
+#
+#db:
+#  container_name: db-service
+#  build: ./Database/
+#  ports:
+#    - 8084:8084
+#

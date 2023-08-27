@@ -6,6 +6,7 @@
 
 
 
+
 mod auth_service;
 use auth_service::Auth::{register_user,log_in, AppData};
 use actix_web::{web, App, HttpServer};

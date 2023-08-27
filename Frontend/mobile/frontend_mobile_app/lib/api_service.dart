@@ -22,4 +22,16 @@ class ApiService
   {
     return _client;
   }
+
+
+  final endpoint = Uri.parse("http://localhost:8080/");
+
+
+  /*
+  an async function that fetches a refreshed token
+  */
+  Future<void> refreshToken() async
+  {
+
+  }
 }
