@@ -10,8 +10,13 @@ use models::global_structs::AppData;
 
 use actix_web::{web, App, HttpServer};
 
-//use auth_service::Auth::{log_in, register_user};
-use sqlx::{postgres::PgPoolOptions, Pool};
+
+mod auth_service;
+use auth_service::Auth::{register_user,log_in};
+
+
+use sqlx::{postgres::PgPoolOptions, Pool,};
+
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -30,8 +35,9 @@ async fn main() -> std::io::Result<()> {
                     db_pool: postgress_pool.clone(),
                 }
             }))
-        //    .service(register_user)
-         //   .service(log_in)
+            .service(register_user)
+            .service(log_in)
+
     })
     .bind(("0.0.0.0", 8080))?
     .run()
