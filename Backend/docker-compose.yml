@@ -1,26 +1,25 @@
-
 services:
 
+
   database:
-    container_name: postgress-database
+    container_name: postgres-database
     image: postgres
+    expose:
+      - 5432
     ports:
-      - 5432:5432
+     - 5432:5432
     restart: always
     environment:
       POSTGRES_PASSWORD: 123
       POSTGRES_DB: users
     volumes:
       - ./init_users.sql:/docker-entrypoint-initdb.d/init.sql
-      
-
-
-#auth:
-#  container_name: auth-service
-#  build: ./Authentication/
-#  ports:
-#    - 8083:8083
 #
+#  auth:
+#    container_name: auth-service
+#    build: ./Authentication/
+#    ports:
+#      - 8080:8080
 #db:
 #  container_name: db-service
 #  build: ./Database/

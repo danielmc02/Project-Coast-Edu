@@ -201,9 +201,11 @@ class OnboardingProvider extends ChangeNotifier {
 
   //http stuff
   Future<dynamic> registerUser(String email, String password) async {
+print(
+  "CLICKED"
+);
 
-
-    final Uri uri = Uri.parse('http://localhost:8080/register_user');
+    final Uri uri = Uri.parse('http://146.190.163.95:8080/register_user');
     final Map<String, String> body = {
       'email': email,
       'password': password,
@@ -213,7 +215,7 @@ class OnboardingProvider extends ChangeNotifier {
       final response = await http.post(uri,
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode(body)
-          );
+          ).timeout(Duration(seconds: 5));
 
       debugPrint(" ahhh ${response.statusCode.toString()}");
       debugPrint(" ahhh ${response.body.toString()}");
@@ -239,7 +241,7 @@ class OnboardingProvider extends ChangeNotifier {
    Future<dynamic> signInUser(String email, String password) async {
 
 
-    final Uri uri = Uri.parse('http://localhost:8080/log_in');
+    final Uri uri = Uri.parse('http://146.190.163.95:8080/log_in');
     final Map<String, String> body = {
       'email': email,
       'password': password,
