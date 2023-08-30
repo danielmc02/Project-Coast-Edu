@@ -1,37 +1,12 @@
-pub mod Auth {
 
+pub mod auth {
+
+    use super::super::auth_structs::auth_structs::*;
     use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
-    use actix_web::{get, post, rt::System, web, web::Json, HttpResponse};
+    use actix_web::{post,  web, web::Json, HttpResponse,get};
     use jsonwebtoken::{encode, Algorithm, EncodingKey, Header};
-    use serde::{Deserialize, Serialize};
-    use sqlx::{FromRow, Pool, Postgres};
 
-
-
-    #[derive(Deserialize)]
-    pub struct UserForm {
-        pub email: String,
-        pub password: String,
-    }
-
-    pub struct AppData {
-        pub db_pool: Pool<Postgres>,
-    }
-
-    #[derive(FromRow)]
-    struct PayLoad {
-
-
-        password_hash: String,
-    }
-
-    #[derive(Debug, Serialize, Deserialize)]
-    struct Claims {
-        exp: usize,
-        sub: String,
-
-    }
 
 
     #[post("/register_user")]
@@ -59,9 +34,7 @@ pub mod Auth {
                 return HttpResponse::Conflict()
                     .body("The user may already exist. Try signing in.");
             }
-            _ => {
-                return HttpResponse::BadRequest().body("SOMETHING WENT WRONG");
-            }
+          
         }
     }
 
@@ -109,17 +82,16 @@ pub mod Auth {
                     exp: expiration_time_unix_timestamp,
                     sub: "user".to_string(),
                 };
-                let private_key_path = "./privkey.pem";
                 let jwt_res = encode(
                     &Header::new(Algorithm::RS256),
                     &user_claims,
-                    &EncodingKey::from_rsa_pem(include_bytes!("privkey.pem")).unwrap(),
+                    &EncodingKey::from_rsa_pem(include_bytes!("keys/privkey.pem")).unwrap(),
                 )
                 .expect("ERROR CREATING JWT");
                 println!("JJJWWWTTT: {}", jwt_res);
                 if res.password_hash == user_form.password {
                     println!("SUCESFUL");
-                    let data = JsonCallBack{shortLifeJwt: "TEST".to_string() ,publicKey:jwt_res,email: "NIG".to_string()};
+                    let data = JsonCallBack{short_life_jwt: "TEST".to_string() ,public_key:jwt_res,email: "NIG".to_string()};
                     return HttpResponse::Ok().json(data);
                 } else {
                     println!("NOT SUCESFUL SIGN IN");
@@ -128,7 +100,7 @@ pub mod Auth {
                 //     println!("{rez}");
                 //    println!("{}\n{} .", res.password_hash, rez);
             }
-            Err(err) => {
+            Err(_err) => {
                 println!("NOT SUCESFUL SIGN IN");
 
                 return HttpResponse::Conflict().body("ERROR");
@@ -136,14 +108,10 @@ pub mod Auth {
         }
     }
 
-#[derive(Serialize,Deserialize)]
-    struct JsonCallBack
+    #[get("/test")]
+    async fn test() -> HttpResponse
     {
-        shortLifeJwt: String,
-        publicKey: String,
-
-        email: String
-
+        HttpResponse::Ok().body("SUCESFULLY RETRIEVED TEST")
     }
 
 }

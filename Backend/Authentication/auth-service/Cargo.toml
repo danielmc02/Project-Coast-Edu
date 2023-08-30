@@ -8,7 +8,7 @@ edition = "2021"
 [dependencies]
 
 actix-web = "4.3.1"
-serde = {features = ["derive"]}
+serde = {features = ["derive"] ,version = "1.0.188"}
 bcrypt = "0.15.0"
 sqlx = {version = "0.7.1", features = ["postgres","runtime-tokio"]}
 jsonwebtoken = "8.3.0"
