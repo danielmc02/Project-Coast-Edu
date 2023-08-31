@@ -15,13 +15,11 @@ async fn test() -> actix_web::HttpResponse
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    //std::thread::sleep(std::time::Duration::new(2, 0));
 
 
     let postgress_pool: Pool<sqlx::Postgres> = PgPoolOptions::new()
         .max_connections(2)
-        .connect("postgres://postgres:123@localhost:5432/users")
-        .await
+        .connect("postgresql://postgres:123@database:5432/users").await
         .expect("Error connecting to db");
     println!("LETS GO");
     HttpServer::new(move || {

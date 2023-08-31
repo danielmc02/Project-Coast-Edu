@@ -1,28 +1,30 @@
 services:
 
-
   database:
     container_name: postgres-database
     image: postgres
     expose:
       - 5432
     ports:
-     - 5432:5432
+      - 5432:5432
     restart: always
     environment:
       POSTGRES_PASSWORD: 123
       POSTGRES_DB: users
     volumes:
       - ./init_users.sql:/docker-entrypoint-initdb.d/init.sql
+#    networks:
+#      - rust-local-network
+
+  auth:
+
+    container_name: auth-service
+    build: ./Authentication/
+    ports:
+      - 8080:8080
+#    networks:
+#      - rust-local-network
 #
-#  auth:
-#    container_name: auth-service
-#    build: ./Authentication/
-#    ports:
-#      - 8080:8080
-#db:
-#  container_name: db-service
-#  build: ./Database/
-#  ports:
-#    - 8084:8084
-#
+#networks:
+#  rust-local-network:
+#    driver: bridge
