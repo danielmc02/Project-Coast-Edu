@@ -1,23 +1,19 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:frontend_mobile_app/api_service.dart';
 import 'package:http/http.dart' as http;
 
 class OnboardingProvider extends ChangeNotifier {
-  bool wantsToSignUp = true;
-    bool defaultPasswordVisibilityState = true;
 
-  OnboardingProvider() {
-    debugPrint("Onboarding init");
-  }
-/// ******** UI purposes *********
 
-  Future<void> changeIntention() async {
-    wantsToSignUp = !wantsToSignUp;
-    notifyListeners();
-  }
+  OnboardingProvider();
 
-  Future<bool> parseEmail(String email) async {
+  /// ******** UI purposes *********
+
+
+
+  bool parseEmail(String email) {
     List<String> supportedEmails = [
       "gmail.com",
       "yahoo.com",
@@ -192,30 +188,25 @@ class OnboardingProvider extends ChangeNotifier {
     return feedback;
   }
 
-  void changePasswordVisibility() {
-    defaultPasswordVisibilityState = !defaultPasswordVisibilityState;
-    notifyListeners();
-  }
-/* -------------------------------- */
 
+/* -------------------------------- */
 
   //http stuff
   Future<dynamic> registerUser(String email, String password) async {
-print(
-  "CLICKED"
-);
+    final Uri uri = Uri.parse('http://localhost:8080/register_user');
 
-    final Uri uri = Uri.parse('http://146.190.163.95:8080/register_user');
+    // final Uri uri = Uri.parse('http://192.168.2.195:8080/register_user');
     final Map<String, String> body = {
       'email': email,
       'password': password,
     };
 
     try {
-      final response = await http.post(uri,
-          headers: {'Content-Type': 'application/json'},
-          body: jsonEncode(body)
-          ).timeout(Duration(seconds: 5));
+      final response = await http
+          .post(uri,
+              headers: {'Content-Type': 'application/json'},
+              body: jsonEncode(body))
+          .timeout(const Duration(seconds: 5));
 
       debugPrint(" ahhh ${response.statusCode.toString()}");
       debugPrint(" ahhh ${response.body.toString()}");
@@ -225,6 +216,10 @@ print(
           'body': response.body
         };
         return report;
+      } else if (response.statusCode == 200) {
+        Map rez = jsonDecode(response.body);
+
+        await ApiService.apiInstance!.handleUser(rez);
       }
     } catch (e) {
       debugPrint("error in connection $e");
@@ -234,14 +229,10 @@ print(
     }
   }
 
+  Future<dynamic> signInUser(String email, String password) async {
+    final Uri uri = Uri.parse('http://localhost:8080/log_in');
 
-
-
-
-   Future<dynamic> signInUser(String email, String password) async {
-
-
-    final Uri uri = Uri.parse('http://146.190.163.95:8080/log_in');
+    // final Uri uri = Uri.parse('http://192.168.2.195:8080/log_in');
     final Map<String, String> body = {
       'email': email,
       'password': password,
@@ -250,8 +241,7 @@ print(
     try {
       final response = await http.post(uri,
           headers: {'Content-Type': 'application/json'},
-          body: jsonEncode(body)
-          );
+          body: jsonEncode(body));
 
       debugPrint(" ahhh ${response.statusCode.toString()}");
       debugPrint(" ahhh ${response.body.toString()}");
@@ -261,13 +251,10 @@ print(
           'body': response.body
         };
         return report;
-      }
-      else if(response.statusCode == 200)
-      {
-        print("WOOP WOOP");
-        Map rez =  jsonDecode(response.body);
-        print(rez);
-        print(rez["email"]);
+      } else if (response.statusCode == 200) {
+        Map rez = jsonDecode(response.body);
+
+        await ApiService.apiInstance!.handleUser(rez);
       }
     } catch (e) {
       debugPrint("error in connection $e");
@@ -276,6 +263,4 @@ print(
       //igit6 return "Uh Oh, there was an error in connecting to the db";
     }
   }
-
-  
 }

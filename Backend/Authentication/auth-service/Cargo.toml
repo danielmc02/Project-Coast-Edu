@@ -7,10 +7,13 @@ edition = "2021"
 
 [dependencies]
 
-actix-web = "4.3.1"
+actix-web = {version = "4.3.1"}
 serde = {features = ["derive"] ,version = "1.0.188"}
 bcrypt = "0.15.0"
-sqlx = {version = "0.7.1", features = ["postgres","runtime-tokio"]}
+sqlx = {version = "0.7.1", features = ["postgres","runtime-tokio","uuid"]}
 jsonwebtoken = "8.3.0"
+env_logger = "0.10.0"
+serde_json = "1.0.105"
+lettre = "0.10.4"
 
 

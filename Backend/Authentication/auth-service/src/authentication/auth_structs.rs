@@ -1,9 +1,11 @@
 pub mod auth_structs {
 
     use serde::{Deserialize, Serialize};
-    use sqlx::{FromRow, Pool, Postgres};
+    use sqlx::types::Uuid;
 
-    #[derive(Deserialize)]
+
+    use sqlx::{FromRow, Pool, Postgres};
+    #[derive(Deserialize,Serialize)]
     pub struct UserForm {
         pub email: String,
         pub password: String,
@@ -13,10 +15,17 @@ pub mod auth_structs {
         pub db_pool: Pool<Postgres>,
     }
 
-    #[derive(FromRow)]
-    pub struct PayLoad {
+    #[derive(FromRow,Debug)]
+    pub struct UserField {
+        pub id: String,
+        pub email: String,
+        pub name: Option<String>,
         pub password_hash: String,
+        pub interests: Option<serde_json::Value>,
+        pub verified_student: bool
+
     }
+
 
     #[derive(Debug, Serialize, Deserialize)]
     pub struct Claims {
@@ -24,11 +33,16 @@ pub mod auth_structs {
         pub sub: String,
     }
 
-    #[derive(Serialize, Deserialize)]
-   pub struct JsonCallBack {
-      pub  short_life_jwt: String,
-     pub   public_key: String,
+    #[derive(Serialize)]
+   pub struct SignInPackage {
+    pub short_life_jwt: String,
+    pub id:  String ,
 
-      pub  email: String,
+    pub email: String,
+    pub name: Option<String>,
+
+   pub interests: Option<serde_json::Value>,
+    pub verified_student: bool
     }
 }
+

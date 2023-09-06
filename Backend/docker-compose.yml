@@ -13,18 +13,12 @@ services:
       POSTGRES_DB: users
     volumes:
       - ./init_users.sql:/docker-entrypoint-initdb.d/init.sql
-#    networks:
-#      - rust-local-network
 
-  auth:
-
-    container_name: auth-service
-    build: ./Authentication/
-    ports:
-      - 8080:8080
-#    networks:
-#      - rust-local-network
+#  auth:
 #
-#networks:
-#  rust-local-network:
-#    driver: bridge
+#    container_name: auth-service
+#    build: ./Authentication/
+#    ports:
+#      - 8080:8080
+#    restart: always
+#

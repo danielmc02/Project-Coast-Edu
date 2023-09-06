@@ -27,7 +27,9 @@ class _OnboardingPageState extends State<OnboardingPage> {
   }
 
   final _fromKey = GlobalKey<FormState>();
-
+  bool wantsToSignUp = true;
+  bool defaultPasswordVisibilityState = true;
+  
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -83,7 +85,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   SizedBox(
                       width: 300,
                       child: TextFormField(
-                        obscureText: algo.defaultPasswordVisibilityState,
+                        obscureText: defaultPasswordVisibilityState,
                         validator: (value) {
                           if (value!.length < 8) {
                             return "Password must be greater than 8 characters";
@@ -103,9 +105,11 @@ class _OnboardingPageState extends State<OnboardingPage> {
                             errorMaxLines: 3,
                             suffixIcon: GestureDetector(
                                 onTap: () {
-                                  algo.changePasswordVisibility();
+                                 setState(() {
+                                   defaultPasswordVisibilityState = !defaultPasswordVisibilityState;
+                                 });
                                 },
-                                child: algo.defaultPasswordVisibilityState
+                                child: defaultPasswordVisibilityState
                                     ? const Icon(Icons.visibility)
                                     : const Icon(Icons.visibility_off)),
                             hintText: "Password",
@@ -126,10 +130,10 @@ class _OnboardingPageState extends State<OnboardingPage> {
                                   MaterialStatePropertyAll(Colors.black)),
                           onPressed: () async {
                             if (_fromKey.currentState!.validate()) {
-                              if (algo.wantsToSignUp) {
+                              if (wantsToSignUp) {
                                 var res = await algo.registerUser(
                                     emailField.text, passwordField.text);
-                                print(res.runtimeType.toString());
+                                debugPrint(res.runtimeType.toString());
                                 res.runtimeType != Null
                                     ? showDialog(
                                         context: context,
@@ -159,14 +163,16 @@ class _OnboardingPageState extends State<OnboardingPage> {
                             }
                           },
                           child: Text(
-                              algo.wantsToSignUp ? "Sign Up" : "Log in"))),
+                             wantsToSignUp ? "Sign Up" : "Log in"))),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: GestureDetector(
                       onTap: () async {
-                        await algo.changeIntention();
+                        setState(() {
+                          wantsToSignUp = !wantsToSignUp;
+                        });
                       },
-                      child: Text(algo.wantsToSignUp
+                      child: Text(wantsToSignUp
                           ? "Already have an account?"
                           : "Dont have an account? Sign Up!"),
                     ),

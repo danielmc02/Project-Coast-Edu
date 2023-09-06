@@ -1,21 +1,17 @@
-
 pub mod auth {
 
     use super::super::auth_structs::auth_structs::*;
     use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
-    use actix_web::{post,  web, web::Json, HttpResponse,get};
+    use actix_web::{get, post, web, web::Json, HttpResponse};
     use jsonwebtoken::{encode, Algorithm, EncodingKey, Header};
-
-
-
+   // use sqlx::types::Json as sqlx;
     #[post("/register_user")]
     pub async fn register_user(
         user_form: Json<UserForm>,
         data: web::Data<AppData>,
     ) -> HttpResponse {
         println!("{}", user_form.password);
-
 
         let formated_query = format!(
             "INSERT INTO Users(email,password_hash) VALUES('{}','{}');",
@@ -25,8 +21,6 @@ pub mod auth {
 
         match result {
             Ok(_) => {
-
-
                 return shared_login_logic(user_form, data).await;
             }
             Err(error) => {
@@ -34,7 +28,6 @@ pub mod auth {
                 return HttpResponse::Conflict()
                     .body("The user may already exist. Try signing in.");
             }
-          
         }
     }
 
@@ -49,49 +42,39 @@ pub mod auth {
         user_form: Json<UserForm>,
         data: web::Data<AppData>,
     ) -> HttpResponse {
-
-
         let formated_query = format!(
-            r"SELECT password_hash FROM users WHERE email = '{}'",
+            r"SELECT id::text, email, name , password_hash, interests, verified_student FROM users WHERE email = '{}'",
             user_form.email
         );
-        println!("STEP 2");
 
         let result =
-            sqlx::query_as::<_, PayLoad>(&formated_query as &str) /* .bind(&user_form.email)*/
+            sqlx::query_as::<_, UserField>(&formated_query as &str) /* .bind(&user_form.email)*/
                 .fetch_one(&data.db_pool)
                 .await;
-        println!("STEP 3");
-
-
-
-        //  println!("Hash: {}",result.password_hash );
+     
+        println!("{:?}",result);
+        
         match result {
             Ok(res) => {
-
                 // RSA JWT
-                let current_time_duration = SystemTime::now()
-                    .duration_since(UNIX_EPOCH)
-                    .expect("Error fetching time");
-
-                let expiration_time_duration = current_time_duration + Duration::new(1800, 0);
-
-                let expiration_time_unix_timestamp = expiration_time_duration.as_secs() as usize;
-
-                let user_claims: Claims = Claims {
-                    exp: expiration_time_unix_timestamp,
-                    sub: "user".to_string(),
-                };
-                let jwt_res = encode(
-                    &Header::new(Algorithm::RS256),
-                    &user_claims,
-                    &EncodingKey::from_rsa_pem(include_bytes!("keys/privkey.pem")).unwrap(),
-                )
-                .expect("ERROR CREATING JWT");
+                print!("OKAYY");
+                let jwt_res: String = create_jwt_token();
                 println!("JJJWWWTTT: {}", jwt_res);
                 if res.password_hash == user_form.password {
                     println!("SUCESFUL");
-                    let data = JsonCallBack{short_life_jwt: "TEST".to_string() ,public_key:jwt_res,email: "NIG".to_string()};
+                    /*
+                    On a user signin, pass jwt, id
+                     */
+                    let data = SignInPackage {
+
+                        short_life_jwt: jwt_res,
+                        email: user_form.email.to_string(),
+                        name: res.name,
+                        id: res.id as String,
+                        interests: res.interests ,
+                        verified_student: res.verified_student,
+                    
+                    };
                     return HttpResponse::Ok().json(data);
                 } else {
                     println!("NOT SUCESFUL SIGN IN");
@@ -100,7 +83,7 @@ pub mod auth {
                 //     println!("{rez}");
                 //    println!("{}\n{} .", res.password_hash, rez);
             }
-            Err(_err) => {
+            Err(_) => {
                 println!("NOT SUCESFUL SIGN IN");
 
                 return HttpResponse::Conflict().body("ERROR");
@@ -109,9 +92,29 @@ pub mod auth {
     }
 
     #[get("/test")]
-    async fn test() -> HttpResponse
-    {
+    async fn test() -> HttpResponse {
         HttpResponse::Ok().body("SUCESFULLY RETRIEVED TEST")
     }
 
+    fn create_jwt_token() -> String {
+        let current_time_duration = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .expect("Error fetching time");
+
+        let expiration_time_duration = current_time_duration + Duration::new(1800, 0);
+
+        let expiration_time_unix_timestamp = expiration_time_duration.as_secs() as usize;
+
+        let user_claims: Claims = Claims {
+            exp: expiration_time_unix_timestamp,
+            sub: "user".to_string(),
+        };
+        let jwt_res = encode(
+            &Header::new(Algorithm::RS256),
+            &user_claims,
+            &EncodingKey::from_rsa_pem(include_bytes!("keys/privkey.pem")).unwrap(),
+        )
+        .expect("ERROR CREATING JWT");
+        return jwt_res;
+    }
 }

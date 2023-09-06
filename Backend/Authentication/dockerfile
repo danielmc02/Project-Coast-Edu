@@ -1,4 +1,4 @@
-FROM rust:1.67
+FROM rust:1.72
 
 WORKDIR /Authentication
 
@@ -10,4 +10,5 @@ RUN cargo build
 EXPOSE 8080
 
 
-CMD ["cargo", "run", "--release"]
+CMD ["cargo", "run" ]
+#"--release"

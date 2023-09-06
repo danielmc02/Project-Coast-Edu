@@ -1,13 +1,8 @@
 {
-    "sqltools.connections": [
-        {
-            "previewLimit": 50,
-            "server": "localhost",
-            "port": 5432,
-            "driver": "PostgreSQL",
-            "name": "test",
-            "database": "users",
-            "username": "postgres"
-        }
+    "rust-analyzer.linkedProjects": [
+        "./Cargo.toml",
+        "./src/email/",
+    //    "/Users/danielmccray/OpenSourseProjects/Project-Coast-Edu/Backend/Authentication/auth-service/",
+    //    "/Users/danielmccray/OpenSourseProjects/Project-Coast-Edu/Backend/Authentication/auth-service/src/email/"
     ]
 }

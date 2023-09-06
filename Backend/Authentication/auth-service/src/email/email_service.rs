@@ -1,0 +1,52 @@
+pub mod email {
+    use actix_web::{post, HttpResponse,web::Json};
+    use lettre::message::header::ContentType;
+    use lettre::transport::smtp::authentication::Credentials;
+    use lettre::{Message, SmtpTransport, Transport};
+    use jsonwebtoken::{decode,DecodingKey,Validation};
+    use std::fs::File;
+    use std::io::Read;
+    use std::result;
+   use super::super::email_structs::email_structs::*;
+
+    #[post("/send_verification_email")]
+ pub   async fn send_verification_email(data: Json<VerifyEmailPayload>) -> HttpResponse {
+
+    let public_key_path = "src/authentication/keys/publickey.pem";
+
+    let mut public_key_file = File::open(public_key_path).expect("ERROR OPENING");
+    let mut public_key_contents = Vec::new();
+    public_key_file.read_to_end(&mut public_key_contents).expect("ERROR READING OUTPUT");
+    let valid = Validation::new(jsonwebtoken::Algorithm::RS256);
+
+    let result = decode::<serde_json::Value>(&data.jwt,  &DecodingKey::from_rsa_pem(&public_key_contents).unwrap(), &valid).expect("msg");
+    print!("{:?}",result);
+    /* 
+        let email = Message::builder()
+            .from("coastlinkedu@gmail.com".parse().unwrap())
+            .to("digity63@gmail.com".parse().unwrap())
+            .subject("Happy new year")
+            .header(ContentType::TEXT_PLAIN)
+            .body(String::from("Be happy!"))
+            .unwrap();
+
+        let creds = Credentials::new(
+            "digity63@gmail.com".to_owned(),
+            "jcdjcpfjhphxrmmp".to_owned(),
+        );
+
+        // Open a remote connection to gmail
+        let mailer = SmtpTransport::relay("smtp.gmail.com")
+            .unwrap()
+            .credentials(creds)
+            .build();
+
+        // Send the email
+        match mailer.send(&email) {
+            Ok(_) => println!("Email sent successfully!"),
+            Err(e) => panic!("Could not send email: {:?}", e),
+        }
+        */
+         HttpResponse::Ok().body("body")
+    }
+}
