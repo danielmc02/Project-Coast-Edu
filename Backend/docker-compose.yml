@@ -14,11 +14,9 @@ services:
     volumes:
       - ./init_users.sql:/docker-entrypoint-initdb.d/init.sql
 
-#  auth:
-#
-#    container_name: auth-service
-#    build: ./Authentication/
-#    ports:
-#      - 8080:8080
-#    restart: always
-#
+  auth:
+   container_name: auth-service
+   build: ./Authentication/
+   ports:
+     - 8080:8080
+   restart: always

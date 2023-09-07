@@ -11,7 +11,7 @@ pub mod email {
 
     #[post("/send_verification_email")]
  pub   async fn send_verification_email(data: Json<VerifyEmailPayload>) -> HttpResponse {
-
+/* 
     let public_key_path = "src/authentication/keys/publickey.pem";
 
     let mut public_key_file = File::open(public_key_path).expect("ERROR OPENING");
@@ -21,17 +21,18 @@ pub mod email {
 
     let result = decode::<serde_json::Value>(&data.jwt,  &DecodingKey::from_rsa_pem(&public_key_contents).unwrap(), &valid).expect("msg");
     print!("{:?}",result);
-    /* 
+    */
+        let message = format!("Hello\nYour verification code is {}",data.code);
         let email = Message::builder()
             .from("coastlinkedu@gmail.com".parse().unwrap())
-            .to("digity63@gmail.com".parse().unwrap())
-            .subject("Happy new year")
+            .to(data.email.parse().unwrap())
+            .subject("Your verification Code")
             .header(ContentType::TEXT_PLAIN)
-            .body(String::from("Be happy!"))
+            .body(message)
             .unwrap();
 
-        let creds = Credentials::new(
-            "digity63@gmail.com".to_owned(),
+        let creds: Credentials = Credentials::new(
+            "coastlinkedu@gmail.com".to_owned(),
             "jcdjcpfjhphxrmmp".to_owned(),
         );
 
@@ -46,7 +47,7 @@ pub mod email {
             Ok(_) => println!("Email sent successfully!"),
             Err(e) => panic!("Could not send email: {:?}", e),
         }
-        */
+        
          HttpResponse::Ok().body("body")
     }
 }
