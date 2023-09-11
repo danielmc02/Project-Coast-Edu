@@ -2,7 +2,9 @@
     "rust-analyzer.linkedProjects": [
         "./Cargo.toml",
         "./src/email/",
-    //    "/Users/danielmccray/OpenSourseProjects/Project-Coast-Edu/Backend/Authentication/auth-service/",
-    //    "/Users/danielmccray/OpenSourseProjects/Project-Coast-Edu/Backend/Authentication/auth-service/src/email/"
+        "./Cargo.toml",
+        "./src/user_purposes/mods.rs",
+        "./Cargo.toml",
+        "./Cargo.toml"
     ]
 }

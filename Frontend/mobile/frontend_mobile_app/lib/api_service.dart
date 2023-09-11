@@ -9,10 +9,31 @@ import 'dart:developer' as developer;
 import 'boxes.dart';
 
 class ApiService extends ChangeNotifier {
+  //Singleton Instance
   static ApiService? _apiInstance;
 
+  //Http client used as gateway for requests
   final _client = http.Client();
+  http.Client get httpClient {
+    return _client;
+  }
+  /*------------------------------*/
 
+  // Constructor that's ran first time "instance is called"
+  ApiService._init() {
+    Boxes.getUser() != null ? signedIn = true : signedIn = false;
+    debugPrint("Just got inited");
+  }
+  /*------------------------------*/
+
+  //Used to fetch the private instance to portray it publicly
+  static ApiService? get instance {
+    _apiInstance ??= ApiService._init();
+    return _apiInstance;
+  }
+  /*------------------------------*/
+
+  //Auth purposed var and method to let app root know auth status
   late bool signedIn;
   Future<bool> isSignedIn() async {
     await Future.delayed(const Duration(seconds: 2));
@@ -24,46 +45,32 @@ class ApiService extends ChangeNotifier {
       return signedIn;
     }
   }
+  /*------------------------------*/
 
-  ApiService._init() {
-    Boxes.getUser() != null ? signedIn = true : signedIn = false;
-    debugPrint("Just got inited");
+  //Auth method called when middle layer of app determines if signed in
+  Future<void> signIn() async {
+    signedIn = true;
+    notifyListeners();
   }
-  static ApiService? get apiInstance {
-    _apiInstance ??= ApiService._init();
-    return _apiInstance;
-  }
-
-  http.Client get httpClient {
-    return _client;
-  }
-
-  final endpoint = Uri.parse("http://localhost:8080/");
+  /*------------------------------*/
 
   Future<void> handleUser(Map res) async {
     developer.log("Checking and assigning user jwt", name: "Handling user");
-    //retrieve new data, check if jwt is valid for longer than 5 minutes
-    //create user and return a bool if valid(true) or not valid(false)
+
     try {
-      print(res.toString());
+      debugPrint(res.toString());
       var currentUser = User(
           shortLifeJwt: res['short_life_jwt'],
           id: res['id'],
           email: res['email'],
           name: res['name'],
           interests: res['interests'],
-          verifiedStudent: res['verified_student']
-          );
+          verifiedStudent: res['verified_student']);
       await Boxes.getUserBox().put('mainUser', currentUser);
-    await  signIn();
+      await signIn();
     } catch (e) {
       debugPrint(e.toString());
     }
-  }
-
-  Future<void> signIn() async {
-    signedIn = true;
-    notifyListeners();
   }
 
   Future<void> signout() async {

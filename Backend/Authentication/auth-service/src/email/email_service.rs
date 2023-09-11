@@ -1,12 +1,10 @@
 pub mod email {
+    
     use actix_web::{post, HttpResponse,web::Json};
     use lettre::message::header::ContentType;
     use lettre::transport::smtp::authentication::Credentials;
     use lettre::{Message, SmtpTransport, Transport};
-    use jsonwebtoken::{decode,DecodingKey,Validation};
-    use std::fs::File;
-    use std::io::Read;
-    use std::result;
+
    use super::super::email_structs::email_structs::*;
 
     #[post("/send_verification_email")]
@@ -44,10 +42,10 @@ pub mod email {
 
         // Send the email
         match mailer.send(&email) {
-            Ok(_) => println!("Email sent successfully!"),
-            Err(e) => panic!("Could not send email: {:?}", e),
+            Ok(_) => HttpResponse::Ok().body(""),
+            Err(_) => HttpResponse::Conflict().body(""),
         }
         
-         HttpResponse::Ok().body("body")
+         
     }
 }

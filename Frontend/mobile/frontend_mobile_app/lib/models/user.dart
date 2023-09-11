@@ -19,7 +19,7 @@ class User {
   late  String? name;
 
   @HiveField(4)
-  late  List<Interests>? interests;
+  late  List<String>? interests;
 
   @HiveField(5)
  late  bool verifiedStudent;

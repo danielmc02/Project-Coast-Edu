@@ -21,7 +21,7 @@ class UserAdapter extends TypeAdapter<User> {
       shortLifeJwt: fields[1] as String,
       email: fields[2] as String,
       name: fields[3] as String?,
-      interests: (fields[4] as List?)?.cast<Interests>(),
+      interests: (fields[4] as List?)?.cast<String>(),
       verifiedStudent: fields[5] as bool,
     );
   }

@@ -1,7 +1,6 @@
 pub mod auth_structs {
 
     use serde::{Deserialize, Serialize};
-    use sqlx::types::Uuid;
 
 
     use sqlx::{FromRow, Pool, Postgres};

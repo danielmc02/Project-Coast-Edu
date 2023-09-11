@@ -1,12 +1,13 @@
 
 enum Interests
 {
-  Auto,
-  Tech,
-  Gaming,
-  Fitness,
-  Art,
-  Music,
-  Entrepreneurship
-
+  auto,
+  tech,
+  gaming,
+  sports,
+  fitness,
+  art,
+  music,
+  entrepreneurship,
+none
 }

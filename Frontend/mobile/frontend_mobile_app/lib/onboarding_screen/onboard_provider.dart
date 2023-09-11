@@ -219,7 +219,7 @@ class OnboardingProvider extends ChangeNotifier {
       } else if (response.statusCode == 200) {
         Map rez = jsonDecode(response.body);
 
-        await ApiService.apiInstance!.handleUser(rez);
+        await ApiService.instance!.handleUser(rez);
       }
     } catch (e) {
       debugPrint("error in connection $e");
@@ -254,7 +254,7 @@ class OnboardingProvider extends ChangeNotifier {
       } else if (response.statusCode == 200) {
         Map rez = jsonDecode(response.body);
 
-        await ApiService.apiInstance!.handleUser(rez);
+        await ApiService.instance!.handleUser(rez);
       }
     } catch (e) {
       debugPrint("error in connection $e");

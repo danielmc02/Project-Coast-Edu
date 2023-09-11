@@ -31,7 +31,7 @@ class Home extends StatelessWidget {
         body: Center(
           child: TextButton(
             onPressed: () async {
-              await ApiService.apiInstance!.signout();
+              await ApiService.instance!.signout();
             },
             style: const ButtonStyle(
                 backgroundColor: MaterialStatePropertyAll(Colors.red)),
@@ -51,26 +51,34 @@ class HomeLoader extends StatefulWidget {
 }
 
 class _HomeLoaderState extends State<HomeLoader> {
-
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => HomeProvider(),
       builder: (context, child) => Consumer<HomeProvider>(
-          builder: (context, algo, child) => FutureBuilder(
-                future: algo.preReqSetup(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (snapshot.connectionState == ConnectionState.done &&
-                      snapshot.hasData) {
-                    return snapshot.data!.isNotEmpty == true
-                        ? PropertyProcessPage(snapshot): const Home();
-                  } else {
-                    return const Text("ERROR");
-                  }
-                },
-              )),
+        builder: (context, algo, child) {
+          if (algo.needsRebuild) {
+            return Home();
+          } else {
+            return FutureBuilder(
+              future: algo.preReqSetup(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.connectionState == ConnectionState.done &&
+                    snapshot.hasData) {
+                  //if algo.TRIGGERRESET == true ?
+                  return snapshot.data!.isNotEmpty == true
+                      ? PropertyProcessPage(snapshot)
+                      : const Home();
+                } else {
+                  return const Text("ERROR");
+                }
+              },
+            );
+          }
+        },
+      ),
     );
   }
 }

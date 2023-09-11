@@ -135,7 +135,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                                     emailField.text, passwordField.text);
                                 debugPrint(res.runtimeType.toString());
                                 res.runtimeType != Null
-                                    ? showDialog(
+                                    ?  showDialog(
                                         context: context,
                                         builder: (context) {
                                           return AlertDialog(

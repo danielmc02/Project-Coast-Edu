@@ -4,8 +4,16 @@ import 'package:frontend_mobile_app/boxes.dart';
 
 
 class HomeProvider extends ChangeNotifier {
-  HomeProvider();
+  HomeProvider(){
+    print("RANNIGGA");
+  }
 
+  bool  needsRebuild = false;
+  void trueRebuild()
+  {
+    needsRebuild = true;
+    notifyListeners();
+  }
   Future<List> preReqSetup() async {
     List<Widget> preReqs = [];
 

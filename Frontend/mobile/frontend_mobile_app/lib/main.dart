@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_mobile_app/api_service.dart';
-import 'package:frontend_mobile_app/boxes.dart';
 import 'package:frontend_mobile_app/home_screen/home_page.dart';
 import 'package:frontend_mobile_app/models/user.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'onboarding_screen/onboarding_page.dart';
 
+
+
 void main() async {
+  //init everything and user model
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   Hive.registerAdapter(UserAdapter());
@@ -21,9 +23,11 @@ class RootApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: AuthWrapper() /*AuthWrapper()*/);
+    return  MaterialApp(
+      routes: {
+        'home' : (context) => HomeLoader()
+      },
+        debugShowCheckedModeBanner: false, home: AuthWrapper());
   }
 }
 
@@ -35,20 +39,21 @@ class AuthWrapper extends StatefulWidget {
 }
 
 class _AuthWrapperState extends State<AuthWrapper> {
-
-@override
-  void initState()
-{
-  Boxes.getUserBox().delete('mainUser');
-  super.initState();
-}
+  @override
+  void initState() {
+    //Only delete the below if necessary. This can cause the app to become unstable
+    // Boxes.getUserBox().delete('mainUser');
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-        create: (context) => ApiService.apiInstance!,
+        create: (context) => ApiService.instance!,
         child: Consumer<ApiService>(builder: (context, algo, child) {
-          return algo.signedIn == true ? const HomeLoader()/*Home()*/ : const OnboardingPage();
+          return algo.signedIn == true
+              ? const HomeLoader()
+              : const OnboardingPage();
         }));
   }
 }
