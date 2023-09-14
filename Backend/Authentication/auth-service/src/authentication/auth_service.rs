@@ -42,13 +42,10 @@ pub mod auth {
         user_form: Json<UserForm>,
         data: web::Data<AppData>,
     ) -> HttpResponse {
-        let formated_query = format!(
-            r"SELECT id::text, email, name , password_hash, interests::json, verified_student FROM users WHERE email = '{}'",
-            user_form.email
-        );
 
         let result =
-            sqlx::query_as::<_, UserField>(&formated_query as &str) /* .bind(&user_form.email)*/
+            sqlx::query_as::<_, UserField>( "SELECT id::text, email, name , password_hash, interests::json, verified_student FROM users WHERE email = $1") /* .bind(&user_form.email)*/
+                .bind(&user_form.email)
                 .fetch_one(&data.db_pool)
                 .await;
      
@@ -83,8 +80,8 @@ pub mod auth {
                 //     println!("{rez}");
                 //    println!("{}\n{} .", res.password_hash, rez);
             }
-            Err(_) => {
-                println!("NOT SUCESFUL SIGN IN");
+            Err(er) => {
+                println!("NOT SUCESFUL SIGN IN {}",er);
 
                 return HttpResponse::Conflict().body("ERROR");
             }

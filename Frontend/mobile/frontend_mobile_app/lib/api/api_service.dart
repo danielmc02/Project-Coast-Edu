@@ -59,17 +59,18 @@ class ApiService extends ChangeNotifier {
 print(res);
     try {
       List<String> stringInterests =[];
-
-      List interests = res['interests'];
-      interests.forEach((element) => stringInterests.add(element.toString()),);
-      print(interests);
+      List fromJson = res['interests'];
+      fromJson.forEach((element) {
+        stringInterests.add(element as String);
+      },);
+      print("woop woop $stringInterests");
       debugPrint(res.toString());
       var currentUser = User(
           shortLifeJwt: res['short_life_jwt'],
           id: res['id'],
           email: res['email'],
           name: res['name'],
-          interests: interests as List<String>,
+          interests:  stringInterests,
           verifiedStudent: res['verified_student']);
       await Boxes.getUserBox().put('mainUser', currentUser);
       await signIn();

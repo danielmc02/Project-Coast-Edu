@@ -24,7 +24,7 @@ pub mod user_services {
         .bind(&req.email)
         //        interests = '$2'::json,    .bind(&req.interests)
         // .bind(&req.verified as &bool)
-        .fetch_one(&data.db_pool)
+        .execute(&data.db_pool)
         .await;
         match result {
             Ok(row) => { 
