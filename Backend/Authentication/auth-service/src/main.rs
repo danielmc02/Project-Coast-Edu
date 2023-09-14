@@ -23,9 +23,9 @@ async fn main() -> std::io::Result<()> {
 
     let _postgress_pool: Pool<sqlx::Postgres> = PgPoolOptions::new()
         .max_connections(2)
-      .connect("postgresql://postgres:123@localhost:5432/users")
+     .connect("postgresql://postgres:123@localhost:5432/users")
 
-   // .connect("postgresql://postgres:123@database:5432/users")
+//    .connect("postgresql://postgres:123@database:5432/users")
         .await
         .expect("Error connecting to db");
     println!("LETS GOz");
@@ -42,7 +42,7 @@ async fn main() -> std::io::Result<()> {
            .service(send_verification_email)
            .service(update_user_preferences)
     })
-    .bind(("0.0.0.0", 8080))?
+    .bind(("0.0.0.0", 80))?
     .run()
     .await
 }

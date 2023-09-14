@@ -1,7 +1,7 @@
 
 import 'package:hive/hive.dart';
 
-import 'models/user.dart';
+import 'user.dart';
 
 class Boxes
 {

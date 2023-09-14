@@ -7,6 +7,6 @@ CREATE TABLE IF NOT EXISTS users (
    email VARCHAR(64) NOT NULL UNIQUE,
    name VARCHAR(64) ,
    password_hash VARCHAR(64) NOT NULL,
-   interests json,
-   verified_student bool DEFAULT false
+   interestsDELETE FROM users json,
+   verified_student bool DEFAULT flase
 );

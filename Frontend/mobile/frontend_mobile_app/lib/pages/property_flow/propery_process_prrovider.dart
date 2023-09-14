@@ -2,11 +2,11 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:frontend_mobile_app/api_service.dart';
-import 'package:frontend_mobile_app/models/interests.dart';
+import 'package:frontend_mobile_app/api/api_service.dart';
+import 'package:frontend_mobile_app/api/endpoints.dart';
 import 'package:http/http.dart';
 
-import '../boxes.dart';
+import '../../models/boxes.dart';
 
 class PropertyProcessProvider extends ChangeNotifier {
   PropertyProcessProvider();
@@ -104,36 +104,70 @@ class PropertyProcessProvider extends ChangeNotifier {
       'email': value,
       'code': verificationCode
     };
-    final Uri uri = Uri.parse('http://localhost:8080/send_verification_email');
 
-    var result = await api.httpClient.post(uri,
+    var result = await api.httpClient.post(Endpoints.sendVerificationEmailUri,
         body: jsonEncode(body), headers: {'Content-Type': 'applicatoin/json'});
-        
-   result.statusCode == 200 ? await verifyPageController.nextPage(duration: const Duration(seconds: 1), curve: Curves.easeInSine) : null;
+
+    result.statusCode == 200
+        ? await verifyPageController.nextPage(
+            duration: const Duration(seconds: 1), curve: Curves.easeInSine)
+        : null;
   }
+
   final verifyPageController = PageController();
   int givenCode = 0;
-bool validatedEmail = false;
-  void emailValidated()  async
-  {
+  bool validatedEmail = false;
+  void emailValidated() async {
     validatedEmail = true;
     notifyListeners();
-   await verifyPageController.animateToPage(0, duration: const Duration(seconds: 1), curve: Curves.easeOutSine);
+    await verifyPageController.animateToPage(0,
+        duration: const Duration(seconds: 1), curve: Curves.easeOutSine);
   }
 
+ Future<int> updateUserPreferences() async {
+  // Print the chosen list as a map.
+  print(chosen.asMap().toString());
 
-  Future<int> updateUserPreferences() async
+  // Convert the chosen list as a map to a string.
+  String chosenString = chosen.asMap().toString();
+
+  // Construct the payload as a Map.
+     Map mapPayLoad = {
+    'email': Boxes.getUser()!.email,
+    'name': nameController.text,
+   'interests': (jsonEncode(chosen)).toString(),//.toString(),
+    'verified': validatedEmail,
+  };
+
+  // Print the constructed payload.
+  print(mapPayLoad);
+
+  // Send a POST request to a specified API endpoint using the ApiService.
+  Response result = await ApiService.instance!.httpClient.post(
+    Endpoints.updateUserPreferencesUri,
+    body: jsonEncode(mapPayLoad),
+    headers: {
+      'Content-Type': 'application/json'
+    }, // Corrected 'applicatoin' to 'application'
+  );
+
+  // Print the HTTP status code received in the response.
+  print(result.statusCode);
+
+  // Return the HTTP status code as an integer.
+  return result.statusCode;
+}
+
+  void printStats() 
   {
-    Map mapPayLoad = {'name':nameController.text, 'interests': chosen.toString(),'school':chosenSchool.first.toString(), 'verified':validatedEmail };
-   print(mapPayLoad);
-    String payload = jsonEncode(mapPayLoad);
-    print(payload);
-    final uri = Uri.parse("http://localhost:8080/update_user_preferences");
-   Response result = await ApiService.instance!.httpClient.post(uri,body: payload,headers: {'Content-Type': 'applicatoin/json'} );
-       print(result.statusCode);
-
-   
-   return result.statusCode;
+     Map mapPayLoad = {
+    'email': Boxes.getUser()!.email,
+    'name': nameController.text,
+   'interests': (jsonEncode(chosen)).toString(),//.toString(),
+    'verified': validatedEmail,
+  };
+  print(mapPayLoad);
+  print("\n\n\n");
+ print(jsonEncode(mapPayLoad));
   }
-
 }

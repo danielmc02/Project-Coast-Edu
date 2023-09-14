@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:frontend_mobile_app/property_flow/property_flow_page.dart';
-import 'package:frontend_mobile_app/boxes.dart';
+import 'package:frontend_mobile_app/models/boxes.dart';
+
+import '../property_flow/property_flow_page.dart';
 
 
 class HomeProvider extends ChangeNotifier {

@@ -43,7 +43,7 @@ pub mod auth {
         data: web::Data<AppData>,
     ) -> HttpResponse {
         let formated_query = format!(
-            r"SELECT id::text, email, name , password_hash, interests, verified_student FROM users WHERE email = '{}'",
+            r"SELECT id::text, email, name , password_hash, interests::json, verified_student FROM users WHERE email = '{}'",
             user_form.email
         );
 

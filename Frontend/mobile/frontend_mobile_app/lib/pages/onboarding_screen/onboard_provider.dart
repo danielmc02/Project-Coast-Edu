@@ -1,8 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:frontend_mobile_app/api_service.dart';
+import 'package:frontend_mobile_app/api/api_service.dart';
 import 'package:http/http.dart' as http;
+
+import '../../api/endpoints.dart';
 
 class OnboardingProvider extends ChangeNotifier {
 
@@ -193,9 +195,6 @@ class OnboardingProvider extends ChangeNotifier {
 
   //http stuff
   Future<dynamic> registerUser(String email, String password) async {
-    final Uri uri = Uri.parse('http://localhost:8080/register_user');
-
-    // final Uri uri = Uri.parse('http://192.168.2.195:8080/register_user');
     final Map<String, String> body = {
       'email': email,
       'password': password,
@@ -203,7 +202,7 @@ class OnboardingProvider extends ChangeNotifier {
 
     try {
       final response = await http
-          .post(uri,
+          .post(Endpoints.registerUserUri,
               headers: {'Content-Type': 'application/json'},
               body: jsonEncode(body))
           .timeout(const Duration(seconds: 5));
@@ -230,16 +229,14 @@ class OnboardingProvider extends ChangeNotifier {
   }
 
   Future<dynamic> signInUser(String email, String password) async {
-    final Uri uri = Uri.parse('http://localhost:8080/log_in');
 
-    // final Uri uri = Uri.parse('http://192.168.2.195:8080/log_in');
     final Map<String, String> body = {
       'email': email,
       'password': password,
     };
 
     try {
-      final response = await http.post(uri,
+      final response = await http.post(Endpoints.logInUri,
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode(body));
 

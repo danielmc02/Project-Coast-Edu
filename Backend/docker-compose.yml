@@ -1,12 +1,13 @@
-services:
+version: '3'  # Specify the Docker Compose version
 
+services:
   database:
     container_name: postgres-database
     image: postgres
     expose:
       - 5432
     ports:
-      - 5432:5432
+      - "5432:5432"
     restart: always
     environment:
       POSTGRES_PASSWORD: 123
@@ -14,9 +15,10 @@ services:
     volumes:
       - ./init_users.sql:/docker-entrypoint-initdb.d/init.sql
 
-  auth:
-   container_name: auth-service
-   build: ./Authentication/
-   ports:
-     - 8080:8080
-   restart: always
+#  auth:
+#    container_name: auth-service
+#    build: ./Authentication/
+#    ports:
+#      - "80:80"
+#    restart: always
+#

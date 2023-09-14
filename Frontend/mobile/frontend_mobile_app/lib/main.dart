@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:frontend_mobile_app/api_service.dart';
-import 'package:frontend_mobile_app/home_screen/home_page.dart';
+import 'package:frontend_mobile_app/api/api_service.dart';
+import 'package:frontend_mobile_app/models/boxes.dart';
 import 'package:frontend_mobile_app/models/user.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
-import 'onboarding_screen/onboarding_page.dart';
+import 'pages/home_screen/home_page.dart';
+import 'pages/onboarding_screen/onboarding_page.dart';
 
 
 
@@ -42,7 +43,7 @@ class _AuthWrapperState extends State<AuthWrapper> {
   @override
   void initState() {
     //Only delete the below if necessary. This can cause the app to become unstable
-    // Boxes.getUserBox().delete('mainUser');
+    Boxes.getUserBox().delete('mainUser');
     super.initState();
   }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:frontend_mobile_app/onboarding_screen/onboard_provider.dart';
 import 'package:provider/provider.dart';
+
+import 'onboard_provider.dart';
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});

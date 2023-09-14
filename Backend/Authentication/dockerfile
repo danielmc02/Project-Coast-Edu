@@ -7,7 +7,7 @@ COPY ./auth-service /Authentication
 WORKDIR /Authentication/auth-service
 
 RUN cargo build
-EXPOSE 8080
+#EXPOSE 8080
 
 
 CMD ["cargo", "run" ]
