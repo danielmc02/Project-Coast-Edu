@@ -5,23 +5,37 @@ pub mod auth {
 
     use actix_web::{get, post, web, web::Json, HttpResponse};
     use jsonwebtoken::{encode, Algorithm, EncodingKey, Header};
+    use argon2::{password_hash::{rand_core::OsRng,PasswordHash,PasswordHasher,PasswordVerifier,SaltString, Salt},Argon2};
    // use sqlx::types::Json as sqlx;
     #[post("/register_user")]
     pub async fn register_user(
-        user_form: Json<UserForm>,
+        req: Json<UserForm>,
         data: web::Data<AppData>,
     ) -> HttpResponse {
-        println!("{}", user_form.password);
+        println!("{}", req.password);
+        let argon2 = Argon2::default();
+        // A generated salt string
+        let salt = SaltString::generate(&mut OsRng);
+        println!("{}",salt);
 
-        let formated_query = format!(
-            "INSERT INTO Users(email,password_hash) VALUES('{}','{}');",
-            user_form.email, user_form.password,
-        );
-        let result = sqlx::query(&formated_query).execute(&data.db_pool).await;
+        let password_hash = argon2.hash_password(&req.password.as_bytes(), &salt).unwrap().to_string();
+        println!("PASSWORD HASH: {:?}\n\n",password_hash);
+
+let ps = PasswordHash::new(&password_hash).expect("msg");
+
+println!("{}",ps);
+
+        let result = sqlx::query(
+            "INSERT INTO users(email,password_hash,salt) VALUES($1, $2, $3);"
+        ).bind(&req.email)
+        .bind(&password_hash)
+        .bind(salt.to_string())
+        .execute(&data.db_pool).await;
 
         match result {
             Ok(_) => {
-                return shared_login_logic(user_form, data).await;
+               return HttpResponse::Ok().body("body");
+                //return shared_login_logic(req, data).await;
             }
             Err(error) => {
                 println!("{}", error);
@@ -44,17 +58,20 @@ pub mod auth {
     ) -> HttpResponse {
 
         let result =
-            sqlx::query_as::<_, UserField>( "SELECT id::text, email, name , password_hash, interests::json, verified_student FROM users WHERE email = $1") /* .bind(&user_form.email)*/
+            sqlx::query_as::<_, User>( "SELECT id::text, email, password_hash, salt FROM users WHERE email = $1") /* .bind(&user_form.email)*/
                 .bind(&user_form.email)
                 .fetch_one(&data.db_pool)
                 .await;
      
-        println!("{:?}",result);
         
         match result {
             Ok(res) => {
+                println!("{:?}",res);
+                let argon2 = Argon2::default();
+
+             let bool =   argon2.verify_password(&user_form.password.as_bytes(), &PasswordHash::new(&res.password_hash).unwrap()).is_ok();
                 // RSA JWT
-                print!("OKAYY");
+                println!("BOOL IS {}",bool);
                 let jwt_res: String = create_jwt_token();
                 println!("JJJWWWTTT: {}", jwt_res);
                 if res.password_hash == user_form.password {
@@ -62,6 +79,8 @@ pub mod auth {
                     /*
                     On a user signin, pass jwt, id
                      */
+
+                    /* 
                     let data = SignInPackage {
 
                         short_life_jwt: jwt_res,
@@ -72,7 +91,8 @@ pub mod auth {
                         verified_student: res.verified_student,
                     
                     };
-                    return HttpResponse::Ok().json(data);
+                    */
+                    return HttpResponse::Ok().body("data");
                 } else {
                     println!("NOT SUCESFUL SIGN IN");
                     return HttpResponse::Conflict().body("Incorect password");

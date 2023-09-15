@@ -15,13 +15,14 @@ pub mod auth_structs {
     }
 
     #[derive(FromRow,Debug)]
-    pub struct UserField {
+    pub struct User {
         pub id: String,
         pub email: String,
-        pub name: Option<String>,
+      //  pub name: Option<String>,
         pub password_hash: String,
-        pub interests: Option<serde_json::Value>,
-        pub verified_student: bool
+        pub salt: String
+    //    pub interests: Option<serde_json::Value>,
+     //   pub verified_student: bool
 
     }
 

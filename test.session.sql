@@ -1,1 +1,1 @@
-UPDATE users
+SELECT * FROM users
