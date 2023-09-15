@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend_mobile_app/api/api_service.dart';
 import 'package:frontend_mobile_app/experimental/sliding_sheet.dart';
 import 'package:frontend_mobile_app/pages/loading.dart';
+import 'package:frontend_mobile_app/theme/styles.dart';
 
 import 'package:provider/provider.dart';
 
@@ -70,13 +71,31 @@ class School extends StatelessWidget {
 }
 
 
+
+
 class Link extends StatelessWidget {
   const Link({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: const Color.fromARGB(0, 255, 255, 255),
+        shadowColor: Colors.transparent,
+        foregroundColor: Colors.black,
+        
+        title: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Text("All",style: Styles.headerText2,),
+            Text("Links"),
+            Text("Chains")
+          ],
+        
+        )
+      ),
       body: Column(),
     );
   }

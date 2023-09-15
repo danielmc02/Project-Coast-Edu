@@ -59,10 +59,10 @@ class ApiService extends ChangeNotifier {
 print(res);
     try {
       List<String> stringInterests =[];
-      List fromJson = res['interests'];
-      fromJson.forEach((element) {
+   List? fromJson = res['interests'];
+       fromJson != null ?  fromJson!.forEach((element) {
         stringInterests.add(element as String);
-      },);
+      },): null;
       print("woop woop $stringInterests");
       debugPrint(res.toString());
       var currentUser = User(
