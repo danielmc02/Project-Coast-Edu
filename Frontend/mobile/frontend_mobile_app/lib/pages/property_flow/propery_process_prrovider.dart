@@ -133,7 +133,7 @@ class PropertyProcessProvider extends ChangeNotifier {
 
   // Construct the payload as a Map.
      Map mapPayLoad = {
-    'email': Boxes.getUser()!.email,
+   // 'email': Boxes.getUser()!.email,
     'name': nameController.text,
    'interests': (jsonEncode(chosen)).toString(),//.toString(),
     'verified': validatedEmail,
@@ -161,7 +161,7 @@ class PropertyProcessProvider extends ChangeNotifier {
   void printStats() 
   {
      Map mapPayLoad = {
-    'email': Boxes.getUser()!.email,
+ //   'email': Boxes.getUser()!.email,
     'name': nameController.text,
    'interests': (jsonEncode(chosen)).toString(),//.toString(),
     'verified': validatedEmail,

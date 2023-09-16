@@ -138,24 +138,25 @@ class _HomeLoaderState extends State<HomeLoader> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: Future.delayed(Duration(seconds: 0)),
+      future: Future.delayed(Duration(seconds: 1)),
       builder: (context, snapshot) => snapshot.connectionState == ConnectionState.waiting ? SplashLoader(): ChangeNotifierProvider(
         create: (context) => HomeProvider(),
         builder: (context, child) => Consumer<HomeProvider>(
           builder: (context, algo, child) {
             if (algo.needsRebuild) {
               return Home();
-            } else {
+            } else{
               return FutureBuilder(
-                future: algo.preReqSetup(),
+                future:   algo.preReqSetup(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
                   } else if (snapshot.connectionState == ConnectionState.done &&
                       snapshot.hasData) {
                     //if algo.TRIGGERRESET == true ?
+               var data = snapshot.data!;
                     return snapshot.data!.isNotEmpty == true
-                        ? PropertyProcessPage(snapshot)
+                        ? PropertyProcessPage(data)
                         :  Home();
                   } else {
                     return const Text("ERROR");

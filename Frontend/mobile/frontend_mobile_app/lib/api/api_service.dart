@@ -55,22 +55,20 @@ class ApiService extends ChangeNotifier {
   /*------------------------------*/
 
   Future<void> handleUser(Map res) async {
-    developer.log("Checking and assigning user jwt", name: "Handling user");
 print(res);
     try {
-      List<String> stringInterests =[];
+ /*     List<String> stringInterests =[];
    List? fromJson = res['interests'];
        fromJson != null ?  fromJson!.forEach((element) {
         stringInterests.add(element as String);
-      },): null;
-      print("woop woop $stringInterests");
+      },): null;*/
+      print("woop woop ");
       debugPrint(res.toString());
       var currentUser = User(
-          shortLifeJwt: res['short_life_jwt'],
+          shortLifeJwt: res['jwt'],
           id: res['id'],
-          email: res['email'],
           name: res['name'],
-          interests:  stringInterests,
+          interests:  res['interests'],
           verifiedStudent: res['verified_student']);
       await Boxes.getUserBox().put('mainUser', currentUser);
       await signIn();

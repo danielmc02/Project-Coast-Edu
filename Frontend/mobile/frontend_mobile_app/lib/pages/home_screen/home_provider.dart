@@ -15,7 +15,7 @@ class HomeProvider extends ChangeNotifier {
     needsRebuild = true;
     notifyListeners();
   }
-  Future<List> preReqSetup() async {
+  Future<List<Widget>> preReqSetup() async {
     List<Widget> preReqs = [];
 
     //  await Future.delayed(Duration(seconds: 3));

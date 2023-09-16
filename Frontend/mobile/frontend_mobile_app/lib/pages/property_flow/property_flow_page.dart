@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frontend_mobile_app/models/user.dart';
@@ -9,7 +10,7 @@ import 'propery_process_prrovider.dart';
 
 class PropertyProcessPage extends StatefulWidget {
   const PropertyProcessPage(this.snapshot, {super.key});
-  final AsyncSnapshot<List> snapshot;
+  final List<Widget> snapshot;
   @override
   State<PropertyProcessPage> createState() => _PropertyProcessPageState();
 }
@@ -19,7 +20,7 @@ class _PropertyProcessPageState extends State<PropertyProcessPage> {
   void initState() {
     super.initState();
   }
-
+int pageIndex = 0;
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -54,7 +55,10 @@ class _PropertyProcessPageState extends State<PropertyProcessPage> {
                     ),
                     TextButton(
                       onPressed: () async {
-                        switch (ppp.pageController.page) {
+                  setState(() {
+                    pageIndex +=1;
+                  });
+                      /*  switch (ppp.pageController.page) {
                           case 0:
                             //Name page, check that it's at least longer than 2
                             ppp.checkNamePage()
@@ -76,7 +80,7 @@ class _PropertyProcessPageState extends State<PropertyProcessPage> {
                             break;
                           default:
                         }
-                      },
+                */      },
                       style: ButtonStyle(
                           shape: MaterialStatePropertyAll(
                               RoundedRectangleBorder(
@@ -95,8 +99,20 @@ class _PropertyProcessPageState extends State<PropertyProcessPage> {
               ),
             ),
             body: GestureDetector(
-              onTap: () => FocusScope.of(context).unfocus(),
-              child: PageView.builder(
+                onTap: () => FocusScope.of(context).unfocus(),
+                child: PageTransitionSwitcher(
+                  duration: Duration(seconds: 1),
+
+child: widget.snapshot[pageIndex] ,
+                  transitionBuilder: (child, primaryAnimation,
+                          secondaryAnimation) =>
+                      SharedAxisTransition(
+                          animation: primaryAnimation,
+                          secondaryAnimation: secondaryAnimation,
+                          transitionType: SharedAxisTransitionType.horizontal,
+                          child: child,),
+                ) /*
+              PageView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 controller: ppp.pageController,
                 itemCount: widget.snapshot.data!.length,
@@ -104,7 +120,9 @@ class _PropertyProcessPageState extends State<PropertyProcessPage> {
                   return widget.snapshot.data![index];
                 },
               ),
-            )),
+           */
+
+                )),
       ),
     );
   }
@@ -216,9 +234,10 @@ class _InterestsPageState extends State<InterestsPage> {
                             });
                           } else {
                             debugPrint('2.5');
-                            debugPrint('Cant select because 3 is already chosen');
+                            debugPrint(
+                                'Cant select because 3 is already chosen');
                           }
-print(algo.chosen);
+                          print(algo.chosen);
                           //  e.value.entries.elementAt(1).
                         },
                         avatar: e.value['icon'])
@@ -291,7 +310,6 @@ class _VerifiedStudentPageState extends State<VerifiedStudentPage> {
                                       padding: const EdgeInsets.all(8.0),
                                       child: GestureDetector(
                                         onTap: () {
-
                                           setState(() {
                                             // Deselect all tiles first
                                             algo.supportedSchools
@@ -317,7 +335,6 @@ class _VerifiedStudentPageState extends State<VerifiedStudentPage> {
                                           ),
                                           width: 300,
                                           child: ListTile(
-                                           
                                             tileColor: Colors.grey,
                                             selected: schoolData['isSelected'],
                                             leading: schoolData['icon'],
@@ -401,21 +418,24 @@ class Summary extends StatelessWidget {
                   "2. Some campus features are enabled by default. Go to Your Campus to disable them"),
               const Text("3. IDK BUT THIS IS TODO"),
               Consumer<HomeProvider>(
-                builder: (context, algo2, child) => TextButton(onPressed: ()async{
-                  if(await algo.updateUserPreferences() == 200)
-                  {
-         User template = Boxes.getUser()!;
-                 template.name = algo.nameController.text;
-                 template.interests = algo.chosen;
-                 template.verifiedStudent = algo.validatedEmail;
-                          await   Boxes.getUserBox().put('mainUser', template);
-                  algo2.trueRebuild();
-                  }
-          
-                }, child: const Text("FINish")),
-              ),TextButton(onPressed: (){
-                algo.printStats();
-              }, child: Text("SEE STATS"))
+                builder: (context, algo2, child) => TextButton(
+                    onPressed: () async {
+                      if (await algo.updateUserPreferences() == 200) {
+                        User template = Boxes.getUser()!;
+                        template.name = algo.nameController.text;
+                        template.interests = algo.chosen;
+                        template.verifiedStudent = algo.validatedEmail;
+                        await Boxes.getUserBox().put('mainUser', template);
+                        algo2.trueRebuild();
+                      }
+                    },
+                    child: const Text("FINish")),
+              ),
+              TextButton(
+                  onPressed: () {
+                    algo.printStats();
+                  },
+                  child: Text("SEE STATS"))
             ],
           )),
     );
