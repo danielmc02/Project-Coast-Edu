@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_mobile_app/api/api_service.dart';
 import 'package:frontend_mobile_app/experimental/sliding_sheet.dart';
+import 'package:frontend_mobile_app/models/boxes.dart';
 import 'package:frontend_mobile_app/pages/loading.dart';
 import 'package:frontend_mobile_app/theme/styles.dart';
 
@@ -10,7 +11,7 @@ import '../property_flow/property_flow_page.dart';
 import 'home_provider.dart';
 
 class Home extends StatefulWidget {
-   Home({super.key});
+   const Home({super.key});
 
   @override
   State<Home> createState() => _HomeState();
@@ -19,7 +20,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
  int index = 2;
 
-final List<Widget> items = [School(),Link(),Profile()];
+final List<Widget> items = [const School(),const Link(),const Profile()];
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +41,7 @@ final List<Widget> items = [School(),Link(),Profile()];
                   });
                   print("school");
                 },
-               icon: Icon(Icons.school),
+               icon: const Icon(Icons.school),
                 color: Colors.grey,
               ),
               FloatingActionButton( backgroundColor: Colors.white,onPressed:(){
@@ -48,13 +49,13 @@ final List<Widget> items = [School(),Link(),Profile()];
                     index = 1;
                   });
                   print("link");
-                },child: Icon(Icons.link,color: Colors.black,), ),
+                },child: const Icon(Icons.link,color: Colors.black,), ),
               IconButton( onPressed:(){
                   setState(() {
                     index = 2;
                   });
                   print("profile");
-                },icon:Icon(Icons.person), color: Colors.grey)
+                },icon:const Icon(Icons.person), color: Colors.grey)
             ]),
       ),
       body: items[index]);
@@ -84,7 +85,7 @@ class Link extends StatelessWidget {
         shadowColor: Colors.transparent,
         foregroundColor: Colors.black,
         
-        title: Row(
+        title: const Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.start,
@@ -96,7 +97,7 @@ class Link extends StatelessWidget {
         
         )
       ),
-      body: Column(),
+      body: const Column(),
     );
   }
 }
@@ -119,7 +120,7 @@ class Profile extends StatelessWidget {
                 child: const Text("SIGN OUT"),
               ),
             ),
-          SlidingSheet()
+          const SlidingSheet()
           ],
         ),
       );
@@ -135,16 +136,25 @@ class HomeLoader extends StatefulWidget {
 }
 
 class _HomeLoaderState extends State<HomeLoader> {
+@override
+void initState() {
+    // TODO: implement initState
+    print("SDFSDOFSNIOFNSFIOFSDFN");     
+
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: Future.delayed(Duration(seconds: 1)),
-      builder: (context, snapshot) => snapshot.connectionState == ConnectionState.waiting ? SplashLoader(): ChangeNotifierProvider(
+      future: Future.delayed(const Duration(seconds: 0)),
+      builder: (context, snapshot) => snapshot.connectionState == ConnectionState.waiting ? const SplashLoader(): ChangeNotifierProvider(
         create: (context) => HomeProvider(),
         builder: (context, child) => Consumer<HomeProvider>(
           builder: (context, algo, child) {
             if (algo.needsRebuild) {
-              return Home();
+              return const Home();
             } else{
               return FutureBuilder(
                 future:   algo.preReqSetup(),
@@ -157,7 +167,7 @@ class _HomeLoaderState extends State<HomeLoader> {
                var data = snapshot.data!;
                     return snapshot.data!.isNotEmpty == true
                         ? PropertyProcessPage(data)
-                        :  Home();
+                        :  const Home();
                   } else {
                     return const Text("ERROR");
                   }

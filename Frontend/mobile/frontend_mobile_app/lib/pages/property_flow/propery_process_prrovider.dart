@@ -9,17 +9,64 @@ import 'package:http/http.dart';
 import '../../models/boxes.dart';
 
 class PropertyProcessProvider extends ChangeNotifier {
-  PropertyProcessProvider();
-  final pageController = PageController();
+  //To be init
+  late List<Widget> snapshot;
+  late List<bool> state;
+  PropertyProcessProvider(List<Widget> snap )
+  {
+
+    //The list with the mandatory user updates
+    snapshot = snap;
+    //Used to refer to a page's state
+    state = List.filled(snapshot.length, false);
+   // List<String> string_snapshot = snapshot as List<String>;
+    //print(string_snapshot);
+        for (var i = 0; i < snapshot.length; i++) {
+      
+    }
+    print("Snapshot: $snapshot\nState: $state\ntostring: ${snapshot.indexOf(snap[1])}");
+
+  }
+
+
+
+// List<bool> state = List.filled(snapshot.length, false);
+
+
+  //Name page stuff
   final nameFormKey = GlobalKey<FormState>();
+
+
+
+
+
+
+
+  int pageIndex = 0;
+  final pageController = PageController();
+  
   final verificationFormKey = GlobalKey<FormState>();
 
   final nameController = TextEditingController();
+
+  bool reverseTransition = false;
   bool checkNamePage() {
     return nameFormKey.currentState!.validate() ? true : false;
   }
 
   List<String> chosen = [];
+  void checkInterestState() 
+  {
+    if(chosen.isEmpty)
+      {
+        state[pageIndex]  = false;
+    }
+    else
+    {
+      state[pageIndex]  = true;
+    }
+  }
+
   var possibleMap = <String, Map>{
     'Auto': {
       'icon': CircleAvatar(child: Image.asset('assets/interest_icons/car.png')),
@@ -88,6 +135,7 @@ class PropertyProcessProvider extends ChangeNotifier {
   var backButtonColor = Colors.transparent;
 
   changeColor(Color color) {
+    print("IN HERE");
     backButtonColor = color;
     notifyListeners();
   }
@@ -170,4 +218,27 @@ class PropertyProcessProvider extends ChangeNotifier {
   print("\n\n\n");
  print(jsonEncode(mapPayLoad));
   }
+
+   nextPage() {
+    int coppiedIndex = pageIndex;
+    coppiedIndex += 1;
+    if(snapshot.length <= coppiedIndex)
+    {
+
+    }
+    else
+    {
+      pageIndex += 1;
+    }
+    notifyListeners();
+  }
+
+     Future<void> previousPage() async{
+    
+      pageIndex += 1;
+    
+    notifyListeners();
+  }
+
+
 }

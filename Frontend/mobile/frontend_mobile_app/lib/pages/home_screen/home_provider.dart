@@ -15,6 +15,12 @@ class HomeProvider extends ChangeNotifier {
     needsRebuild = true;
     notifyListeners();
   }
+
+
+  //This function inserts mandatory pages prior to accessing app
+  /*
+  For future feature adds that don't require updates, do NOT put them in here
+  */
   Future<List<Widget>> preReqSetup() async {
     List<Widget> preReqs = [];
 

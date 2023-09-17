@@ -13,7 +13,7 @@ class SlidingSheet extends StatefulWidget {
 class _SlidingSheetState extends State<SlidingSheet> {
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: MediaQuery.of(context).size.width,
       child: Column(
         mainAxisSize: MainAxisSize.max,
@@ -25,7 +25,7 @@ class _SlidingSheetState extends State<SlidingSheet> {
                   minHeight: MediaQuery.of(context).size.height / 4.5),
               child: Container(
                 height: 50,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(20),
                         topRight: Radius.circular(20)),
@@ -37,8 +37,8 @@ class _SlidingSheetState extends State<SlidingSheet> {
                   children: [
                     Stack(
                       children: [
-                        Container(child: ConstrainedBox(constraints: BoxConstraints(minWidth: 110,minHeight: 110),child: CircleAvatar(backgroundColor: Colors.black,))),
-                      Positioned(child: Boxes.getUser()!.verifiedStudent == true ? Icon(Icons.check_circle,size: 30,color: Colors.blue,) : Icon(Icons.warning,size: 30,color: Colors.yellow,),top: 0,right: 10,)
+                        Container(child: ConstrainedBox(constraints: const BoxConstraints(minWidth: 110,minHeight: 110),child: const CircleAvatar(backgroundColor: Colors.black,))),
+                      Positioned(top: 0,right: 10,child: Boxes.getUser()!.verifiedStudent == true ? const Icon(Icons.check_circle,size: 30,color: Colors.blue,) : const Icon(Icons.warning,size: 30,color: Colors.yellow,),)
                       ],
                     ),
                     Text(Boxes.getUser()!.name!,style: Styles.headerText2,)

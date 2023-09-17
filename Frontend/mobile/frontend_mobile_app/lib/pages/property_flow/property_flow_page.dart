@@ -1,3 +1,4 @@
+
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -20,16 +21,32 @@ class _PropertyProcessPageState extends State<PropertyProcessPage> {
   void initState() {
     super.initState();
   }
-int pageIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => PropertyProcessProvider(),
+      create: (context) => PropertyProcessProvider( widget.snapshot),
       child: Consumer<PropertyProcessProvider>(
-        builder: (context, ppp, child) => Scaffold(
+        builder: (context, algo, child) => Scaffold(
+          appBar: PreferredSize(preferredSize: const Size.fromHeight(0), child: Column(
+            children: [
+              Expanded(flex: 92,child: Container(color: Colors.transparent,),),
+              Expanded(flex: 8,
+                child: AnimatedBuilder(
+                            animation:  Listenable.merge([]),
+                            builder: (context, child) {
+                              return LinearProgressIndicator(
+                                  backgroundColor: Colors.transparent,
+                                  color: Colors.blue,
+                                  semanticsLabel: "Sign Up Progress Indicator",
+                                  value: (algo.pageIndex+1) / algo.snapshot.length);
+                            }),
+              ),              
+            ],
+          )),
             bottomNavigationBar: Container(
-              color: Colors.black,
-              height: 79,
+              color: Colors.transparent,
+              height: MediaQuery.of(context).size.height * .1,
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Row(
@@ -38,60 +55,56 @@ int pageIndex = 0;
                   children: [
                     IconButton(
                       onPressed: () {
-                        if (ppp.pageController.page! > 0) {
-                          ppp.pageController
-                              .previousPage(
-                                  duration: const Duration(seconds: 1),
-                                  curve: Curves.easeOutSine)
-                              .then((value) {
-                            if (ppp.pageController.page! == 0) {
-                              ppp.changeColor(Colors.transparent);
-                            }
-                          });
+                        if (algo.pageIndex > 0) {
+                                                        setState(() {
+                                                          int copiedIndex = algo.pageIndex;
+                                                          if((copiedIndex -= 1) <= -1)
+                                                          {
+                                                            print("woops");
+                                                          }
+                                                          else
+                                                          { 
+                                                            algo.reverseTransition =true;
+                                                          algo.pageIndex -= 1;
+
+                                                          }
+                                                          
+                                                        
+                                                         
+
+
+                                                        });
+
                         }
                       },
-                      color: ppp.backButtonColor,
-                      icon: const Icon(Icons.arrow_back),
+                      color: algo.pageIndex != 0 ?  Colors.black : Colors.transparent,
+                      icon: const Icon(Icons.arrow_back),splashColor: Colors.transparent,hoverColor: Colors.transparent,focusColor: Colors.transparent,highlightColor: Colors.transparent,
                     ),
-                    TextButton(
-                      onPressed: () async {
-                  setState(() {
-                    pageIndex +=1;
-                  });
-                      /*  switch (ppp.pageController.page) {
-                          case 0:
-                            //Name page, check that it's at least longer than 2
-                            ppp.checkNamePage()
-                                ? await ppp.pageController
-                                    .nextPage(
-                                        duration: const Duration(seconds: 1),
-                                        curve: Curves.easeInSine)
-                                    .then((value) =>
-                                        ppp.changeColor(Colors.white))
-                                : null;
-                            break;
-
-                          case 1:
-                            ppp.checkInterestPage()
-                                ? await ppp.pageController.nextPage(
-                                    duration: const Duration(seconds: 1),
-                                    curve: Curves.easeInSine)
-                                : null;
-                            break;
-                          default:
-                        }
-                */      },
-                      style: ButtonStyle(
-                          shape: MaterialStatePropertyAll(
-                              RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  side: const BorderSide(
-                                      style: BorderStyle.solid))),
-                          backgroundColor:
-                              const MaterialStatePropertyAll(Colors.white)),
-                      child: const Text(
-                        "Next",
-                        style: Styles.buttonText,
+                    SizedBox(
+                      width: 100,
+                      child: TextButton(
+                        onPressed: () async {
+algo.reverseTransition =false;
+                          algo.state[algo.pageIndex] == true ? algo.nextPage() :null;
+                        
+                      },
+                        style: ButtonStyle(elevation: const MaterialStatePropertyAll(6),
+                          shadowColor: const MaterialStatePropertyAll(Colors.black),
+                          foregroundColor: const MaterialStatePropertyAll(Colors.black),
+                          surfaceTintColor: const MaterialStatePropertyAll(Colors.black),overlayColor: const MaterialStatePropertyAll(Colors.black12),
+                            shape: MaterialStatePropertyAll(
+                              
+                                RoundedRectangleBorder(
+                                  
+                                    borderRadius: BorderRadius.circular(20),
+                                    side: const BorderSide(
+                                        style: BorderStyle.solid))),
+                            backgroundColor:
+                                const MaterialStatePropertyAll(Colors.black)),
+                        child: const Text(
+                          "Next",
+                          style: Styles.buttonText2,
+                        ),
                       ),
                     )
                   ],
@@ -101,16 +114,17 @@ int pageIndex = 0;
             body: GestureDetector(
                 onTap: () => FocusScope.of(context).unfocus(),
                 child: PageTransitionSwitcher(
-                  duration: Duration(seconds: 1),
-
-child: widget.snapshot[pageIndex] ,
+                  duration: const Duration(seconds: 1),
                   transitionBuilder: (child, primaryAnimation,
                           secondaryAnimation) =>
                       SharedAxisTransition(
+                        
                           animation: primaryAnimation,
                           secondaryAnimation: secondaryAnimation,
                           transitionType: SharedAxisTransitionType.horizontal,
-                          child: child,),
+                          child: child,),reverse: algo.reverseTransition,
+
+child: algo.snapshot[algo.pageIndex] ,
                 ) /*
               PageView.builder(
                 physics: const NeverScrollableScrollPhysics(),
@@ -128,8 +142,9 @@ child: widget.snapshot[pageIndex] ,
   }
 }
 
-class NamePage extends StatelessWidget {
-  const NamePage({super.key});
+class NamePage extends StatelessWidget
+{
+    const NamePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -138,17 +153,24 @@ class NamePage extends StatelessWidget {
         body: Form(
           key: algo.nameFormKey,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+           mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+      
               const Text(
                 "What's your name?",
-                style: Styles.headerText1,
-              ),
+                style: Styles.headerText1,textAlign: TextAlign.center,
+              ),const Spacer(),
               SizedBox(
                   width: 300,
                   child: TextFormField(
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    onChanged: (value) {
+                   algo.nameFormKey.currentState!.validate() ? algo.state[algo.pageIndex] = true: algo.state[algo.pageIndex] = false;
+                   print(algo.state);
+                    },
+              style: Styles.buttonText,
                     controller: algo.nameController,
                     inputFormatters: [CapitalizedWordsTextInputFormatter()],
                     validator: (value) {
@@ -158,14 +180,19 @@ class NamePage extends StatelessWidget {
                     },
                     maxLines: 1,
                     maxLength: 20,
+                
                     maxLengthEnforcement: MaxLengthEnforcement.enforced,
-                    textAlign: TextAlign.center,
+                    textAlign: TextAlign.center,cursorColor: Colors.black,
                     decoration: const InputDecoration(
+                      
+                      border: InputBorder.none,
+                    counterText: '',
+            //  hintTextDirection: TextDirection.rtl,
                         hintText: "Your name here",
                         hintStyle:
                             TextStyle(color: Color.fromARGB(87, 0, 0, 0))),
                   ))
-            ],
+     ,  const Spacer()     ],
           ),
         ),
       ),
@@ -193,7 +220,9 @@ class _InterestsPageState extends State<InterestsPage> {
             const Text(
               "What Interests You?",
               style: Styles.headerText1,
+              textAlign: TextAlign.center,
             ),
+            const Spacer(),
             Wrap(
                 verticalDirection: VerticalDirection.down,
                 runSpacing: 20,
@@ -224,6 +253,7 @@ class _InterestsPageState extends State<InterestsPage> {
                               e.value['isSelected'] = !e.value['isSelected'];
                               if (e.value['isSelected'] == true) {
                                 algo.chosen.add(e.key);
+                                algo.checkInterestState();
                               }
                             });
                           } else if (e.value['isSelected'] == true) {
@@ -231,6 +261,8 @@ class _InterestsPageState extends State<InterestsPage> {
                             setState(() {
                               e.value['isSelected'] = false;
                               algo.chosen.remove(e.key);
+                                                              algo.checkInterestState();
+
                             });
                           } else {
                             debugPrint('2.5');
@@ -241,7 +273,7 @@ class _InterestsPageState extends State<InterestsPage> {
                           //  e.value.entries.elementAt(1).
                         },
                         avatar: e.value['icon'])
-                ]),
+                ]),const Spacer()
           ],
         ),
       ),
@@ -288,10 +320,11 @@ class _VerifiedStudentPageState extends State<VerifiedStudentPage> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           const Text(
-                            "Are you a student?",
+                            "What school do you attend?",
                             style: Styles.headerText1,
+                            textAlign: TextAlign.center,
                           ),
-                          Center(
+                      /*    Center(
                             child: ConstrainedBox(
                               constraints: BoxConstraints(
                                 maxHeight:
@@ -325,23 +358,30 @@ class _VerifiedStudentPageState extends State<VerifiedStudentPage> {
                                         },
                                         child: Container(
                                           decoration: BoxDecoration(
+                                            
                                             border:
-                                                Border.all(color: Colors.grey),
+                                                Border.all(color: Colors.green),
                                             borderRadius:
                                                 BorderRadius.circular(8.0),
                                             color: schoolData['isSelected']
                                                 ? Colors.white
-                                                : null,
+                                                : Colors.grey,
+                                                
                                           ),
                                           width: 300,
-                                          child: ListTile(
-                                            tileColor: Colors.grey,
-                                            selected: schoolData['isSelected'],
-                                            leading: schoolData['icon'],
-                                            dense: false,
-                                            // subtitle: const Text("Current Users: "),
-                                            title: Text(name,
-                                                textAlign: TextAlign.center),
+                                          height: 200,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: ListTile(
+                                              
+                                              //tileColor: Colors.grey,
+                                              selected: schoolData['isSelected'],
+                                              leading: schoolData['icon'],
+                                              dense: false,
+                                              // subtitle: const Text("Current Users: "),
+                                              title: Text(name,
+                                                  textAlign: TextAlign.center),
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -351,8 +391,46 @@ class _VerifiedStudentPageState extends State<VerifiedStudentPage> {
                               ),
                             ),
                           ),
-                          SizedBox(
-                              width: 300,
+                    */ 
+                     Container(
+  width: 300, // Set the width as needed
+  height: 200, // Set the height as needed
+  decoration: BoxDecoration(
+    image: const DecorationImage(
+      image: AssetImage('assets/occ.jpeg'), // Replace with your image path
+      fit: BoxFit.cover, // You can use different BoxFit values to control the image size and position
+    ),
+    borderRadius: BorderRadius.circular(12), // Optional: Add rounded corners
+    boxShadow: [
+      BoxShadow(
+        color: Colors.grey.withOpacity(0.5), // Optional: Add a shadow
+        spreadRadius: 5,
+        blurRadius: 7,
+        offset: const Offset(0, 3),
+      ),
+    ],
+  ),
+  // You can add child widgets inside the Container if needed
+  child: Stack(
+    children: [
+      Container(color: const Color.fromARGB(112, 0, 0, 0),),
+      const Column(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+        Row(
+          children: [
+            CircleAvatar( backgroundColor: Colors.white,backgroundImage: AssetImage("assets/school_icons/occ.png"),)
+            ,Text("Orange Coast College")],
+        )
+        ],
+      )
+    ],
+  ),
+)
+,
+                       
+                        SizedBox(
+                            width: 300,
                               child: TextFormField(
                                 controller: emailFieldController,
                                 // key: algo.verificationFormKey,
@@ -435,7 +513,7 @@ class Summary extends StatelessWidget {
                   onPressed: () {
                     algo.printStats();
                   },
-                  child: Text("SEE STATS"))
+                  child: const Text("SEE STATS"))
             ],
           )),
     );

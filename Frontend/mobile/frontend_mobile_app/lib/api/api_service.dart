@@ -5,7 +5,6 @@ Ensures a single instance throughout the entire app
 import 'package:flutter/material.dart';
 import 'package:frontend_mobile_app/models/user.dart';
 import 'package:http/http.dart' as http;
-import 'dart:developer' as developer;
 import '../models/boxes.dart';
 
 class ApiService extends ChangeNotifier {
