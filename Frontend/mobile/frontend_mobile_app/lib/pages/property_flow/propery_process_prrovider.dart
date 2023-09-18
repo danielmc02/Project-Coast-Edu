@@ -124,11 +124,11 @@ class PropertyProcessProvider extends ChangeNotifier {
   List<String> chosenSchool = [];
   Map supportedSchools = {
     "Orange Coast College": {
-      'icon': Image.asset("assets/school_icons/occ.png"),
+      'icon': AssetImage("assets/school_icons/occ.png"),
       'isSelected': false
     },
     "Golden West College": {
-      'icon': Image.asset("assets/school_icons/gwc.png"),
+      'icon': AssetImage("assets/school_icons/gwc.png"),
       'isSelected': false
     }
   };

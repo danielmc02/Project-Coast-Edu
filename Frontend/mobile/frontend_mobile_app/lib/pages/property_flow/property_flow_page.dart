@@ -1,8 +1,8 @@
-
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frontend_mobile_app/models/user.dart';
+import 'package:frontend_mobile_app/pages/home_screen/home_page.dart';
 import 'package:frontend_mobile_app/theme/styles.dart';
 import 'package:provider/provider.dart';
 import 'package:frontend_mobile_app/models/boxes.dart';
@@ -25,25 +25,35 @@ class _PropertyProcessPageState extends State<PropertyProcessPage> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => PropertyProcessProvider( widget.snapshot),
+      create: (context) => PropertyProcessProvider(widget.snapshot),
       child: Consumer<PropertyProcessProvider>(
         builder: (context, algo, child) => Scaffold(
-          appBar: PreferredSize(preferredSize: const Size.fromHeight(0), child: Column(
-            children: [
-              Expanded(flex: 92,child: Container(color: Colors.transparent,),),
-              Expanded(flex: 8,
-                child: AnimatedBuilder(
-                            animation:  Listenable.merge([]),
-                            builder: (context, child) {
-                              return LinearProgressIndicator(
-                                  backgroundColor: Colors.transparent,
-                                  color: Colors.blue,
-                                  semanticsLabel: "Sign Up Progress Indicator",
-                                  value: (algo.pageIndex+1) / algo.snapshot.length);
-                            }),
-              ),              
-            ],
-          )),
+            appBar: PreferredSize(
+                preferredSize: const Size.fromHeight(0),
+                child: Column(
+                  children: [
+                    Expanded(
+                      flex: 92,
+                      child: Container(
+                        color: Colors.transparent,
+                      ),
+                    ),
+                    Expanded(
+                      flex: 8,
+                      child: AnimatedBuilder(
+                          animation: Listenable.merge([]),
+                          builder: (context, child) {
+                            print(algo.pageIndex / algo.snapshot.length);
+                            return LinearProgressIndicator(
+                                backgroundColor: Colors.transparent,
+                                color: Colors.blue,
+                                semanticsLabel: "Sign Up Progress Indicator",
+                                value: algo.pageIndex /
+                                    (algo.snapshot.length - 1));
+                          }),
+                    ),
+                  ],
+                )),
             bottomNavigationBar: Container(
               color: Colors.transparent,
               height: MediaQuery.of(context).size.height * .1,
@@ -56,46 +66,47 @@ class _PropertyProcessPageState extends State<PropertyProcessPage> {
                     IconButton(
                       onPressed: () {
                         if (algo.pageIndex > 0) {
-                                                        setState(() {
-                                                          int copiedIndex = algo.pageIndex;
-                                                          if((copiedIndex -= 1) <= -1)
-                                                          {
-                                                            print("woops");
-                                                          }
-                                                          else
-                                                          { 
-                                                            algo.reverseTransition =true;
-                                                          algo.pageIndex -= 1;
-
-                                                          }
-                                                          
-                                                        
-                                                         
-
-
-                                                        });
-
+                          setState(() {
+                            int copiedIndex = algo.pageIndex;
+                            if ((copiedIndex -= 1) <= -1) {
+                              print("woops");
+                            } else {
+                              algo.reverseTransition = true;
+                              algo.pageIndex -= 1;
+                            }
+                          });
                         }
                       },
-                      color: algo.pageIndex != 0 ?  Colors.black : Colors.transparent,
-                      icon: const Icon(Icons.arrow_back),splashColor: Colors.transparent,hoverColor: Colors.transparent,focusColor: Colors.transparent,highlightColor: Colors.transparent,
+                      color: algo.pageIndex != 0
+                          ? Colors.black
+                          : Colors.transparent,
+                      icon: const Icon(Icons.arrow_back),
+                      splashColor: Colors.transparent,
+                      hoverColor: Colors.transparent,
+                      focusColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
                     ),
                     SizedBox(
                       width: 100,
                       child: TextButton(
                         onPressed: () async {
-algo.reverseTransition =false;
-                          algo.state[algo.pageIndex] == true ? algo.nextPage() :null;
-                        
-                      },
-                        style: ButtonStyle(elevation: const MaterialStatePropertyAll(6),
-                          shadowColor: const MaterialStatePropertyAll(Colors.black),
-                          foregroundColor: const MaterialStatePropertyAll(Colors.black),
-                          surfaceTintColor: const MaterialStatePropertyAll(Colors.black),overlayColor: const MaterialStatePropertyAll(Colors.black12),
+                          algo.reverseTransition = false;
+                          algo.state[algo.pageIndex] == true
+                              ? algo.nextPage()
+                              : null;
+                        },
+                        style: ButtonStyle(
+                            elevation: const MaterialStatePropertyAll(6),
+                            shadowColor:
+                                const MaterialStatePropertyAll(Colors.black),
+                            foregroundColor:
+                                const MaterialStatePropertyAll(Colors.black),
+                            surfaceTintColor:
+                                const MaterialStatePropertyAll(Colors.black),
+                            overlayColor:
+                                const MaterialStatePropertyAll(Colors.black12),
                             shape: MaterialStatePropertyAll(
-                              
                                 RoundedRectangleBorder(
-                                  
                                     borderRadius: BorderRadius.circular(20),
                                     side: const BorderSide(
                                         style: BorderStyle.solid))),
@@ -115,16 +126,16 @@ algo.reverseTransition =false;
                 onTap: () => FocusScope.of(context).unfocus(),
                 child: PageTransitionSwitcher(
                   duration: const Duration(seconds: 1),
-                  transitionBuilder: (child, primaryAnimation,
-                          secondaryAnimation) =>
-                      SharedAxisTransition(
-                        
-                          animation: primaryAnimation,
-                          secondaryAnimation: secondaryAnimation,
-                          transitionType: SharedAxisTransitionType.horizontal,
-                          child: child,),reverse: algo.reverseTransition,
-
-child: algo.snapshot[algo.pageIndex] ,
+                  transitionBuilder:
+                      (child, primaryAnimation, secondaryAnimation) =>
+                          SharedAxisTransition(
+                    animation: primaryAnimation,
+                    secondaryAnimation: secondaryAnimation,
+                    transitionType: SharedAxisTransitionType.horizontal,
+                    child: child,
+                  ),
+                  reverse: algo.reverseTransition,
+                  child: algo.snapshot[algo.pageIndex],
                 ) /*
               PageView.builder(
                 physics: const NeverScrollableScrollPhysics(),
@@ -142,9 +153,8 @@ child: algo.snapshot[algo.pageIndex] ,
   }
 }
 
-class NamePage extends StatelessWidget
-{
-    const NamePage({super.key});
+class NamePage extends StatelessWidget {
+  const NamePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -153,24 +163,27 @@ class NamePage extends StatelessWidget
         body: Form(
           key: algo.nameFormKey,
           child: Column(
-           mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-      
               const Text(
                 "What's your name?",
-                style: Styles.headerText1,textAlign: TextAlign.center,
-              ),const Spacer(),
+                style: Styles.headerText1,
+                textAlign: TextAlign.center,
+              ),
+              const Spacer(),
               SizedBox(
                   width: 300,
                   child: TextFormField(
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     onChanged: (value) {
-                   algo.nameFormKey.currentState!.validate() ? algo.state[algo.pageIndex] = true: algo.state[algo.pageIndex] = false;
-                   print(algo.state);
+                      algo.nameFormKey.currentState!.validate()
+                          ? algo.state[algo.pageIndex] = true
+                          : algo.state[algo.pageIndex] = false;
+                      print(algo.state);
                     },
-              style: Styles.buttonText,
+                    style: Styles.buttonText,
                     controller: algo.nameController,
                     inputFormatters: [CapitalizedWordsTextInputFormatter()],
                     validator: (value) {
@@ -180,19 +193,19 @@ class NamePage extends StatelessWidget
                     },
                     maxLines: 1,
                     maxLength: 20,
-                
                     maxLengthEnforcement: MaxLengthEnforcement.enforced,
-                    textAlign: TextAlign.center,cursorColor: Colors.black,
+                    textAlign: TextAlign.center,
+                    cursorColor: Colors.black,
                     decoration: const InputDecoration(
-                      
-                      border: InputBorder.none,
-                    counterText: '',
-            //  hintTextDirection: TextDirection.rtl,
+                        border: InputBorder.none,
+                        counterText: '',
+                        //  hintTextDirection: TextDirection.rtl,
                         hintText: "Your name here",
                         hintStyle:
                             TextStyle(color: Color.fromARGB(87, 0, 0, 0))),
-                  ))
-     ,  const Spacer()     ],
+                  )),
+              const Spacer()
+            ],
           ),
         ),
       ),
@@ -261,8 +274,7 @@ class _InterestsPageState extends State<InterestsPage> {
                             setState(() {
                               e.value['isSelected'] = false;
                               algo.chosen.remove(e.key);
-                                                              algo.checkInterestState();
-
+                              algo.checkInterestState();
                             });
                           } else {
                             debugPrint('2.5');
@@ -273,7 +285,8 @@ class _InterestsPageState extends State<InterestsPage> {
                           //  e.value.entries.elementAt(1).
                         },
                         avatar: e.value['icon'])
-                ]),const Spacer()
+                ]),
+            const Spacer()
           ],
         ),
       ),
@@ -324,7 +337,8 @@ class _VerifiedStudentPageState extends State<VerifiedStudentPage> {
                             style: Styles.headerText1,
                             textAlign: TextAlign.center,
                           ),
-                      /*    Center(
+            Spacer(),
+                           Center(
                             child: ConstrainedBox(
                               constraints: BoxConstraints(
                                 maxHeight:
@@ -358,9 +372,9 @@ class _VerifiedStudentPageState extends State<VerifiedStudentPage> {
                                         },
                                         child: Container(
                                           decoration: BoxDecoration(
-                                            
+                                         // image: DecorationImage(image: AssetImage("assets/occ.jpeg")),
                                             border:
-                                                Border.all(color: Colors.green),
+                                                Border.all(color: Colors.black),
                                             borderRadius:
                                                 BorderRadius.circular(8.0),
                                             color: schoolData['isSelected']
@@ -369,18 +383,19 @@ class _VerifiedStudentPageState extends State<VerifiedStudentPage> {
                                                 
                                           ),
                                           width: 300,
-                                          height: 200,
+                                        //  height: 200,
                                           child: Padding(
                                             padding: const EdgeInsets.all(8.0),
                                             child: ListTile(
                                               
+                                              selectedColor: Colors.white,
                                               //tileColor: Colors.grey,
                                               selected: schoolData['isSelected'],
-                                              leading: schoolData['icon'],
+                                              leading: CircleAvatar(backgroundColor: Colors.white,foregroundImage:schoolData['icon'] ,) ,
                                               dense: false,
                                               // subtitle: const Text("Current Users: "),
                                               title: Text(name,
-                                                  textAlign: TextAlign.center),
+                                                  textAlign: TextAlign.center,style: TextStyle(color: schoolData['isSelected'] ? Colors.black : Colors.white60),),
                                             ),
                                           ),
                                         ),
@@ -391,47 +406,12 @@ class _VerifiedStudentPageState extends State<VerifiedStudentPage> {
                               ),
                             ),
                           ),
-                    */ 
-                     Container(
-  width: 300, // Set the width as needed
-  height: 200, // Set the height as needed
-  decoration: BoxDecoration(
-    image: const DecorationImage(
-      image: AssetImage('assets/occ.jpeg'), // Replace with your image path
-      fit: BoxFit.cover, // You can use different BoxFit values to control the image size and position
-    ),
-    borderRadius: BorderRadius.circular(12), // Optional: Add rounded corners
-    boxShadow: [
-      BoxShadow(
-        color: Colors.grey.withOpacity(0.5), // Optional: Add a shadow
-        spreadRadius: 5,
-        blurRadius: 7,
-        offset: const Offset(0, 3),
-      ),
-    ],
-  ),
-  // You can add child widgets inside the Container if needed
-  child: Stack(
-    children: [
-      Container(color: const Color.fromARGB(112, 0, 0, 0),),
-      const Column(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-        Row(
-          children: [
-            CircleAvatar( backgroundColor: Colors.white,backgroundImage: AssetImage("assets/school_icons/occ.png"),)
-            ,Text("Orange Coast College")],
-        )
-        ],
-      )
-    ],
-  ),
-)
-,
-                       
-                        SizedBox(
-                            width: 300,
+                          SizedBox(
+                              width: double.infinity,
                               child: TextFormField(
+                                 style: Styles.buttonText,
+                    cursorColor: Colors.black,
+
                                 controller: emailFieldController,
                                 // key: algo.verificationFormKey,
                                 validator: (value) {
@@ -448,6 +428,8 @@ class _VerifiedStudentPageState extends State<VerifiedStudentPage> {
                                   FilteringTextInputFormatter.deny(' ')
                                 ],
                                 decoration: const InputDecoration(
+                                                          border: InputBorder.none,
+
                                     hintText: "example@cccd.edu.com",
                                     hintStyle: TextStyle(
                                         color: Color.fromARGB(87, 0, 0, 0))),
@@ -455,12 +437,12 @@ class _VerifiedStudentPageState extends State<VerifiedStudentPage> {
                           TextButton(
                               onPressed: () async {
                                 algo.verificationFormKey.currentState!
-                                        .validate()
+                                        .validate() && algo.chosenSchool.isEmpty == false
                                     ? algo.verifyStudentEmail(
                                         emailFieldController.text)
                                     : null;
                               },
-                              child: const Text("Verify"))
+                              child: const Text("Verify")),Spacer()
                         ],
                       ),
                     ),
@@ -470,6 +452,37 @@ class _VerifiedStudentPageState extends State<VerifiedStudentPage> {
           ]),
     );
   }
+}
+
+Widget schoolCard(String schoolName) {
+  return Container(
+    //decoration: BoxDecoration(image: DecorationImage(image: AssetImage("assets/occ.jpeg"))),
+    width: 350,
+    height: 275,
+    padding: const EdgeInsets.all(32),
+    child: Card(
+      elevation: 9,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      surfaceTintColor: Colors.red,
+    child: Container(
+      child: Stack(
+        children: [
+          Container(width: double.infinity,decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),color: const Color.fromARGB(93, 0, 0, 0)),),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,mainAxisSize: MainAxisSize.max,
+            children: [
+              CircleAvatar(backgroundColor: Colors.white,foregroundImage: AssetImage("assets/school_icons/occ.png"),),
+              FittedBox(child: Text("Orange Coast College",style: Styles.buttonText2,maxLines: 3,))
+            ],
+          )
+        ],
+      ),
+    decoration: BoxDecoration(image: DecorationImage(fit: BoxFit.cover,image: AssetImage("assets/occ.jpeg")),color: Colors.black,borderRadius: BorderRadius.circular(20))),
+      
+    ),
+    //decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),image: DecorationImage(image: AssetImage("assets/occ.jpeg"))),
+  );
 }
 
 class Summary extends StatelessWidget {
