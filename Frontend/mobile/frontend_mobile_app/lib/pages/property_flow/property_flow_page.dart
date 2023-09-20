@@ -46,7 +46,8 @@ class _PropertyProcessPageState extends State<PropertyProcessPage> {
                             print(algo.pageIndex / algo.snapshot.length);
                             return LinearProgressIndicator(
                                 backgroundColor: Colors.transparent,
-                                color: Colors.blue,
+                                color: Colors.black,
+                                borderRadius: BorderRadius.only(topRight: Radius.circular(20),bottomRight: Radius.circular(20)),
                                 semanticsLabel: "Sign Up Progress Indicator",
                                 value: algo.pageIndex /
                                     (algo.snapshot.length - 1));
@@ -90,7 +91,9 @@ class _PropertyProcessPageState extends State<PropertyProcessPage> {
                       width: 100,
                       child: TextButton(
                         onPressed: () async {
+                          print(algo.state);
                           algo.reverseTransition = false;
+                      
                           algo.state[algo.pageIndex] == true
                               ? algo.nextPage()
                               : null;
@@ -112,8 +115,8 @@ class _PropertyProcessPageState extends State<PropertyProcessPage> {
                                         style: BorderStyle.solid))),
                             backgroundColor:
                                 const MaterialStatePropertyAll(Colors.black)),
-                        child: const Text(
-                          "Next",
+                        child:  Text(
+                       algo.canFinish ? "Finish":    "Next",
                           style: Styles.buttonText2,
                         ),
                       ),
@@ -156,6 +159,10 @@ class _PropertyProcessPageState extends State<PropertyProcessPage> {
 class NamePage extends StatelessWidget {
   const NamePage({super.key});
 
+  void runhttp()
+  {
+    
+  }
   @override
   Widget build(BuildContext context) {
     return Consumer<PropertyProcessProvider>(
@@ -179,8 +186,8 @@ class NamePage extends StatelessWidget {
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     onChanged: (value) {
                       algo.nameFormKey.currentState!.validate()
-                          ? algo.state[algo.pageIndex] = true
-                          : algo.state[algo.pageIndex] = false;
+                          ? algo.updateRespectedStateIndex(true)//algo.state[algo.pageIndex] = true
+                          : algo.updateRespectedStateIndex(false);
                       print(algo.state);
                     },
                     style: Styles.buttonText,

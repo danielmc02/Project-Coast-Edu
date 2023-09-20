@@ -4,14 +4,16 @@ use email::email_service::email::send_verification_email;
 mod authentication;
 use authentication::auth_service::auth::{log_in, register_user};
 use authentication::auth_structs::auth_structs::AppData;
+use redis::Commands;
 use sqlx::{postgres::PgPoolOptions, Pool};
 
 mod user_services;
 
 use user_services::users_services::user_services::update_user_preferences;
 #[get("/test")]
-async fn test() -> HttpResponse {
-    println!("TEST SCOPED");
+async fn test(app_data: web::Data<AppData>) -> HttpResponse {
+
+   println!("TEST SCOPED");
     actix_web::HttpResponse::Ok().body("TEST TEST TEST")
 }
 

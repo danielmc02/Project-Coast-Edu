@@ -1,7 +1,7 @@
 pub mod auth {
 
     use super::super::auth_structs::auth_structs::*;
-    use std::time::{Duration, SystemTime, UNIX_EPOCH};
+    use std::{time::{Duration, SystemTime, UNIX_EPOCH}, fmt::format};
 
     use actix_web::{get, post, web, web::Json, HttpResponse};
     use argon2::{
@@ -86,7 +86,7 @@ pub mod auth {
         match result {
             //an account exists, time to verify the password
             Ok(res) => {
-                
+                println!("RESSIDDDD {}\n\n\n",res.id);
                 //set up argon2 configuration 
                 let argon2 = Argon2::default();
                 let bool = argon2
@@ -100,9 +100,10 @@ pub mod auth {
                         return HttpResponse::Conflict().body("Password incorect");
                     }
                 }
-
+                let formated_query = format!("SELECT id::text, name, interests, verified_student,friends FROM public_users WHERE id = '{}'",res.id);
+                println!("FORMATED QUERY: {}\n",formated_query);
             let rez =sqlx::query_as::<_,SignInResponce>(
-            "SELECT id::text, name, interests, verified_student,friends FROM public_users WHERE id = '3fb0479e-9f61-4a6c-a8de-07886e571ee9'"
+            &formated_query
                 ).bind(res.id).fetch_one(&data.db_pool).await.unwrap();
                 println!("\n\nVALUE: {:?}\n\n",rez);
               //  let response = SignInResponce{};

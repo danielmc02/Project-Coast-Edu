@@ -4,66 +4,54 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:frontend_mobile_app/api/api_service.dart';
 import 'package:frontend_mobile_app/api/endpoints.dart';
+import 'package:frontend_mobile_app/pages/property_flow/property_flow_page.dart';
 import 'package:http/http.dart';
 
 import '../../models/boxes.dart';
 
 class PropertyProcessProvider extends ChangeNotifier {
-  //To be init
+
   late List<Widget> snapshot;
   late List<bool> state;
-  PropertyProcessProvider(List<Widget> snap )
-  {
 
-    //The list with the mandatory user updates
+
+  
+  
+  PropertyProcessProvider(List<Widget> snap) {
+    //The list of widgets
     snapshot = snap;
     //Used to refer to a page's state
     state = List.filled(snapshot.length, false);
-   // List<String> string_snapshot = snapshot as List<String>;
-    //print(string_snapshot);
-        for (var i = 0; i < snapshot.length; i++) {
-      
-    }
-    print("Snapshot: $snapshot\nState: $state\ntostring: ${snapshot.indexOf(snap[1])}");
-
   }
 
-
-
-// List<bool> state = List.filled(snapshot.length, false);
-
-
-  //Name page stuff
-  final nameFormKey = GlobalKey<FormState>();
-
-
-
-
-
-
-
+  //A reference for the current page
   int pageIndex = 0;
-  final pageController = PageController();
-  
-  final verificationFormKey = GlobalKey<FormState>();
 
+
+  //Used for verifying name length
+  final nameFormKey = GlobalKey<FormState>();
+  //Controller for name
   final nameController = TextEditingController();
 
+
+  //Used for verifying email signature
+  final verificationFormKey = GlobalKey<FormState>();
+
+  //Used as a reference for which way the transition should be
   bool reverseTransition = false;
+
+
+
   bool checkNamePage() {
     return nameFormKey.currentState!.validate() ? true : false;
   }
 
   List<String> chosen = [];
-  void checkInterestState() 
-  {
-    if(chosen.isEmpty)
-      {
-        state[pageIndex]  = false;
-    }
-    else
-    {
-      state[pageIndex]  = true;
+  void checkInterestState() {
+    if (chosen.isEmpty) {
+      updateRespectedStateIndex(false);
+    } else {
+      updateRespectedStateIndex(true);
     }
   }
 
@@ -167,78 +155,78 @@ class PropertyProcessProvider extends ChangeNotifier {
   bool validatedEmail = false;
   void emailValidated() async {
     validatedEmail = true;
+    updateRespectedStateIndex(true);
     notifyListeners();
     await verifyPageController.animateToPage(0,
         duration: const Duration(seconds: 1), curve: Curves.easeOutSine);
   }
 
- Future<int> updateUserPreferences() async {
-  // Print the chosen list as a map.
-  print(chosen.asMap().toString());
+  Future<int> updateUserPreferences() async {
+    // Print the chosen list as a map.
+    print(chosen.asMap().toString());
 
-  // Convert the chosen list as a map to a string.
-  String chosenString = chosen.asMap().toString();
+    // Convert the chosen list as a map to a string.
+    String chosenString = chosen.asMap().toString();
 
-  // Construct the payload as a Map.
-     Map mapPayLoad = {
-   // 'email': Boxes.getUser()!.email,
-    'name': nameController.text,
-   'interests': (jsonEncode(chosen)).toString(),//.toString(),
-    'verified': validatedEmail,
-  };
+    // Construct the payload as a Map.
+    Map mapPayLoad = {
+      // 'email': Boxes.getUser()!.email,
+      'name': nameController.text,
+      'interests': (jsonEncode(chosen)).toString(), //.toString(),
+      'verified': validatedEmail,
+    };
 
-  // Print the constructed payload.
-  print(mapPayLoad);
+    // Print the constructed payload.
+    print(mapPayLoad);
 
-  // Send a POST request to a specified API endpoint using the ApiService.
-  Response result = await ApiService.instance!.httpClient.post(
-    Endpoints.updateUserPreferencesUri,
-    body: jsonEncode(mapPayLoad),
-    headers: {
-      'Content-Type': 'application/json'
-    }, // Corrected 'applicatoin' to 'application'
-  );
+    // Send a POST request to a specified API endpoint using the ApiService.
+    Response result = await ApiService.instance!.httpClient.post(
+      Endpoints.updateUserPreferencesUri,
+      body: jsonEncode(mapPayLoad),
+      headers: {
+        'Content-Type': 'application/json'
+      }, // Corrected 'applicatoin' to 'application'
+    );
 
-  // Print the HTTP status code received in the response.
-  print(result.statusCode);
+    // Print the HTTP status code received in the response.
+    print(result.statusCode);
 
-  // Return the HTTP status code as an integer.
-  return result.statusCode;
-}
-
-  void printStats() 
-  {
-     Map mapPayLoad = {
- //   'email': Boxes.getUser()!.email,
-    'name': nameController.text,
-   'interests': (jsonEncode(chosen)).toString(),//.toString(),
-    'verified': validatedEmail,
-  };
-  print(mapPayLoad);
-  print("\n\n\n");
- print(jsonEncode(mapPayLoad));
+    // Return the HTTP status code as an integer.
+    return result.statusCode;
   }
 
-   nextPage() {
+  void printStats() {
+    Map mapPayLoad = {
+      //   'email': Boxes.getUser()!.email,
+      'name': nameController.text,
+      'interests': (jsonEncode(chosen)).toString(), //.toString(),
+      'verified': validatedEmail,
+    };
+    print(mapPayLoad);
+    print("\n\n\n");
+    print(jsonEncode(mapPayLoad));
+  }
+
+  nextPage() {
     int coppiedIndex = pageIndex;
     coppiedIndex += 1;
-    if(snapshot.length <= coppiedIndex)
-    {
-
-    }
-    else
-    {
+    if (snapshot.length <= coppiedIndex) {
+    } else {
       pageIndex += 1;
     }
     notifyListeners();
   }
 
-     Future<void> previousPage() async{
-    
-      pageIndex += 1;
-    
+  Future<void> previousPage() async {
+    pageIndex += 1;
+
     notifyListeners();
   }
 
-
+  bool canFinish = false;
+  void updateRespectedStateIndex(bool value) {
+    state[pageIndex] = value;
+    canFinish = state.every((element) => element == true);
+    notifyListeners();
+  }
 }

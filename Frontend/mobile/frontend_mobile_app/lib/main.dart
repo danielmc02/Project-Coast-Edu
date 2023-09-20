@@ -43,7 +43,7 @@ class _AuthWrapperState extends State<AuthWrapper> {
   @override
   void initState() {
     //Only delete the below if necessary. This can cause the app to become unstable
-   // Boxes.getUserBox().delete('mainUser');
+    Boxes.getUserBox().delete('mainUser');
     super.initState();
   }
 
