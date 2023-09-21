@@ -1,5 +1,4 @@
 pub mod auth_structs {
-
     use serde::{Deserialize, Serialize};
     use redis::{RedisError, Client};
     use sqlx::{FromRow, Pool, Postgres};
@@ -11,7 +10,7 @@ pub mod auth_structs {
 
     pub struct AppData {
         pub db_pool: Pool<Postgres>,
-       // pub redis_connection: Result<Client, RedisError>
+        //pub redis_connection: redis::Client
         
     }
    

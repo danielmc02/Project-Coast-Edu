@@ -16,13 +16,15 @@ class HomeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+var namePage = NamePage();
+
 
   //This function inserts mandatory pages prior to accessing app
   /*
   For future feature adds that don't require updates, do NOT put them in here
   */
-  Future<List<Widget>> preReqSetup() async {
-    List<Widget> preReqs = [];
+  Future<bool> requiresOnboarding() async {
+    //List<Widget> preReqs = [];
 
     //  await Future.delayed(Duration(seconds: 3));
     debugPrint(
@@ -31,19 +33,9 @@ class HomeProvider extends ChangeNotifier {
     if (Boxes.getUser()!.name == null ||
         Boxes.getUser()!.interests == null ||
         Boxes.getUser()!.verifiedStudent == false) {
-      debugPrint(preReqs.length.toString());
-      Boxes.getUser()!.name == null ? preReqs.add(const NamePage()) : null;
-      Boxes.getUser()!.interests == null
-          ? preReqs.add(const InterestsPage())
-          : null;
-      Boxes.getUser()!.verifiedStudent == false
-          ? preReqs.add(const VerifiedStudentPage())
-          : null;
-      debugPrint(preReqs.length.toString());
-
-      return preReqs;
+          return true;
     } else {
-      return preReqs;
+      return false;
     }
   }
 

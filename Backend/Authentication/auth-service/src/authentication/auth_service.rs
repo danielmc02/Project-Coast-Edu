@@ -1,7 +1,10 @@
 pub mod auth {
 
     use super::super::auth_structs::auth_structs::*;
-    use std::{time::{Duration, SystemTime, UNIX_EPOCH}, fmt::format};
+    use std::{
+        fmt::format,
+        time::{Duration, SystemTime, UNIX_EPOCH},
+    };
 
     use actix_web::{get, post, web, web::Json, HttpResponse};
     use argon2::{
@@ -23,7 +26,6 @@ pub mod auth {
         match res {
             //if the query suceeds than the email belongs to an account
             Ok(k) => {
-
                 println!("IN HERE:");
                 return HttpResponse::Conflict()
                     .body("The user may already exist. Try signing in.2");
@@ -86,8 +88,8 @@ pub mod auth {
         match result {
             //an account exists, time to verify the password
             Ok(res) => {
-                println!("RESSIDDDD {}\n\n\n",res.id);
-                //set up argon2 configuration 
+                println!("RESSIDDDD {}\n\n\n", res.id);
+                //set up argon2 configuration
                 let argon2 = Argon2::default();
                 let bool = argon2
                     .verify_password(
@@ -96,26 +98,28 @@ pub mod auth {
                     )
                     .is_ok();
                 {
-                  if  bool == false {
+                    if bool == false {
                         return HttpResponse::Conflict().body("Password incorect");
                     }
                 }
                 let formated_query = format!("SELECT id::text, name, interests, verified_student,friends FROM public_users WHERE id = '{}'",res.id);
-                println!("FORMATED QUERY: {}\n",formated_query);
-            let rez =sqlx::query_as::<_,SignInResponce>(
-            &formated_query
-                ).bind(res.id).fetch_one(&data.db_pool).await.unwrap();
-                println!("\n\nVALUE: {:?}\n\n",rez);
-              //  let response = SignInResponce{};
+                println!("FORMATED QUERY: {}\n", formated_query);
+                let rez = sqlx::query_as::<_, SignInResponce>(&formated_query)
+                    .bind(res.id)
+                    .fetch_one(&data.db_pool)
+                    .await
+                    .unwrap();
+                println!("\n\nVALUE: {:?}\n\n", rez);
+                //  let response = SignInResponce{};
                 // RSA JWT
-           let json_string = serde_json::to_value(&rez).unwrap(); // serde_json::to_string(&rez).unwrap();
+                let json_string = serde_json::to_value(&rez).unwrap(); // serde_json::to_string(&rez).unwrap();
 
-           let mut modified_json_object = json_string.as_object().unwrap().clone();
-           let jwt: serde_json::Value= json!(create_jwt_token());
-modified_json_object.insert("jwt".to_string(), jwt);
-println!("THE pack IS {:?}\n\n\n",modified_json_object);
+                let mut modified_json_object = json_string.as_object().unwrap().clone();
+                let jwt: serde_json::Value = json!(create_jwt_token());
+                modified_json_object.insert("jwt".to_string(), jwt);
+                println!("THE pack IS {:?}\n\n\n", modified_json_object);
 
-       return HttpResponse::Ok().json(modified_json_object);
+                return HttpResponse::Ok().json(modified_json_object);
             }
             Err(er) => {
                 println!("NOT SUCESFUL SIGN IN {}", er);

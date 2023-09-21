@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'models/boxes.dart';
 import 'pages/home_screen/home_page.dart';
 import 'pages/onboarding_screen/onboarding_page.dart';
+import 'pages/property_flow/property_flow_page.dart';
 
 
 
@@ -43,7 +44,7 @@ class _AuthWrapperState extends State<AuthWrapper> {
   @override
   void initState() {
     //Only delete the below if necessary. This can cause the app to become unstable
-    Boxes.getUserBox().delete('mainUser');
+   // Boxes.getUserBox().delete('mainUser');
     super.initState();
   }
 

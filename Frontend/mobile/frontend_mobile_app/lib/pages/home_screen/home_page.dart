@@ -157,16 +157,15 @@ void initState() {
               return const Home();
             } else{
               return FutureBuilder(
-                future:   algo.preReqSetup(),
+                future:   algo.requiresOnboarding(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
                   } else if (snapshot.connectionState == ConnectionState.done &&
                       snapshot.hasData) {
                     //if algo.TRIGGERRESET == true ?
-               var data = snapshot.data!;
-                    return snapshot.data!.isNotEmpty == true
-                        ? PropertyProcessPage(data)
+                    return snapshot.data! == true
+                        ? PropertyProcessPage()
                         :  const Home();
                   } else {
                     return const Text("ERROR");

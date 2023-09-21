@@ -10,8 +10,8 @@ import '../home_screen/home_provider.dart';
 import 'propery_process_prrovider.dart';
 
 class PropertyProcessPage extends StatefulWidget {
-  const PropertyProcessPage(this.snapshot, {super.key});
-  final List<Widget> snapshot;
+  const PropertyProcessPage({super.key});
+
   @override
   State<PropertyProcessPage> createState() => _PropertyProcessPageState();
 }
@@ -25,7 +25,7 @@ class _PropertyProcessPageState extends State<PropertyProcessPage> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => PropertyProcessProvider(widget.snapshot),
+      create: (context) => PropertyProcessProvider(),
       child: Consumer<PropertyProcessProvider>(
         builder: (context, algo, child) => Scaffold(
             appBar: PreferredSize(
@@ -43,14 +43,14 @@ class _PropertyProcessPageState extends State<PropertyProcessPage> {
                       child: AnimatedBuilder(
                           animation: Listenable.merge([]),
                           builder: (context, child) {
-                            print(algo.pageIndex / algo.snapshot.length);
+                            print(algo.pageIndex / algo.onboardPages.length);
                             return LinearProgressIndicator(
                                 backgroundColor: Colors.transparent,
                                 color: Colors.black,
                                 borderRadius: BorderRadius.only(topRight: Radius.circular(20),bottomRight: Radius.circular(20)),
                                 semanticsLabel: "Sign Up Progress Indicator",
                                 value: algo.pageIndex /
-                                    (algo.snapshot.length - 1));
+                                    (algo.onboardPages.length - 1));
                           }),
                     ),
                   ],
@@ -91,6 +91,11 @@ class _PropertyProcessPageState extends State<PropertyProcessPage> {
                       width: 100,
                       child: TextButton(
                         onPressed: () async {
+                          if(algo.canFinish)
+                          {
+                            print("RUNNING FINISH ALL");
+                            algo.finishAll();
+                          }
                           print(algo.state);
                           algo.reverseTransition = false;
                       
@@ -138,14 +143,14 @@ class _PropertyProcessPageState extends State<PropertyProcessPage> {
                     child: child,
                   ),
                   reverse: algo.reverseTransition,
-                  child: algo.snapshot[algo.pageIndex],
+                  child: algo.onboardPages[algo.pageIndex] as Widget,
                 ) /*
               PageView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 controller: ppp.pageController,
-                itemCount: widget.snapshot.data!.length,
+                itemCount: widget.onboardPages.data!.length,
                 itemBuilder: (context, index) {
-                  return widget.snapshot.data![index];
+                  return widget.onboardPages.data![index];
                 },
               ),
            */
@@ -156,13 +161,22 @@ class _PropertyProcessPageState extends State<PropertyProcessPage> {
   }
 }
 
-class NamePage extends StatelessWidget {
+abstract class HttpRunable
+{
+  Future<void> runHttp();
+}
+
+
+
+class NamePage extends StatelessWidget implements HttpRunable {
   const NamePage({super.key});
 
-  void runhttp()
-  {
-    
+  @override
+  Future<void> runHttp() async{
+   print("NAME PAGE RAN");
   }
+  
+  
   @override
   Widget build(BuildContext context) {
     return Consumer<PropertyProcessProvider>(
@@ -218,16 +232,25 @@ class NamePage extends StatelessWidget {
       ),
     );
   }
+  
+
 }
 
-class InterestsPage extends StatefulWidget {
+class InterestsPage extends StatefulWidget implements HttpRunable {
   const InterestsPage({super.key});
-
+  @override
+  Future<void> runHttp() async{
+    
+  print("INTEREST PAGE RAN");
+  }
   @override
   State<InterestsPage> createState() => _InterestsPageState();
 }
 
 class _InterestsPageState extends State<InterestsPage> {
+  
+  
+
   @override
   Widget build(BuildContext context) {
     return Consumer<PropertyProcessProvider>(
@@ -301,13 +324,19 @@ class _InterestsPageState extends State<InterestsPage> {
   }
 }
 
-class VerifiedStudentPage extends StatefulWidget {
+class VerifiedStudentPage extends StatefulWidget implements HttpRunable {
   const VerifiedStudentPage({
     super.key,
   });
+  
 
   @override
   State<VerifiedStudentPage> createState() => _VerifiedStudentPageState();
+  
+  @override
+  Future<void> runHttp() async{
+   print("VERIFIED STUDENT RAN");
+  }
 }
 
 class _VerifiedStudentPageState extends State<VerifiedStudentPage> {

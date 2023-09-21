@@ -6,8 +6,10 @@ use authentication::auth_service::auth::{log_in, register_user};
 use authentication::auth_structs::auth_structs::AppData;
 use redis::Commands;
 use sqlx::{postgres::PgPoolOptions, Pool};
+use crate::email::email_service;
 
 mod user_services;
+mod cache;
 
 use user_services::users_services::user_services::update_user_preferences;
 #[get("/test")]
@@ -26,10 +28,10 @@ async fn main() -> std::io::Result<()> {
     let _postgress_pool: Pool<sqlx::Postgres> = PgPoolOptions::new()
         .max_connections(2)
      .connect("postgresql://postgres:123@localhost:5432/users")
-
     //.connect("postgresql://postgres:123@database:5432/users")
         .await
         .expect("Error connecting to db");
+
     println!("LETS GOz");
     HttpServer::new(move || {
         App::new()

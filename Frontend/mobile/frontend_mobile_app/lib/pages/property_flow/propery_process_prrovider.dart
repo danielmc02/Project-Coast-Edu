@@ -11,18 +11,38 @@ import '../../models/boxes.dart';
 
 class PropertyProcessProvider extends ChangeNotifier {
 
-  late List<Widget> snapshot;
-  late List<bool> state;
+  NamePage NAMEPAGE = NamePage();
+  InterestsPage INTERESTSPAGE = InterestsPage();
+  VerifiedStudentPage VERIFYSTUDENT = VerifiedStudentPage();
+ // NAMEPAGE.runhttp();
+
+ late  List<HttpRunable> onboardPages;
+ late List<bool> state;
 
 
+
+Future<void> finishAll() async
+{
+  onboardPages.every((element) 
+  {
+    element.runHttp();
+    return true;
+  } );
+}
   
-  
-  PropertyProcessProvider(List<Widget> snap) {
+  PropertyProcessProvider() {
     //The list of widgets
-    snapshot = snap;
+  //  snapshot = snap;
     //Used to refer to a page's state
-    state = List.filled(snapshot.length, false);
+ //   state = List.filled(snapshot.length, false);
+ onboardPages = List.empty(growable: true);
+     Boxes.getUser()!.name == null ? onboardPages.add(NAMEPAGE) : null;
+    Boxes.getUser()!.interests == null ? onboardPages.add(INTERESTSPAGE) : null;
+    Boxes.getUser()!.verifiedStudent == false ? onboardPages.add(VERIFYSTUDENT) : null;
+    state = List.filled(onboardPages.length, false);
   }
+
+
 
   //A reference for the current page
   int pageIndex = 0;
@@ -210,7 +230,7 @@ class PropertyProcessProvider extends ChangeNotifier {
   nextPage() {
     int coppiedIndex = pageIndex;
     coppiedIndex += 1;
-    if (snapshot.length <= coppiedIndex) {
+    if (onboardPages.length <= coppiedIndex) {
     } else {
       pageIndex += 1;
     }
@@ -229,4 +249,6 @@ class PropertyProcessProvider extends ChangeNotifier {
     canFinish = state.every((element) => element == true);
     notifyListeners();
   }
+
+
 }
