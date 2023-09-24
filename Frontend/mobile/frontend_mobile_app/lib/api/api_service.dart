@@ -59,18 +59,18 @@ class ApiService extends ChangeNotifier {
   Future<void> handleUser(Map res) async {
     print(res);
     try {
-      /*     List<String> stringInterests =[];
+          List<String> stringInterests =[];
    List? fromJson = res['interests'];
-       fromJson != null ?  fromJson!.forEach((element) {
+       fromJson != null ?  fromJson.forEach((element) {
         stringInterests.add(element as String);
-      },): null;*/
+      },): null;
       print("woop woop ");
       debugPrint(res.toString());
       var currentUser = User(
           shortLifeJwt: res['jwt'],
           id: res['id'],
           name: res['name'],
-          interests: res['interests'],
+          interests: stringInterests,
           verifiedStudent: res['verified_student']);
       await Boxes.getUserBox().put('mainUser', currentUser);
       await signIn();
