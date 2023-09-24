@@ -16,7 +16,7 @@ class HomeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-var namePage = NamePage();
+
 
 
   //This function inserts mandatory pages prior to accessing app

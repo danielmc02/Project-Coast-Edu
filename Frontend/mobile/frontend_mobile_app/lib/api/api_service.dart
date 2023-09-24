@@ -2,7 +2,10 @@
 A singleton class.
 Ensures a single instance throughout the entire app
 */
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:frontend_mobile_app/api/endpoints.dart';
 import 'package:frontend_mobile_app/models/user.dart';
 import 'package:http/http.dart' as http;
 import '../models/boxes.dart';
@@ -54,9 +57,9 @@ class ApiService extends ChangeNotifier {
   /*------------------------------*/
 
   Future<void> handleUser(Map res) async {
-print(res);
+    print(res);
     try {
- /*     List<String> stringInterests =[];
+      /*     List<String> stringInterests =[];
    List? fromJson = res['interests'];
        fromJson != null ?  fromJson!.forEach((element) {
         stringInterests.add(element as String);
@@ -67,7 +70,7 @@ print(res);
           shortLifeJwt: res['jwt'],
           id: res['id'],
           name: res['name'],
-          interests:  res['interests'],
+          interests: res['interests'],
           verifiedStudent: res['verified_student']);
       await Boxes.getUserBox().put('mainUser', currentUser);
       await signIn();
@@ -81,5 +84,59 @@ print(res);
     await Boxes.getUserBox().delete('mainUser');
     signedIn = false;
     notifyListeners();
+  }
+
+  Future<void> updateUserName(Map req) async {
+    try {
+      print(2);
+
+      String reqJson = jsonEncode(req);
+
+    //  print(reqJson);
+
+      await _client.put(
+        Endpoints.defaultUriConcatanate("/update_user_name"),
+        body: reqJson,
+        headers: {'Content-Type': 'application/json'},
+      );
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> updateUserInterests(Map request) async {
+    try {
+      print(3);
+
+      String reqJson = jsonEncode(request);
+
+      print(reqJson);
+
+      await _client.put(
+        Endpoints.defaultUriConcatanate("/update_user_interests"),
+        body: reqJson,
+        headers: {'Content-Type': 'application/json'},
+      );
+    } catch (e) {
+      print(e);
+    }
+  }
+
+    Future<void> updateVerifiedStudentStatus(Map req) async {
+    try {
+
+
+      String reqJson = jsonEncode(req);
+
+      print(reqJson);
+
+      await _client.put(
+        Endpoints.defaultUriConcatanate("/update_verified_student_status"),
+        body: reqJson,
+        headers: {'Content-Type': 'application/json'},
+      );
+    } catch (e) {
+      print(e);
+    }
   }
 }

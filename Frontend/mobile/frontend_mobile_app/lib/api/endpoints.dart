@@ -15,6 +15,7 @@ class Endpoints
   //static final updateUserPreferencesUri = Uri.parse('http://192.168.2.195:80/send_verification_email');
   static final updateUserPreferencesUri = Uri.parse('http://localhost:80/update_user_preferences');
 
+ static Uri defaultUriConcatanate (String uriPath) =>  Uri.parse('http://localhost:80${uriPath}');
 
 
 

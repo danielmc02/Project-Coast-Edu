@@ -9,9 +9,11 @@ use sqlx::{postgres::PgPoolOptions, Pool};
 use crate::email::email_service;
 
 mod user_services;
+use user_services::users_services::user_services::{update_user_name,update_user_interests,update_verified_student_status};
 mod cache;
 
-use user_services::users_services::user_services::update_user_preferences;
+//use user_services::users_services::user_services::update_user_preferences;
+
 #[get("/test")]
 async fn test(app_data: web::Data<AppData>) -> HttpResponse {
 
@@ -44,7 +46,10 @@ async fn main() -> std::io::Result<()> {
             .service(log_in)
             .service(test)
            .service(send_verification_email)
-           .service(update_user_preferences)
+           .service(update_user_interests)
+           .service(update_user_name)
+            .service(update_verified_student_status)
+
     })
     .bind(("0.0.0.0", 80))?
     .run()

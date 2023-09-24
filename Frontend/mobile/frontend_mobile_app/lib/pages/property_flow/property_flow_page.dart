@@ -45,8 +45,9 @@ class _PropertyProcessPageState extends State<PropertyProcessPage> {
                           builder: (context, child) {
                             print(algo.pageIndex / algo.onboardPages.length);
                             return LinearProgressIndicator(
-                                backgroundColor: Colors.transparent,
-                                color: Colors.black,
+                              
+                                backgroundColor: const Color.fromARGB(255, 158, 158, 158),
+                                color: Color.fromARGB(255, 2, 144, 246),
                                 borderRadius: BorderRadius.only(topRight: Radius.circular(20),bottomRight: Radius.circular(20)),
                                 semanticsLabel: "Sign Up Progress Indicator",
                                 value: algo.pageIndex /
@@ -89,40 +90,43 @@ class _PropertyProcessPageState extends State<PropertyProcessPage> {
                     ),
                     SizedBox(
                       width: 100,
-                      child: TextButton(
-                        onPressed: () async {
-                          if(algo.canFinish)
-                          {
-                            print("RUNNING FINISH ALL");
-                            algo.finishAll();
-                          }
-                          print(algo.state);
-                          algo.reverseTransition = false;
+                      child: Consumer<HomeProvider>(
+                        builder: (context, algo2, child) => TextButton(
+                          onPressed: () async {
+                            if(algo.canFinish)
+                            {
+                              print("RUNNING FINISH ALL");
+                              await algo.finishAll().then((value) => value ? algo2.trueRebuild(): null);
                       
-                          algo.state[algo.pageIndex] == true
-                              ? algo.nextPage()
-                              : null;
-                        },
-                        style: ButtonStyle(
-                            elevation: const MaterialStatePropertyAll(6),
-                            shadowColor:
-                                const MaterialStatePropertyAll(Colors.black),
-                            foregroundColor:
-                                const MaterialStatePropertyAll(Colors.black),
-                            surfaceTintColor:
-                                const MaterialStatePropertyAll(Colors.black),
-                            overlayColor:
-                                const MaterialStatePropertyAll(Colors.black12),
-                            shape: MaterialStatePropertyAll(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                    side: const BorderSide(
-                                        style: BorderStyle.solid))),
-                            backgroundColor:
-                                const MaterialStatePropertyAll(Colors.black)),
-                        child:  Text(
-                       algo.canFinish ? "Finish":    "Next",
-                          style: Styles.buttonText2,
+                            }
+                            print(algo.state);
+                            algo.reverseTransition = false;
+                        
+                            algo.state[algo.pageIndex] == true
+                                ? algo.nextPage()
+                                : null;
+                          },
+                          style: ButtonStyle(
+                              elevation: const MaterialStatePropertyAll(6),
+                              shadowColor:
+                                  const MaterialStatePropertyAll(Colors.black),
+                              foregroundColor:
+                                  const MaterialStatePropertyAll(Colors.black),
+                              surfaceTintColor:
+                                  const MaterialStatePropertyAll(Colors.black),
+                              overlayColor:
+                                  const MaterialStatePropertyAll(Colors.black12),
+                              shape: MaterialStatePropertyAll(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                      side: const BorderSide(
+                                          style: BorderStyle.solid))),
+                              backgroundColor:
+                                  const MaterialStatePropertyAll(Colors.black)),
+                          child:  Text(
+                         algo.canFinish ? "Finish":    "Next",
+                            style: Styles.buttonText2,
+                          ),
                         ),
                       ),
                     )
@@ -161,334 +165,8 @@ class _PropertyProcessPageState extends State<PropertyProcessPage> {
   }
 }
 
-abstract class HttpRunable
-{
-  Future<void> runHttp();
-}
 
 
-
-class NamePage extends StatelessWidget implements HttpRunable {
-  const NamePage({super.key});
-
-  @override
-  Future<void> runHttp() async{
-   print("NAME PAGE RAN");
-  }
-  
-  
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<PropertyProcessProvider>(
-      builder: (context, algo, child) => Scaffold(
-        body: Form(
-          key: algo.nameFormKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Text(
-                "What's your name?",
-                style: Styles.headerText1,
-                textAlign: TextAlign.center,
-              ),
-              const Spacer(),
-              SizedBox(
-                  width: 300,
-                  child: TextFormField(
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    onChanged: (value) {
-                      algo.nameFormKey.currentState!.validate()
-                          ? algo.updateRespectedStateIndex(true)//algo.state[algo.pageIndex] = true
-                          : algo.updateRespectedStateIndex(false);
-                      print(algo.state);
-                    },
-                    style: Styles.buttonText,
-                    controller: algo.nameController,
-                    inputFormatters: [CapitalizedWordsTextInputFormatter()],
-                    validator: (value) {
-                      return value!.length < 3
-                          ? "Must be at least 3 characters"
-                          : null;
-                    },
-                    maxLines: 1,
-                    maxLength: 20,
-                    maxLengthEnforcement: MaxLengthEnforcement.enforced,
-                    textAlign: TextAlign.center,
-                    cursorColor: Colors.black,
-                    decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        counterText: '',
-                        //  hintTextDirection: TextDirection.rtl,
-                        hintText: "Your name here",
-                        hintStyle:
-                            TextStyle(color: Color.fromARGB(87, 0, 0, 0))),
-                  )),
-              const Spacer()
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-  
-
-}
-
-class InterestsPage extends StatefulWidget implements HttpRunable {
-  const InterestsPage({super.key});
-  @override
-  Future<void> runHttp() async{
-    
-  print("INTEREST PAGE RAN");
-  }
-  @override
-  State<InterestsPage> createState() => _InterestsPageState();
-}
-
-class _InterestsPageState extends State<InterestsPage> {
-  
-  
-
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<PropertyProcessProvider>(
-      builder: (context, algo, child) => Scaffold(
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Text(
-              "What Interests You?",
-              style: Styles.headerText1,
-              textAlign: TextAlign.center,
-            ),
-            const Spacer(),
-            Wrap(
-                verticalDirection: VerticalDirection.down,
-                runSpacing: 20,
-                spacing: 20,
-                direction: Axis.horizontal,
-                textDirection: TextDirection.ltr,
-                alignment: WrapAlignment.center,
-                crossAxisAlignment: WrapCrossAlignment.center,
-                runAlignment: WrapAlignment.center,
-                children: [
-                  for (var e in algo.possibleMap.entries)
-                    ChoiceChip(
-                        elevation: e.value['isSelected'] ? 3 : 0,
-                        selectedColor: e.value['color'],
-                        label: Text(
-                          e.key,
-                          style: Styles.chipText,
-                        ),
-                        selected: e.value['isSelected'],
-                        onSelected: (value) {
-                          if (algo.chosen.length < 3 &&
-                              e.value['isSelected'] ==
-                                  false) //volume isn't at max
-                          {
-                            debugPrint('1');
-
-                            setState(() {
-                              e.value['isSelected'] = !e.value['isSelected'];
-                              if (e.value['isSelected'] == true) {
-                                algo.chosen.add(e.key);
-                                algo.checkInterestState();
-                              }
-                            });
-                          } else if (e.value['isSelected'] == true) {
-                            debugPrint('2');
-                            setState(() {
-                              e.value['isSelected'] = false;
-                              algo.chosen.remove(e.key);
-                              algo.checkInterestState();
-                            });
-                          } else {
-                            debugPrint('2.5');
-                            debugPrint(
-                                'Cant select because 3 is already chosen');
-                          }
-                          print(algo.chosen);
-                          //  e.value.entries.elementAt(1).
-                        },
-                        avatar: e.value['icon'])
-                ]),
-            const Spacer()
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class VerifiedStudentPage extends StatefulWidget implements HttpRunable {
-  const VerifiedStudentPage({
-    super.key,
-  });
-  
-
-  @override
-  State<VerifiedStudentPage> createState() => _VerifiedStudentPageState();
-  
-  @override
-  Future<void> runHttp() async{
-   print("VERIFIED STUDENT RAN");
-  }
-}
-
-class _VerifiedStudentPageState extends State<VerifiedStudentPage> {
-  late TextEditingController emailFieldController;
-  @override
-  void initState() {
-    emailFieldController = TextEditingController();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    emailFieldController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<PropertyProcessProvider>(
-      builder: (context, algo, child) => PageView(
-          physics: const NeverScrollableScrollPhysics(),
-          controller: algo.verifyPageController,
-          children: [
-            algo.validatedEmail == false
-                ? Form(
-                    key: algo.verificationFormKey,
-                    child: Scaffold(
-                      body: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const Text(
-                            "What school do you attend?",
-                            style: Styles.headerText1,
-                            textAlign: TextAlign.center,
-                          ),
-            Spacer(),
-                           Center(
-                            child: ConstrainedBox(
-                              constraints: BoxConstraints(
-                                maxHeight:
-                                    MediaQuery.of(context).size.height * 0.5,
-                              ),
-                              child: SingleChildScrollView(
-                                child: Column(
-                                  children: List.generate(
-                                      algo.supportedSchools.length, (index) {
-                                    String name = algo.supportedSchools.keys
-                                        .elementAt(index);
-                                    Map<String, dynamic> schoolData =
-                                        algo.supportedSchools[name];
-
-                                    return Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            // Deselect all tiles first
-                                            algo.supportedSchools
-                                                .forEach((key, value) {
-                                              value['isSelected'] = false;
-                                            });
-
-                                            // Select the tapped tile and update chosenSchool
-                                            schoolData['isSelected'] = true;
-                                            algo.chosenSchool = [name];
-                                          });
-                                          print(algo.chosenSchool);
-                                        },
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                         // image: DecorationImage(image: AssetImage("assets/occ.jpeg")),
-                                            border:
-                                                Border.all(color: Colors.black),
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
-                                            color: schoolData['isSelected']
-                                                ? Colors.white
-                                                : Colors.grey,
-                                                
-                                          ),
-                                          width: 300,
-                                        //  height: 200,
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: ListTile(
-                                              
-                                              selectedColor: Colors.white,
-                                              //tileColor: Colors.grey,
-                                              selected: schoolData['isSelected'],
-                                              leading: CircleAvatar(backgroundColor: Colors.white,foregroundImage:schoolData['icon'] ,) ,
-                                              dense: false,
-                                              // subtitle: const Text("Current Users: "),
-                                              title: Text(name,
-                                                  textAlign: TextAlign.center,style: TextStyle(color: schoolData['isSelected'] ? Colors.black : Colors.white60),),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  }),
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                              width: double.infinity,
-                              child: TextFormField(
-                                 style: Styles.buttonText,
-                    cursorColor: Colors.black,
-
-                                controller: emailFieldController,
-                                // key: algo.verificationFormKey,
-                                validator: (value) {
-                                  return value!.contains('@student.cccd.edu')
-                                      ? null
-                                      : "Invalid school email format";
-                                },
-                                maxLines: 1,
-                                // maxLength: 20,
-                                maxLengthEnforcement:
-                                    MaxLengthEnforcement.enforced,
-                                textAlign: TextAlign.center,
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.deny(' ')
-                                ],
-                                decoration: const InputDecoration(
-                                                          border: InputBorder.none,
-
-                                    hintText: "example@cccd.edu.com",
-                                    hintStyle: TextStyle(
-                                        color: Color.fromARGB(87, 0, 0, 0))),
-                              )),
-                          TextButton(
-                              onPressed: () async {
-                                algo.verificationFormKey.currentState!
-                                        .validate() && algo.chosenSchool.isEmpty == false
-                                    ? algo.verifyStudentEmail(
-                                        emailFieldController.text)
-                                    : null;
-                              },
-                              child: const Text("Verify")),Spacer()
-                        ],
-                      ),
-                    ),
-                  )
-                : const Summary(),
-            const VerifyCode()
-          ]),
-    );
-  }
-}
 
 Widget schoolCard(String schoolName) {
   return Container(

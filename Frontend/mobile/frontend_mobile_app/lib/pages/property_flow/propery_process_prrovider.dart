@@ -4,6 +4,9 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:frontend_mobile_app/api/api_service.dart';
 import 'package:frontend_mobile_app/api/endpoints.dart';
+import 'package:frontend_mobile_app/pages/property_flow/onboarding_pages/interests_page.dart';
+import 'package:frontend_mobile_app/pages/property_flow/onboarding_pages/name_page.dart';
+import 'package:frontend_mobile_app/pages/property_flow/onboarding_pages/verify_student_email.dart';
 import 'package:frontend_mobile_app/pages/property_flow/property_flow_page.dart';
 import 'package:http/http.dart';
 
@@ -21,13 +24,16 @@ class PropertyProcessProvider extends ChangeNotifier {
 
 
 
-Future<void> finishAll() async
+Future<bool> finishAll() async
 {
-  onboardPages.every((element) 
-  {
+ bool result = onboardPages.every((element) 
+   {
     element.runHttp();
     return true;
-  } );
+  }  );
+  print("DONE, signing in $result");
+  return result;
+  
 }
   
   PropertyProcessProvider() {
@@ -148,7 +154,7 @@ Future<void> finishAll() async
     notifyListeners();
   }
 
-  void verifyStudentEmail(String value) async {
+  Future<bool> verifyStudentEmail(String value) async {
     int fourDigit = Random().nextInt(9001) + 1000;
     String verificationCode = fourDigit.toString();
     givenCode = fourDigit;
@@ -164,10 +170,19 @@ Future<void> finishAll() async
     var result = await api.httpClient.post(Endpoints.sendVerificationEmailUri,
         body: jsonEncode(body), headers: {'Content-Type': 'applicatoin/json'});
 
-    result.statusCode == 200
-        ? await verifyPageController.nextPage(
-            duration: const Duration(seconds: 1), curve: Curves.easeInSine)
-        : null;
+   if ( result.statusCode == 200)
+   {
+ await verifyPageController.nextPage(
+            duration: const Duration(seconds: 1), curve: Curves.easeInSine);
+            print("About to return true for email validity");
+            return true;
+   }
+        
+        else
+        {
+          return false;
+        }
+       
   }
 
   final verifyPageController = PageController();
@@ -252,3 +267,10 @@ Future<void> finishAll() async
 
 
 }
+
+//Abstract class extension for all onboarding pages to implement an http function
+abstract class HttpRunable
+{
+  Future<void> runHttp();
+}
+

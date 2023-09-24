@@ -155,4 +155,11 @@ pub mod auth {
         .expect("ERROR CREATING JWT");
         return jwt_res;
     }
+
+    fn is_valid_jwt(jwt: String) -> bool
+    {
+        return false;
+    }
+
+
 }
