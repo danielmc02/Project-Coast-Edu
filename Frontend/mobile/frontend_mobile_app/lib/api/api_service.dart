@@ -59,18 +59,22 @@ class ApiService extends ChangeNotifier {
   Future<void> handleUser(Map res) async {
     print(res);
     try {
-          List<String> stringInterests =[];
-   List? fromJson = res['interests'];
-       fromJson != null ?  fromJson.forEach((element) {
-        stringInterests.add(element as String);
-      },): null;
+      List<String> stringInterests = [];
+      List? fromJson = res['interests'];
+      if (fromJson != null) {
+        for (var element in fromJson) {
+          stringInterests.add(element as String);
+        }
+      }
+
       print("woop woop ");
       debugPrint(res.toString());
       var currentUser = User(
           shortLifeJwt: res['jwt'],
           id: res['id'],
           name: res['name'],
-          interests: stringInterests,
+          interests:
+              fromJson == null ? fromJson as List<String>? : stringInterests,
           verifiedStudent: res['verified_student']);
       await Boxes.getUserBox().put('mainUser', currentUser);
       await signIn();
@@ -92,7 +96,7 @@ class ApiService extends ChangeNotifier {
 
       String reqJson = jsonEncode(req);
 
-    //  print(reqJson);
+      //  print(reqJson);
 
       await _client.put(
         Endpoints.defaultUriConcatanate("/update_user_name"),
@@ -122,10 +126,8 @@ class ApiService extends ChangeNotifier {
     }
   }
 
-    Future<void> updateVerifiedStudentStatus(Map req) async {
+  Future<void> updateVerifiedStudentStatus(Map req) async {
     try {
-
-
       String reqJson = jsonEncode(req);
 
       print(reqJson);
@@ -137,6 +139,38 @@ class ApiService extends ChangeNotifier {
       );
     } catch (e) {
       print(e);
+    }
+  }
+
+  Future<bool> updateLocalUserInfo() async
+  {
+    try
+    {
+   var res =   await httpClient.post(Endpoints.getPublicUserInfo, body:jsonEncode( {'id': Boxes.getUser()!.id}),headers: {'Content-Type': 'application/json'},);
+   print(res.body);
+   Map dataRes = jsonDecode(res.body);
+print(dataRes);
+
+      List<String> stringInterests = [];
+      List? fromJson = dataRes['interests'];
+      if (fromJson != null) {
+        for (var element in fromJson) {
+          stringInterests.add(element as String);
+        }
+      }
+
+
+
+   Boxes.getUser()!.updateName(dataRes['name']);
+   Boxes.getUser()!.updateInterests(stringInterests as List<String>?);
+      Boxes.getUser()!.updateVerifiedStatus(dataRes['verified_student']);
+
+return true;
+    }
+    catch(e)
+    {
+      print("SHIT NIGGA WE GOTTA PROB $e");
+      return false;
     }
   }
 }

@@ -1,8 +1,8 @@
 pub mod user_structs
 {
     use std::vec::Vec;
-    use serde::{Deserialize,Serialize};
-    use sqlx::types::Json;
+    use serde::{Deserialize,Serialize, de};
+    use sqlx::{types::Json, FromRow};
 
     /* 
     #[derive(Deserialize,Serialize)]
@@ -19,5 +19,19 @@ pub mod user_structs
        pub jwt : String,
        pub id : String,
        pub data : String
+    }
+
+#[derive(FromRow, Serialize,Deserialize,Debug)]
+    pub struct PublicUserInformation
+    {
+        pub name: String,
+        pub interests: Option<serde_json::Value>,
+        pub verified_student: bool
+    }
+
+    #[derive(Serialize,Deserialize)]
+    pub struct ClientIdMaster
+    {
+        pub id: String
     }
 }

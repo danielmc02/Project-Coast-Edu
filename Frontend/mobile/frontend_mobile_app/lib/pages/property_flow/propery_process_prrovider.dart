@@ -24,15 +24,20 @@ class PropertyProcessProvider extends ChangeNotifier {
 
 
 
-Future<bool> finishAll() async
+Future<void> finishAll() async
 {
- bool result = onboardPages.every((element) 
+  for (var e in onboardPages) 
+  {
+    await e.runHttp();
+  }
+
+ /*bool result = onboardPages.every((element)  
    {
-    element.runHttp();
+   await element.runHttp();
     return true;
   }  );
   print("DONE, signing in $result");
-  return result;
+  return result; */
   
 }
   

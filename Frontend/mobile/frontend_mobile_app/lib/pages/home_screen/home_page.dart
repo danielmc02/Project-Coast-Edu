@@ -80,6 +80,7 @@ class Link extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(onPressed: (){},child: Icon(Icons.add,color: Colors.white,),backgroundColor: Colors.black),
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(0, 255, 255, 255),
         shadowColor: Colors.transparent,

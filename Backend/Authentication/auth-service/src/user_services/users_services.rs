@@ -2,10 +2,12 @@ pub mod user_services {
     use std::fmt::format;
 
     use crate::email;
+    use crate::user_services::user_structs;
 
     use super::super::super::AppData;
+    use actix_web::post;
     //use super::super::user_structs::user_structs::DefaultPreferences;
-    use actix_web::{post, web, web::Json, HttpResponse, put};
+    use actix_web::{get, web, web::Json, HttpResponse, put};
     use serde_json;
     use sqlx::query_as;
   /*   #[post("/update_user_preferences")]
@@ -106,5 +108,16 @@ pub mod user_services {
         }
     }
         
+    }
+use super::super::user_structs::user_structs::{PublicUserInformation,ClientIdMaster};
+    #[post("/get_public_user_information")]
+    async fn get_public_user_information(req: Json<ClientIdMaster>,data: web::Data<AppData>)->HttpResponse
+    {
+        println!("I SENSE AN UPDATE");
+    let result = sqlx::query_as::<_,PublicUserInformation>("SELECT name, interests, verified_student FROM public_users WHERE id = $1::uuid").bind(&req.id).fetch_one(&data.db_pool).await.unwrap();
+println!("WOPO\n{:?}",result);
+
+
+        HttpResponse::Ok().json(result)
     }
 }

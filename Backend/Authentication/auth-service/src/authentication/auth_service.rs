@@ -14,6 +14,7 @@ pub mod auth {
         Argon2,
     };
     use jsonwebtoken::{encode, Algorithm, EncodingKey, Header};
+    use serde::{Serialize, Deserialize};
     use serde_json::json;
     // use sqlx::types::Json as sqlx;
     #[post("/register_user")]
@@ -153,12 +154,31 @@ pub mod auth {
             &EncodingKey::from_rsa_pem(include_bytes!("keys/privkey.pem")).unwrap(),
         )
         .expect("ERROR CREATING JWT");
+   // is_valid_jwt(&jwt_res);
         return jwt_res;
     }
 
-    fn is_valid_jwt(jwt: String) -> bool
+    fn is_valid_jwt(jwt: &String) -> bool
     {
-        return false;
+        let pub_rsa_pem=  std::fs::read_to_string("./keys/publickey.pem").expect("Error opening public key");
+
+            let bytes = pub_rsa_pem.as_bytes();
+       let token_data = jsonwebtoken::decode::<Claims>(&jwt, &jsonwebtoken::DecodingKey::from_rsa_pem(bytes).expect("error"), &jsonwebtoken::Validation::new(Algorithm::RS256));
+       match token_data {
+           
+
+           Ok(value)=>{
+            println!("{:?}",value);
+            return true;
+           },
+           Err(err)=>
+
+           {
+            println!("{:?}",err);
+            return false;
+           }
+       }
+     
     }
 
 

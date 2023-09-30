@@ -14,7 +14,6 @@ services:
       POSTGRES_DB: users
     volumes:
       - ./init_users.sql:/docker-entrypoint-initdb.d/init.sql
-
 #  auth:
 #    container_name: auth-service
 #    build: ./Authentication/

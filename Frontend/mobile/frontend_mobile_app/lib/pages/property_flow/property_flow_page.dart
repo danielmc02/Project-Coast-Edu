@@ -1,6 +1,7 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:frontend_mobile_app/api/api_service.dart';
 import 'package:frontend_mobile_app/models/user.dart';
 import 'package:frontend_mobile_app/pages/home_screen/home_page.dart';
 import 'package:frontend_mobile_app/theme/styles.dart';
@@ -96,7 +97,16 @@ class _PropertyProcessPageState extends State<PropertyProcessPage> {
                             if(algo.canFinish)
                             {
                               print("RUNNING FINISH ALL");
-                              await algo.finishAll().then((value) => value ? algo2.trueRebuild(): null);
+                              //what about calling handle user
+                              await algo.finishAll().then((value) async
+                              {
+                               await ApiService.instance!.updateLocalUserInfo().then((value) {
+                                if (value)
+                                {
+                                  algo2.trueRebuild();
+                                }
+                               });
+                              });
                       
                             }
                             print(algo.state);

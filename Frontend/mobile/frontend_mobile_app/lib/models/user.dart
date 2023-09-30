@@ -31,4 +31,15 @@ class User {
     name = newName;
   }
 
+  void updateInterests(List<String>? newInterests)
+  {
+    interests = newInterests;
+  }
+
+  void updateVerifiedStatus(bool newStatus)
+  {
+    verifiedStudent = newStatus;
+
+  }
+
 }
