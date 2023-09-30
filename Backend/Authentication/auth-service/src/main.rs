@@ -1,18 +1,19 @@
-use actix_web::{  web, App, HttpResponse, HttpServer,get };
-mod email;
-use email::email_service::email::send_verification_email;
 mod authentication;
 use authentication::auth_service::auth::{log_in, register_user};
 use authentication::auth_structs::auth_structs::AppData;
-use redis::Commands;
-use sqlx::{postgres::PgPoolOptions, Pool};
-use crate::email::email_service;
+
+mod email;
+use email::email_service::email::send_verification_email;
 
 mod user_services;
 use user_services::users_services::user_services::{update_user_name,update_user_interests,update_verified_student_status,get_public_user_information};
-mod cache;
 
-//use user_services::users_services::user_services::update_user_preferences;
+use actix_web::{  web, App, HttpResponse, HttpServer,get };
+
+
+use sqlx::{postgres::PgPoolOptions, Pool};
+
+
 
 #[get("/test")]
 async fn test(app_data: web::Data<AppData>) -> HttpResponse {

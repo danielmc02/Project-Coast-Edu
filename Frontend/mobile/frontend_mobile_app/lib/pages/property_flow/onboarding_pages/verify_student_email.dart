@@ -10,6 +10,7 @@ import 'package:frontend_mobile_app/pages/property_flow/propery_process_prrovide
 import 'package:frontend_mobile_app/theme/styles.dart';
 import 'package:provider/provider.dart';
 
+// ignore: must_be_immutable
 class VerifiedStudentPage extends StatefulWidget implements HttpRunable {
    VerifiedStudentPage({
     super.key,
@@ -19,7 +20,6 @@ class VerifiedStudentPage extends StatefulWidget implements HttpRunable {
   
   @override
   Future<void> runHttp() async{
-       print(3);
     Map updateVerifiedStudentStatus = { 'jwt' : Boxes.getUser()!.shortLifeJwt, 'id' : Boxes.getUser()!.id, 'data' : verified.toString() };
    await ApiService.instance!.updateVerifiedStudentStatus(updateVerifiedStudentStatus);
   }
@@ -54,6 +54,7 @@ class _VerifiedStudentPageState extends State<VerifiedStudentPage> {
                 ? Form(
                     key: algo.verificationFormKey,
                     child: Scaffold(
+                   //   backgroundColor: Colors.black,
                       body: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -63,7 +64,7 @@ class _VerifiedStudentPageState extends State<VerifiedStudentPage> {
                             style: Styles.headerText1,
                             textAlign: TextAlign.center,
                           ),
-            Spacer(),
+            const Spacer(),
                            Center(
                             child: ConstrainedBox(
                               constraints: BoxConstraints(
@@ -94,7 +95,6 @@ class _VerifiedStudentPageState extends State<VerifiedStudentPage> {
                                             schoolData['isSelected'] = true;
                                             algo.chosenSchool = [name];
                                           });
-                                          print(algo.chosenSchool);
                                         },
                                         child: Container(
                                           decoration: BoxDecoration(
@@ -168,7 +168,7 @@ class _VerifiedStudentPageState extends State<VerifiedStudentPage> {
                                         emailFieldController.text).then((value) => widget.verified = value)
                                     : null;
                               },
-                              child: const Text("Verify")),Spacer()
+                              child: const Text("Verify")),const Spacer()
                         ],
                       ),
                     ),

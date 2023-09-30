@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_mobile_app/api/api_service.dart';
 import 'package:frontend_mobile_app/experimental/sliding_sheet.dart';
-import 'package:frontend_mobile_app/models/boxes.dart';
 import 'package:frontend_mobile_app/pages/loading.dart';
 import 'package:frontend_mobile_app/theme/styles.dart';
 
@@ -39,7 +38,6 @@ final List<Widget> items = [const School(),const Link(),const Profile()];
                   setState(() {
                     index = 0;
                   });
-                  print("school");
                 },
                icon: const Icon(Icons.school),
                 color: Colors.grey,
@@ -48,13 +46,11 @@ final List<Widget> items = [const School(),const Link(),const Profile()];
                   setState(() {
                     index = 1;
                   });
-                  print("link");
                 },child: const Icon(Icons.link,color: Colors.black,), ),
               IconButton( onPressed:(){
                   setState(() {
                     index = 2;
                   });
-                  print("profile");
                 },icon:const Icon(Icons.person), color: Colors.grey)
             ]),
       ),
@@ -80,7 +76,7 @@ class Link extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(onPressed: (){},child: Icon(Icons.add,color: Colors.white,),backgroundColor: Colors.black),
+      floatingActionButton: FloatingActionButton(onPressed: (){},backgroundColor: Colors.black, child: const Icon(Icons.add,color: Colors.white,)),
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(0, 255, 255, 255),
         shadowColor: Colors.transparent,
@@ -139,8 +135,6 @@ class HomeLoader extends StatefulWidget {
 class _HomeLoaderState extends State<HomeLoader> {
 @override
 void initState() {
-    // TODO: implement initState
-    print("SDFSDOFSNIOFNSFIOFSDFN");     
 
 
     super.initState();
@@ -166,7 +160,7 @@ void initState() {
                       snapshot.hasData) {
                     //if algo.TRIGGERRESET == true ?
                     return snapshot.data! == true
-                        ? PropertyProcessPage()
+                        ? const PropertyProcessPage()
                         :  const Home();
                   } else {
                     return const Text("ERROR");

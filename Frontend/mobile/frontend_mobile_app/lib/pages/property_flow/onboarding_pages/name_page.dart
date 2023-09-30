@@ -15,7 +15,6 @@ class NamePage extends StatelessWidget implements HttpRunable {
 
   @override
   Future<void> runHttp() async{
-    print(1);
     Map updateNameRequest = { 'jwt' : Boxes.getUser()!.shortLifeJwt, 'id' : Boxes.getUser()!.id, 'data' : newName };
    await ApiService.instance!.updateUserName(updateNameRequest);
   }
@@ -48,13 +47,11 @@ class NamePage extends StatelessWidget implements HttpRunable {
                       algo.nameFormKey.currentState!.validate()
                           ? algo.updateRespectedStateIndex(true)//algo.state[algo.pageIndex] = true
                           : algo.updateRespectedStateIndex(false);
-                      print(algo.state);
                     },
                     style: Styles.buttonText,
                     controller: algo.nameController,
                     inputFormatters: [CapitalizedWordsTextInputFormatter()],
                     validator: (value) {
-                      print("NEW NAME IS $newName");
                       return value!.length < 3
                           ? "Must be at least 3 characters"
                           : null;

@@ -30,7 +30,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
   final _fromKey = GlobalKey<FormState>();
   bool wantsToSignUp = true;
   bool defaultPasswordVisibilityState = true;
-  
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -93,8 +93,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                           }
 
                           String feedback = algo.parsePassword(value);
-                          if (feedback !=
-                              "Password meets all requirements.") {
+                          if (feedback != "Password meets all requirements.") {
                             return feedback;
                           }
 
@@ -106,9 +105,10 @@ class _OnboardingPageState extends State<OnboardingPage> {
                             errorMaxLines: 3,
                             suffixIcon: GestureDetector(
                                 onTap: () {
-                                 setState(() {
-                                   defaultPasswordVisibilityState = !defaultPasswordVisibilityState;
-                                 });
+                                  setState(() {
+                                    defaultPasswordVisibilityState =
+                                        !defaultPasswordVisibilityState;
+                                  });
                                 },
                                 child: defaultPasswordVisibilityState
                                     ? const Icon(Icons.visibility)
@@ -136,7 +136,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                                     emailField.text, passwordField.text);
                                 debugPrint(res.runtimeType.toString());
                                 res.runtimeType != Null
-                                    ?  showDialog(
+                                    ? showDialog(
                                         context: context,
                                         builder: (context) {
                                           return AlertDialog(
@@ -149,7 +149,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                               } else {
                                 var res = await algo.signInUser(
                                     emailField.text, passwordField.text);
-                                     res.runtimeType != Null
+                                res.runtimeType != Null
                                     ? showDialog(
                                         context: context,
                                         builder: (context) {
@@ -163,8 +163,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                               }
                             }
                           },
-                          child: Text(
-                             wantsToSignUp ? "Sign Up" : "Log in"))),
+                          child: Text(wantsToSignUp ? "Sign Up" : "Log in"))),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: GestureDetector(

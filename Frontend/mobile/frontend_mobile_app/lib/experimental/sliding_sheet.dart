@@ -37,7 +37,7 @@ class _SlidingSheetState extends State<SlidingSheet> {
                   children: [
                     Stack(
                       children: [
-                        Container(child: ConstrainedBox(constraints: const BoxConstraints(minWidth: 110,minHeight: 110),child: const CircleAvatar(backgroundColor: Colors.black,))),
+                        ConstrainedBox(constraints: const BoxConstraints(minWidth: 110,minHeight: 110),child: const CircleAvatar(backgroundColor: Colors.black,)),
                       Positioned(top: 0,right: 10,child: Boxes.getUser()!.verifiedStudent == true ? const Icon(Icons.check_circle,size: 30,color: Colors.blue,) : const Icon(Icons.warning,size: 30,color: Colors.yellow,),)
                       ],
                     ),

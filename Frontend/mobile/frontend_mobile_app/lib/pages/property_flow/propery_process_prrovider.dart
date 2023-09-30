@@ -7,15 +7,16 @@ import 'package:frontend_mobile_app/api/endpoints.dart';
 import 'package:frontend_mobile_app/pages/property_flow/onboarding_pages/interests_page.dart';
 import 'package:frontend_mobile_app/pages/property_flow/onboarding_pages/name_page.dart';
 import 'package:frontend_mobile_app/pages/property_flow/onboarding_pages/verify_student_email.dart';
-import 'package:frontend_mobile_app/pages/property_flow/property_flow_page.dart';
 import 'package:http/http.dart';
 
 import '../../models/boxes.dart';
 
 class PropertyProcessProvider extends ChangeNotifier {
-
+  // ignore: non_constant_identifier_names
   NamePage NAMEPAGE = NamePage();
+  // ignore: non_constant_identifier_names
   InterestsPage INTERESTSPAGE = InterestsPage();
+    // ignore: non_constant_identifier_names
   VerifiedStudentPage VERIFYSTUDENT = VerifiedStudentPage();
  // NAMEPAGE.runhttp();
 
@@ -143,18 +144,17 @@ Future<void> finishAll() async
   List<String> chosenSchool = [];
   Map supportedSchools = {
     "Orange Coast College": {
-      'icon': AssetImage("assets/school_icons/occ.png"),
+      'icon': const AssetImage("assets/school_icons/occ.png"),
       'isSelected': false
     },
     "Golden West College": {
-      'icon': AssetImage("assets/school_icons/gwc.png"),
+      'icon': const AssetImage("assets/school_icons/gwc.png"),
       'isSelected': false
     }
   };
   var backButtonColor = Colors.transparent;
 
   changeColor(Color color) {
-    print("IN HERE");
     backButtonColor = color;
     notifyListeners();
   }
@@ -179,7 +179,6 @@ Future<void> finishAll() async
    {
  await verifyPageController.nextPage(
             duration: const Duration(seconds: 1), curve: Curves.easeInSine);
-            print("About to return true for email validity");
             return true;
    }
         
@@ -203,10 +202,8 @@ Future<void> finishAll() async
 
   Future<int> updateUserPreferences() async {
     // Print the chosen list as a map.
-    print(chosen.asMap().toString());
 
     // Convert the chosen list as a map to a string.
-    String chosenString = chosen.asMap().toString();
 
     // Construct the payload as a Map.
     Map mapPayLoad = {
@@ -217,7 +214,6 @@ Future<void> finishAll() async
     };
 
     // Print the constructed payload.
-    print(mapPayLoad);
 
     // Send a POST request to a specified API endpoint using the ApiService.
     Response result = await ApiService.instance!.httpClient.post(
@@ -229,23 +225,11 @@ Future<void> finishAll() async
     );
 
     // Print the HTTP status code received in the response.
-    print(result.statusCode);
 
     // Return the HTTP status code as an integer.
     return result.statusCode;
   }
 
-  void printStats() {
-    Map mapPayLoad = {
-      //   'email': Boxes.getUser()!.email,
-      'name': nameController.text,
-      'interests': (jsonEncode(chosen)).toString(), //.toString(),
-      'verified': validatedEmail,
-    };
-    print(mapPayLoad);
-    print("\n\n\n");
-    print(jsonEncode(mapPayLoad));
-  }
 
   nextPage() {
     int coppiedIndex = pageIndex;
@@ -276,6 +260,6 @@ Future<void> finishAll() async
 //Abstract class extension for all onboarding pages to implement an http function
 abstract class HttpRunable
 {
-  Future<void> runHttp();
+   Future<void> runHttp();
 }
 

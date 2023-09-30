@@ -57,7 +57,6 @@ class ApiService extends ChangeNotifier {
   /*------------------------------*/
 
   Future<void> handleUser(Map res) async {
-    print(res);
     try {
       List<String> stringInterests = [];
       List? fromJson = res['interests'];
@@ -67,7 +66,6 @@ class ApiService extends ChangeNotifier {
         }
       }
 
-      print("woop woop ");
       debugPrint(res.toString());
       var currentUser = User(
           shortLifeJwt: res['jwt'],
@@ -79,7 +77,6 @@ class ApiService extends ChangeNotifier {
       await Boxes.getUserBox().put('mainUser', currentUser);
       await signIn();
     } catch (e) {
-      print("uhoh");
       debugPrint(e.toString());
     }
   }
@@ -92,7 +89,6 @@ class ApiService extends ChangeNotifier {
 
   Future<void> updateUserName(Map req) async {
     try {
-      print(2);
 
       String reqJson = jsonEncode(req);
 
@@ -104,17 +100,15 @@ class ApiService extends ChangeNotifier {
         headers: {'Content-Type': 'application/json'},
       );
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     }
   }
 
   Future<void> updateUserInterests(Map request) async {
     try {
-      print(3);
 
       String reqJson = jsonEncode(request);
 
-      print(reqJson);
 
       await _client.put(
         Endpoints.defaultUriConcatanate("/update_user_interests"),
@@ -122,7 +116,7 @@ class ApiService extends ChangeNotifier {
         headers: {'Content-Type': 'application/json'},
       );
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     }
   }
 
@@ -130,7 +124,6 @@ class ApiService extends ChangeNotifier {
     try {
       String reqJson = jsonEncode(req);
 
-      print(reqJson);
 
       await _client.put(
         Endpoints.defaultUriConcatanate("/update_verified_student_status"),
@@ -138,7 +131,7 @@ class ApiService extends ChangeNotifier {
         headers: {'Content-Type': 'application/json'},
       );
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     }
   }
 
@@ -147,9 +140,7 @@ class ApiService extends ChangeNotifier {
     try
     {
    var res =   await httpClient.post(Endpoints.getPublicUserInfo, body:jsonEncode( {'id': Boxes.getUser()!.id}),headers: {'Content-Type': 'application/json'},);
-   print(res.body);
    Map dataRes = jsonDecode(res.body);
-print(dataRes);
 
       List<String> stringInterests = [];
       List? fromJson = dataRes['interests'];
@@ -162,14 +153,13 @@ print(dataRes);
 
 
    Boxes.getUser()!.updateName(dataRes['name']);
-   Boxes.getUser()!.updateInterests(stringInterests as List<String>?);
+   Boxes.getUser()!.updateInterests(stringInterests);
       Boxes.getUser()!.updateVerifiedStatus(dataRes['verified_student']);
 
 return true;
     }
     catch(e)
     {
-      print("SHIT NIGGA WE GOTTA PROB $e");
       return false;
     }
   }

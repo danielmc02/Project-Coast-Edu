@@ -1,16 +1,12 @@
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:frontend_mobile_app/api/api_service.dart';
 import 'package:frontend_mobile_app/models/user.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
-import 'models/boxes.dart';
 import 'pages/home_screen/home_page.dart';
 import 'pages/onboarding_screen/onboarding_page.dart';
-import 'pages/property_flow/property_flow_page.dart';
 
-import 'package:plain_notification_token/plain_notification_token.dart';
 
 void main() async {
   //init everything and user model

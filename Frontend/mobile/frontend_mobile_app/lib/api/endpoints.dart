@@ -2,25 +2,25 @@
 class Endpoints
 {
 
- // static const String ENDPOINT = "192.168.2.129";
-  static const String ENDPOINT = "localhost";
+  static const String endpoint = "192.168.2.129";
+ // static const String endpoint = "localhost";
 
   
-  static final registerUserUri = Uri.parse('http://${ENDPOINT}:80/register_user');
+  static final registerUserUri = Uri.parse('http://$endpoint:80/register_user');
 
 
   
-  static final logInUri = Uri.parse('http://${ENDPOINT}:80/log_in');
+  static final logInUri = Uri.parse('http://$endpoint:80/log_in');
 
-  static final sendVerificationEmailUri = Uri.parse('http://${ENDPOINT}:80/send_verification_email');
-
-
-  static final updateUserPreferencesUri = Uri.parse('http://${ENDPOINT}:80/update_user_preferences');
+  static final sendVerificationEmailUri = Uri.parse('http://$endpoint:80/send_verification_email');
 
 
-  static final getPublicUserInfo = Uri.parse('http://${ENDPOINT}:80/get_public_user_information');
+  static final updateUserPreferencesUri = Uri.parse('http://$endpoint:80/update_user_preferences');
 
- static Uri defaultUriConcatanate (String uriPath) =>  Uri.parse('http://${ENDPOINT}:80${uriPath}');
+
+  static final getPublicUserInfo = Uri.parse('http://$endpoint:80/get_public_user_information');
+
+ static Uri defaultUriConcatanate (String uriPath) =>  Uri.parse('http://$endpoint:80$uriPath');
 
 
 

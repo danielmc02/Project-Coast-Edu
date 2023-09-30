@@ -5,15 +5,16 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:frontend_mobile_app/api/api_service.dart';
 import 'package:frontend_mobile_app/models/boxes.dart';
-import 'package:frontend_mobile_app/pages/property_flow/property_flow_page.dart';
 import 'package:frontend_mobile_app/pages/property_flow/propery_process_prrovider.dart';
 import 'package:frontend_mobile_app/theme/styles.dart';
 import 'package:provider/provider.dart';
 
+
+// ignore: must_be_immutable
 class InterestsPage extends StatefulWidget implements HttpRunable {
    InterestsPage({super.key});
 
-  List<String> chosenInterests = [];
+   List<String> chosenInterests = [];
   @override
   Future<void> runHttp() async{
     Map updateInterestRequest = { 'jwt' : Boxes.getUser()!.shortLifeJwt, 'id' : Boxes.getUser()!.id, 'data' :  (jsonEncode(chosenInterests)).toString() };
@@ -89,7 +90,6 @@ class _InterestsPageState extends State<InterestsPage> {
                                 'Cant select because 3 is already chosen');
                           }
                           widget.chosenInterests = algo.chosen;
-                                                    print(widget.chosenInterests);
 
                           //  e.value.entries.elementAt(1).
                         },

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frontend_mobile_app/api/api_service.dart';
 import 'package:frontend_mobile_app/models/user.dart';
-import 'package:frontend_mobile_app/pages/home_screen/home_page.dart';
 import 'package:frontend_mobile_app/theme/styles.dart';
 import 'package:provider/provider.dart';
 import 'package:frontend_mobile_app/models/boxes.dart';
@@ -44,15 +43,16 @@ class _PropertyProcessPageState extends State<PropertyProcessPage> {
                       child: AnimatedBuilder(
                           animation: Listenable.merge([]),
                           builder: (context, child) {
-                            print(algo.pageIndex / algo.onboardPages.length);
                             return LinearProgressIndicator(
-                              
-                                backgroundColor: const Color.fromARGB(255, 158, 158, 158),
-                                color: Color.fromARGB(255, 2, 144, 246),
-                                borderRadius: BorderRadius.only(topRight: Radius.circular(20),bottomRight: Radius.circular(20)),
+                                backgroundColor:
+                                    const Color.fromARGB(255, 158, 158, 158),
+                                color: const Color.fromARGB(255, 2, 144, 246),
+                                borderRadius: const BorderRadius.only(
+                                    topRight: Radius.circular(20),
+                                    bottomRight: Radius.circular(20)),
                                 semanticsLabel: "Sign Up Progress Indicator",
                                 value: algo.pageIndex /
-                                    (algo.onboardPages.length - 1));
+                                    (algo.onboardPages.length ));
                           }),
                     ),
                   ],
@@ -72,7 +72,6 @@ class _PropertyProcessPageState extends State<PropertyProcessPage> {
                           setState(() {
                             int copiedIndex = algo.pageIndex;
                             if ((copiedIndex -= 1) <= -1) {
-                              print("woops");
                             } else {
                               algo.reverseTransition = true;
                               algo.pageIndex -= 1;
@@ -94,24 +93,20 @@ class _PropertyProcessPageState extends State<PropertyProcessPage> {
                       child: Consumer<HomeProvider>(
                         builder: (context, algo2, child) => TextButton(
                           onPressed: () async {
-                            if(algo.canFinish)
-                            {
-                              print("RUNNING FINISH ALL");
+                            if (algo.canFinish) {
                               //what about calling handle user
-                              await algo.finishAll().then((value) async
-                              {
-                               await ApiService.instance!.updateLocalUserInfo().then((value) {
-                                if (value)
-                                {
-                                  algo2.trueRebuild();
-                                }
-                               });
+                              await algo.finishAll().then((value) async {
+                                await ApiService.instance!
+                                    .updateLocalUserInfo()
+                                    .then((value) {
+                                  if (value) {
+                                    algo2.trueRebuild();
+                                  }
+                                });
                               });
-                      
                             }
-                            print(algo.state);
                             algo.reverseTransition = false;
-                        
+
                             algo.state[algo.pageIndex] == true
                                 ? algo.nextPage()
                                 : null;
@@ -124,8 +119,8 @@ class _PropertyProcessPageState extends State<PropertyProcessPage> {
                                   const MaterialStatePropertyAll(Colors.black),
                               surfaceTintColor:
                                   const MaterialStatePropertyAll(Colors.black),
-                              overlayColor:
-                                  const MaterialStatePropertyAll(Colors.black12),
+                              overlayColor: const MaterialStatePropertyAll(
+                                  Colors.black12),
                               shape: MaterialStatePropertyAll(
                                   RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(20),
@@ -133,8 +128,8 @@ class _PropertyProcessPageState extends State<PropertyProcessPage> {
                                           style: BorderStyle.solid))),
                               backgroundColor:
                                   const MaterialStatePropertyAll(Colors.black)),
-                          child:  Text(
-                         algo.canFinish ? "Finish":    "Next",
+                          child: Text(
+                            algo.canFinish ? "Finish" : "Next",
                             style: Styles.buttonText2,
                           ),
                         ),
@@ -175,9 +170,6 @@ class _PropertyProcessPageState extends State<PropertyProcessPage> {
   }
 }
 
-
-
-
 Widget schoolCard(String schoolName) {
   return Container(
     //decoration: BoxDecoration(image: DecorationImage(image: AssetImage("assets/occ.jpeg"))),
@@ -188,22 +180,39 @@ Widget schoolCard(String schoolName) {
       elevation: 9,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       surfaceTintColor: Colors.red,
-    child: Container(
-      child: Stack(
-        children: [
-          Container(width: double.infinity,decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),color: const Color.fromARGB(93, 0, 0, 0)),),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,mainAxisSize: MainAxisSize.max,
+      child: Container(
+          decoration: BoxDecoration(
+              image: const DecorationImage(
+                  fit: BoxFit.cover, image: AssetImage("assets/occ.jpeg")),
+              color: Colors.black,
+              borderRadius: BorderRadius.circular(20)),
+          child: Stack(
             children: [
-              CircleAvatar(backgroundColor: Colors.white,foregroundImage: AssetImage("assets/school_icons/occ.png"),),
-              FittedBox(child: Text("Orange Coast College",style: Styles.buttonText2,maxLines: 3,))
+              Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: const Color.fromARGB(93, 0, 0, 0)),
+              ),
+              const Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  CircleAvatar(
+                    backgroundColor: Colors.white,
+                    foregroundImage: AssetImage("assets/school_icons/occ.png"),
+                  ),
+                  FittedBox(
+                      child: Text(
+                    "Orange Coast College",
+                    style: Styles.buttonText2,
+                    maxLines: 3,
+                  ))
+                ],
+              )
             ],
-          )
-        ],
-      ),
-    decoration: BoxDecoration(image: DecorationImage(fit: BoxFit.cover,image: AssetImage("assets/occ.jpeg")),color: Colors.black,borderRadius: BorderRadius.circular(20))),
-      
+          )),
     ),
     //decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),image: DecorationImage(image: AssetImage("assets/occ.jpeg"))),
   );
@@ -246,11 +255,7 @@ class Summary extends StatelessWidget {
                     },
                     child: const Text("FINish")),
               ),
-              TextButton(
-                  onPressed: () {
-                    algo.printStats();
-                  },
-                  child: const Text("SEE STATS"))
+        
             ],
           )),
     );
