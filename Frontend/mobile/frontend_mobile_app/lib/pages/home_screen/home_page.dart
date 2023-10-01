@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_mobile_app/api/api_service.dart';
-import 'package:frontend_mobile_app/experimental/sliding_sheet.dart';
+import 'package:frontend_mobile_app/pages/home_screen/components/sliding_sheet.dart';
 import 'package:frontend_mobile_app/pages/loading.dart';
 import 'package:frontend_mobile_app/theme/styles.dart';
 
@@ -40,18 +40,18 @@ final List<Widget> items = [const School(),const Link(),const Profile()];
                   });
                 },
                icon: const Icon(Icons.school),
-                color: Colors.grey,
+                color: index == 0 ? Colors.black : Colors.grey
               ),
-              FloatingActionButton( backgroundColor: Colors.white,onPressed:(){
+              IconButton( onPressed:(){
                   setState(() {
                     index = 1;
                   });
-                },child: const Icon(Icons.link,color: Colors.black,), ),
+                },icon: const Icon(Icons.link,),color: index == 1 ? Colors.black : Colors.grey, ),
               IconButton( onPressed:(){
                   setState(() {
                     index = 2;
                   });
-                },icon:const Icon(Icons.person), color: Colors.grey)
+                },icon: Icon(Icons.person), color: index == 2 ? Colors.black : Colors.grey)
             ]),
       ),
       body: items[index]);
