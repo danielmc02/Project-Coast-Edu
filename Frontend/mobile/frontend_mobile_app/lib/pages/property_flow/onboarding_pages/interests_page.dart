@@ -93,7 +93,7 @@ class _InterestsPageState extends State<InterestsPage> {
 
                           //  e.value.entries.elementAt(1).
                         },
-                        avatar: e.value['icon'])
+                       /*avatar: e.value['icon']*/)
                 ]),
             const Spacer()
           ],

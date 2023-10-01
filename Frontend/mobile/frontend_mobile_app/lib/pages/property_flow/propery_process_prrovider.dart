@@ -88,7 +88,7 @@ Future<void> finishAll() async
   }
 
   var possibleMap = <String, Map>{
-    'Auto': {
+    'Cars': {
       'icon': CircleAvatar(child: Image.asset('assets/interest_icons/car.png')),
       'isSelected': false,
       'color': Colors.white
