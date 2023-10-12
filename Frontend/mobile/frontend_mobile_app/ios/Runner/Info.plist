@@ -46,7 +46,11 @@
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	
-
+	<!--Camera permission, only photo (10/04/23)-->
+	<key>NSCameraUsageDescription</key>
+	<string>Use your camera to post, interact with others, edit your profile, and more.</string>
+<key>NSMicrophoneUsageDescription</key>
+<string>Allow audio recording in order to make videos</string>
 
 </dict>
 </plist>

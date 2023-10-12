@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_mobile_app/api/api_service.dart';
 import 'package:frontend_mobile_app/pages/home_screen/components/sliding_sheet.dart';
+import 'package:frontend_mobile_app/pages/home_screen/pages/link_page.dart';
+import 'package:frontend_mobile_app/pages/home_screen/pages/profile_page.dart';
+import 'package:frontend_mobile_app/pages/home_screen/pages/school_page.dart';
 import 'package:frontend_mobile_app/pages/loading.dart';
 import 'package:frontend_mobile_app/theme/styles.dart';
 
@@ -17,7 +20,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
- int index = 2;
+ int index = 1;
 
 final List<Widget> items = [const School(),const Link(),const Profile()];
 
@@ -58,72 +61,11 @@ final List<Widget> items = [const School(),const Link(),const Profile()];
   }
 }
 
-class School extends StatelessWidget {
-  const School({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
-  }
-}
 
 
 
 
-class Link extends StatelessWidget {
-  const Link({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(onPressed: (){},backgroundColor: Colors.black, child: const Icon(Icons.add,color: Colors.white,)),
-      appBar: AppBar(
-        backgroundColor: const Color.fromARGB(0, 255, 255, 255),
-        shadowColor: Colors.transparent,
-        foregroundColor: Colors.black,
-        
-        title: const Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Text("All",style: Styles.headerText2,),
-            Text("Links"),
-            Text("Chains")
-          ],
-        
-        )
-      ),
-      body: const Column(),
-    );
-  }
-}
-
-class Profile extends StatelessWidget {
-  const Profile({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return  Scaffold(
-        body: Stack(
-          children: [
-            Center(
-              child: TextButton(
-                onPressed: () async {
-                  await ApiService.instance!.signout();
-                },
-                style: const ButtonStyle(
-                    backgroundColor: MaterialStatePropertyAll(Colors.red)),
-                child: const Text("SIGN OUT"),
-              ),
-            ),
-          const SlidingSheet()
-          ],
-        ),
-      );
-    
-  }
-}
 
 class HomeLoader extends StatefulWidget {
   const HomeLoader({super.key});

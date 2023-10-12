@@ -2,10 +2,12 @@
     "sqltools.connections": [
         {
             "previewLimit": 50,
-            "server": "localhost",
+            "server": "192.168.2.129",
             "port": 5432,
+            "askForPassword": true,
             "driver": "PostgreSQL",
-            "name": "test",
+            "name": "Remote Ubuntu Server",
+            "group": "Remote",
             "database": "users",
             "username": "postgres"
         }

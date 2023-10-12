@@ -17,7 +17,7 @@ class HomeProvider extends ChangeNotifier {
   */
   Future<bool> requiresOnboarding() async {
     //List<Widget> preReqs = [];
-
+print("Running requires onboard\n${Boxes.getUser()!.verifiedStudent}");
       await Future.delayed(const Duration(seconds: 1));
  
     if (Boxes.getUser()!.name == null ||
