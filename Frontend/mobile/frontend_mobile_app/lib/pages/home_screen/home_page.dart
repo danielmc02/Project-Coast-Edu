@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:frontend_mobile_app/api/api_service.dart';
-import 'package:frontend_mobile_app/pages/home_screen/components/sliding_sheet.dart';
 import 'package:frontend_mobile_app/pages/home_screen/pages/link_page.dart';
 import 'package:frontend_mobile_app/pages/home_screen/pages/profile_page.dart';
 import 'package:frontend_mobile_app/pages/home_screen/pages/school_page.dart';
 import 'package:frontend_mobile_app/pages/loading.dart';
-import 'package:frontend_mobile_app/theme/styles.dart';
 
 import 'package:provider/provider.dart';
 
@@ -54,7 +51,7 @@ final List<Widget> items = [const School(),const Link(),const Profile()];
                   setState(() {
                     index = 2;
                   });
-                },icon: Icon(Icons.person), color: index == 2 ? Colors.black : Colors.grey)
+                },icon: const Icon(Icons.person), color: index == 2 ? Colors.black : Colors.grey)
             ]),
       ),
       body: items[index]);

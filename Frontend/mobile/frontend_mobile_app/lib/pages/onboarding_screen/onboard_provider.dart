@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:frontend_mobile_app/api/api_service.dart';
+import 'package:frontend_mobile_app/models/boxes.dart';
+import 'package:frontend_mobile_app/models/user.dart';
 import 'package:http/http.dart' as http;
 
 import '../../api/endpoints.dart';
@@ -218,13 +220,13 @@ class OnboardingProvider extends ChangeNotifier {
       } else if (response.statusCode == 200) {
         Map rez = jsonDecode(response.body);
 
-        await ApiService.instance!.handleUser(rez);
+      await handleUser(rez);
+       // await ApiService.instance!.handleUser(rez);
       }
     } catch (e) {
       debugPrint("error in connection $e");
       Map report = {'code': e.toString(), 'body': "Server is not up"};
       return report;
-      //igit6 return "Uh Oh, there was an error in connecting to the db";
     }
   }
 
@@ -250,8 +252,8 @@ class OnboardingProvider extends ChangeNotifier {
         return report;
       } else if (response.statusCode == 200) {
         Map rez = jsonDecode(response.body);
-
-        await ApiService.instance!.handleUser(rez);
+      await handleUser(rez);
+       // await ApiService.instance!.handleUser(rez);
       }
     } catch (e) {
       debugPrint("error in connection $e");
@@ -261,3 +263,29 @@ class OnboardingProvider extends ChangeNotifier {
     }
   }
 }
+
+
+  Future<void> handleUser(Map res) async {
+    try {
+      List<String> stringInterests = [];
+      List? fromJson = res['interests'];
+      if (fromJson != null) {
+        for (var element in fromJson) {
+          stringInterests.add(element as String);
+        }
+      }
+
+      //debugPrint(res.toString());
+      var currentUser = User(
+          shortLifeJwt: res['jwt'],
+          id: res['id'],
+          name: res['name'],
+          interests:
+              fromJson == null ? fromJson as List<String>? : stringInterests,
+          verifiedStudent: res['verified_student']);
+      await Boxes.getUserBox().put('mainUser', currentUser);
+      await ApiService.instance!.signIn();
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }

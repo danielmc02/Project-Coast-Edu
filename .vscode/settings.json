@@ -10,6 +10,15 @@
             "group": "Remote",
             "database": "users",
             "username": "postgres"
+        },
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "local db",
+            "username": "postgres",
+            "database": "users"
         }
     ]
 }

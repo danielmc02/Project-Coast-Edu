@@ -5,7 +5,6 @@ pub mod auth {
         fmt::format,
         time::{Duration, SystemTime, UNIX_EPOCH},
     };
-
     use actix_web::{get, post, web, web::Json, HttpResponse};
     use argon2::{
         password_hash::{
@@ -16,34 +15,33 @@ pub mod auth {
     use jsonwebtoken::{encode, Algorithm, EncodingKey, Header};
     use serde::{Serialize, Deserialize};
     use serde_json::json;
-    // use sqlx::types::Json as sqlx;
+
+
     #[post("/register_user")]
     pub async fn register_user(req: Json<UserForm>, data: web::Data<AppData>) -> HttpResponse {
-        //query database for email first instead of using compute power to hash!!!
+        // a query to check if the account exists in the first place
         let res = sqlx::query("SELECT * FROM users WHERE email = $1")
             .bind(&req.email)
             .fetch_one(&data.db_pool)
             .await;
+
         match res {
-            //if the query suceeds than the email belongs to an account
             Ok(k) => {
-                println!("IN HERE:");
+                // Email already exists
                 return HttpResponse::Conflict()
                     .body("The user may already exist. Try signing in.2");
             }
-            //if the email dosen't exist than continue with registering the new email
             Err(_) => {
-                let argon2 = Argon2::default();
-                // A generated salt string
+                // Email wasn't found, continue to register the given credentials
+      
                 let salt = SaltString::generate(&mut OsRng);
 
-                let password_hash = argon2
+                let password_hash = Argon2::default()
                     .hash_password(&req.password.as_bytes(), &salt)
                     .unwrap()
                     .to_string();
-                println!("PASSWORD HASH: {:?}\n\n", password_hash);
 
-                let ps = PasswordHash::new(&password_hash).expect("msg");
+                let ps = PasswordHash::new(&password_hash).expect("Failed to generate password hash");
 
                 let result =
                     sqlx::query("INSERT INTO users(email,password_hash,salt) VALUES($1, $2, $3);")
@@ -70,8 +68,6 @@ pub mod auth {
 
     #[post("/log_in")]
     pub async fn log_in(user_form: Json<UserForm>, data: web::Data<AppData>) -> HttpResponse {
-        // Run a query that checks the db with the email
-
         shared_login_logic(user_form, data).await
     }
 
@@ -79,9 +75,10 @@ pub mod auth {
         user_form: Json<UserForm>,
         data: web::Data<AppData>,
     ) -> HttpResponse {
+        // Fetch user information
         let result = sqlx::query_as::<_, User>(
             "SELECT id::text, email, password_hash, salt FROM users WHERE email = $1",
-        ) /* .bind(&user_form.email)*/
+        ) 
         .bind(&user_form.email)
         .fetch_one(&data.db_pool)
         .await;
@@ -89,10 +86,8 @@ pub mod auth {
         match result {
             //an account exists, time to verify the password
             Ok(res) => {
-                println!("RESSIDDDD {}\n\n\n", res.id);
-                //set up argon2 configuration
-                let argon2 = Argon2::default();
-                let bool = argon2
+         
+                let bool = Argon2::default()
                     .verify_password(
                         &user_form.password.as_bytes(),
                         &PasswordHash::new(&res.password_hash).unwrap(),
@@ -104,42 +99,35 @@ pub mod auth {
                     }
                 }
                 let formated_query = format!("SELECT id::text, name, interests, verified_student,friends FROM public_users WHERE id = '{}'",res.id);
-                println!("FORMATED QUERY: {}\n", formated_query);
                 let rez = sqlx::query_as::<_, SignInResponce>(&formated_query)
                     .bind(res.id)
                     .fetch_one(&data.db_pool)
                     .await
                     .unwrap();
-                println!("\n\nVALUE: {:?}\n\n", rez);
-                //  let response = SignInResponce{};
-                // RSA JWT
-                let json_string = serde_json::to_value(&rez).unwrap(); // serde_json::to_string(&rez).unwrap();
+            
+                //cast to json so you can insert jwt from what was once a struct
+                let json_string = serde_json::to_value(&rez).unwrap(); 
 
                 let mut modified_json_object = json_string.as_object().unwrap().clone();
                 let jwt: serde_json::Value = json!(create_jwt_token());
                 modified_json_object.insert("jwt".to_string(), jwt);
-                println!("THE pack IS {:?}\n\n\n", modified_json_object);
 
                 return HttpResponse::Ok().json(modified_json_object);
             }
             Err(er) => {
-                println!("NOT SUCESFUL SIGN IN {}", er);
-
+               //No account exists
                 return HttpResponse::Conflict().body("This account may not exist");
             }
         }
     }
 
-    #[get("/test")]
-    async fn test() -> HttpResponse {
-        HttpResponse::Ok().body("SUCESFULLY RETRIEVED TEST")
-    }
+
 
     fn create_jwt_token() -> String {
         let current_time_duration = SystemTime::now()
             .duration_since(UNIX_EPOCH)
             .expect("Error fetching time");
-
+        // Expiration of 30 minutes
         let expiration_time_duration = current_time_duration + Duration::new(1800, 0);
 
         let expiration_time_unix_timestamp = expiration_time_duration.as_secs() as usize;

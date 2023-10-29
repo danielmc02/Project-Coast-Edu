@@ -3,9 +3,9 @@ class Endpoints
 {
 
   static const String endpoint = "192.168.2.129";
-  //static const String endpoint = "localhost";
+ // static const String endpoint = "localhost";
 
-  
+ // Ashleys  static const String endpoint = "192.168.254.134";
   static final registerUserUri = Uri.parse('http://$endpoint:80/register_user');
 
 

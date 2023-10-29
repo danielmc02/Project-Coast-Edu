@@ -6,7 +6,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:frontend_mobile_app/api/endpoints.dart';
-import 'package:frontend_mobile_app/models/user.dart';
 import 'package:http/http.dart' as http;
 import '../models/boxes.dart';
 
@@ -56,30 +55,7 @@ class ApiService extends ChangeNotifier {
   }
   /*------------------------------*/
 
-  Future<void> handleUser(Map res) async {
-    try {
-      List<String> stringInterests = [];
-      List? fromJson = res['interests'];
-      if (fromJson != null) {
-        for (var element in fromJson) {
-          stringInterests.add(element as String);
-        }
-      }
 
-      debugPrint(res.toString());
-      var currentUser = User(
-          shortLifeJwt: res['jwt'],
-          id: res['id'],
-          name: res['name'],
-          interests:
-              fromJson == null ? fromJson as List<String>? : stringInterests,
-          verifiedStudent: res['verified_student']);
-      await Boxes.getUserBox().put('mainUser', currentUser);
-      await signIn();
-    } catch (e) {
-      debugPrint(e.toString());
-    }
-  }
 
   Future<void> signout() async {
     await Boxes.getUserBox().delete('mainUser');

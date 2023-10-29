@@ -10,13 +10,13 @@ class Profile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return  const Scaffold(
         body: Stack(
           children: [
             Center(
               child: Text("Show people who you really are. Post a video for others to see",style: Styles.headerText2,)
             ),
-          const SlidingSheet()
+          SlidingSheet()
           ],
         ),
       );

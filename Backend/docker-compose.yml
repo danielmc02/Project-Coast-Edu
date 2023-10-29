@@ -14,12 +14,23 @@ services:
       POSTGRES_DB: users
     volumes:
       - ./init_users.sql:/docker-entrypoint-initdb.d/init.sql
-#  auth:
-#    container_name: auth-service
-#    build: ./Authentication/
-#    ports:
-#      - "80:80"
-#    restart: always
+  auth:
+    container_name: auth-service
+    build: ./RustServer/
+    ports:
+      - "80:80"
+    restart: always
+
+#  mongo:
+#
+#    container_name: mongo-database
+#    image: mongo:7.0.2
+#    environment:
+#      MONGO_INITDB_ROOT_USERNAME: root
+#      MONGO_INITDB_ROOT_PASSWORD: 123
+
+
+
 #  redis-cache: 
 #    container_name: redis-server
 #    image: redis

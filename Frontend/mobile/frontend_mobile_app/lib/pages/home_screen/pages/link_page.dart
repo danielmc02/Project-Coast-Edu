@@ -30,19 +30,30 @@ class Link extends StatelessWidget {
       body: const Column(
         children: [],
       ),
-      bottomNavigationBar:  ReusableButton(title: "Create a Chain"),
+      bottomNavigationBar:  ReusableButton(title: "Create a Chain",command: () {
+        showDialog(context: context, builder: (context) {
+          return AlertDialog(actions: [
+            ReusableButton(title: "Continue", command: (){})
+          ],alignment: Alignment.center,title: Text("All big things start small"),content: Column(mainAxisSize: MainAxisSize.min,
+            children: [Text("1. Create a chain\n2. Users will be notified\n3. With enough people interested, you have created a link")],
+          ),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20),),
+          );
+        },);
+      },),
     );
   }
 }
 
 class ReusableButton extends StatelessWidget {
-   ReusableButton({super.key, required this.title});
+   ReusableButton({super.key, required this.title, required this.command});
   late String title;
+  late void Function()? command;
   @override
   Widget build(BuildContext context) {
-    return FractionallySizedBox(widthFactor: .9,child: TextButton(onPressed: (){}, child: Text(title,style: Styles.buttonText2,),style: ButtonStyle(
-      backgroundColor: MaterialStatePropertyAll(Colors.black),
+    return FractionallySizedBox(widthFactor: .9,child: TextButton(onPressed:command,style: ButtonStyle(
+      backgroundColor: const MaterialStatePropertyAll(Colors.black),
       shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)))
-    ),));
+    ), child: Text(title,style: Styles.buttonText2,),));
   }
 }

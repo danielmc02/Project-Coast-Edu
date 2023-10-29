@@ -30,8 +30,8 @@ async fn main() -> std::io::Result<()> {
 
     let _postgress_pool: Pool<sqlx::Postgres> = PgPoolOptions::new()
         .max_connections(2)
-     .connect("postgresql://postgres:123@localhost:5432/users")
- //   .connect("postgresql://postgres:123@database:5432/users")
+   //  .connect("postgresql://postgres:123@localhost:5432/users")
+ .connect("postgresql://postgres:123@database:5432/users")
         .await
         .expect("Error connecting to db");
 
