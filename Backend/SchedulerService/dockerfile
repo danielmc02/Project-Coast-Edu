@@ -1,0 +1,11 @@
+FROM python:3
+
+WORKDIR /App
+
+COPY ./main.py /App/
+
+
+
+
+
+CMD [ "python3" , "main.py"]
