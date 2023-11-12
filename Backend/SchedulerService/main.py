@@ -4,11 +4,10 @@
 print("INIT")
 import asyncio
 
-import Schedule
+import Schedulez
 
 
-
-asyncio.run(Schedule.SchedualarMinutes(1))
+asyncio.run(Schedulez.SchedualarMinutes(1))
 
 
 

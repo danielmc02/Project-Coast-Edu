@@ -16,7 +16,7 @@ class Profile extends StatelessWidget {
             Center(
               child: Text("Show people who you really are. Post a video for others to see",style: Styles.headerText2,)
             ),
-          SlidingSheet()
+          ProfileFooter()
           ],
         ),
       );

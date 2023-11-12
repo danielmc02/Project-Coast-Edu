@@ -34,7 +34,7 @@ class Link extends StatelessWidget {
         showDialog(context: context, builder: (context) {
           return AlertDialog(actions: [
             ReusableButton(title: "Continue", command: (){})
-          ],alignment: Alignment.center,title: Text("All big things start small"),content: Column(mainAxisSize: MainAxisSize.min,
+          ],alignment: Alignment.center,title: const Text("All big things start small"),content: const Column(mainAxisSize: MainAxisSize.min,
             children: [Text("1. Create a chain\n2. Users will be notified\n3. With enough people interested, you have created a link")],
           ),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20),),

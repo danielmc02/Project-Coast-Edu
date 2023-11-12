@@ -8,14 +8,14 @@ import 'package:provider/provider.dart';
 
 import '../../../models/boxes.dart';
 
-class SlidingSheet extends StatefulWidget {
-  const SlidingSheet({super.key});
+class ProfileFooter extends StatefulWidget {
+  const ProfileFooter({super.key});
 
   @override
-  State<SlidingSheet> createState() => _SlidingSheetState();
+  State<ProfileFooter> createState() => _ProfileFooterState();
 }
 
-class _SlidingSheetState extends State<SlidingSheet> {
+class _ProfileFooterState extends State<ProfileFooter> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -194,7 +194,7 @@ class _ProfilePictureState extends State<ProfilePicture> {
                                                       }),
                                                       ReusableButton(title: "Retake", command: (){Navigator.pop(context);})
                                                 ],
-                                                title: Text(
+                                                title: const Text(
                                                     "This is your new probile picture"),
                                                 content: CircleAvatar(
                                                   radius: 110,
@@ -265,13 +265,10 @@ class _ProfilePictureState extends State<ProfilePicture> {
 class ProfilePictureProvider extends ChangeNotifier
 {
   ProfilePictureProvider()
-  {
-
-  }
-
+;
   Future<void> uploadProfilePicture() async
   {
-    Set j = Set();
+    Set j = {};
     //create proper uri with parameters to publish picture to blob
     Uri blockStroageUri = Uri.parse("https://08link02storage.blob.core.windows.net/profile-pictures/myblob");
     ApiService.instance!.httpClient.put(blockStroageUri,headers: {'Authorization':''});
