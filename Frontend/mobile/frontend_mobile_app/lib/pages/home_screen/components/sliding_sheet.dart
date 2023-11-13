@@ -2,6 +2,7 @@ import 'package:camera/camera.dart' ;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend_mobile_app/api/api_service.dart';
+import 'package:frontend_mobile_app/pages/home_screen/components/settings.dart';
 import 'package:frontend_mobile_app/pages/home_screen/pages/link_page.dart';
 import 'package:frontend_mobile_app/theme/styles.dart';
 import 'package:provider/provider.dart';
@@ -54,13 +55,20 @@ class _ProfileFooterState extends State<ProfileFooter> {
                               //       mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                FittedBox(
-                                  child: Text(
-                                    Boxes.getUser()!.name!,
-                                    style: Styles.headerText2,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
+                                Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    FittedBox(
+                                      child: Text(
+                                        Boxes.getUser()!.name!,
+                                        style: Styles.headerText2,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                    SettingsButton()
+                                  ],
                                 ),
                                 //   Container(color: Colors.red,height: 40,width: MediaQuery.of(context).size.width,)
                                 //  Expanded(child: Container(color: Colors.red,))
@@ -83,15 +91,7 @@ class _ProfileFooterState extends State<ProfileFooter> {
                                     },
                                   ),
                                 ),
-                                TextButton(
-                                  onPressed: () async {
-                                    await ApiService.instance!.signout();
-                                  },
-                                  style: const ButtonStyle(
-                                      backgroundColor:
-                                          MaterialStatePropertyAll(Colors.red)),
-                                  child: const Text("SIGN OUT"),
-                                ),
+                                
                               ],
                             ),
                           )
