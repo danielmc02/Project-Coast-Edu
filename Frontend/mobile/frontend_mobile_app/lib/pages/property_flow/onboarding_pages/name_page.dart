@@ -65,7 +65,7 @@ class NamePage extends StatelessWidget implements HttpRunable {
                         border: InputBorder.none,
                         counterText: '',
                         //  hintTextDirection: TextDirection.rtl,
-                        hintText: "Your name here",
+                        hintText: "Firstname Lastname  ",
                         hintStyle:
                             TextStyle(color: Color.fromARGB(87, 0, 0, 0))),
                   )),

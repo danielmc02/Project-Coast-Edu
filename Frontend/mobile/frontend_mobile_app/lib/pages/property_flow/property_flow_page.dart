@@ -347,7 +347,7 @@ class VerifyCode extends StatelessWidget {
 }
 
 class CapitalizedWordsTextInputFormatter extends FilteringTextInputFormatter {
-  CapitalizedWordsTextInputFormatter() : super.allow(RegExp(r'^[A-Za-z\s]*$'));
+  CapitalizedWordsTextInputFormatter() : super.allow(RegExp(r'^[A-Za-z\s.]*$'));
 
   @override
   TextEditingValue formatEditUpdate(
@@ -361,18 +361,21 @@ class CapitalizedWordsTextInputFormatter extends FilteringTextInputFormatter {
       (match) => match.group(0)!.toUpperCase(),
     );
 
+    // Replace consecutive spaces with a single space
+    final newStringWithSingleSpace = newString.replaceAll(RegExp(r'\s{2,}'), ' ');
+
     // Calculate the updated selection range while ensuring it's within bounds
     final updatedSelection = newValue.selection.copyWith(
-      baseOffset: newValue.selection.baseOffset <= newString.length
+      baseOffset: newValue.selection.baseOffset <= newStringWithSingleSpace.length
           ? newValue.selection.baseOffset
-          : newString.length,
-      extentOffset: newValue.selection.extentOffset <= newString.length
+          : newStringWithSingleSpace.length,
+      extentOffset: newValue.selection.extentOffset <= newStringWithSingleSpace.length
           ? newValue.selection.extentOffset
-          : newString.length,
+          : newStringWithSingleSpace.length,
     );
 
     return TextEditingValue(
-      text: newString,
+      text: newStringWithSingleSpace,
       selection: updatedSelection,
     );
   }
