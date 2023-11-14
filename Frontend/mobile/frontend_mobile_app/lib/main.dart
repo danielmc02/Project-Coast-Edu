@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:frontend_mobile_app/api/api_service.dart';
 import 'package:frontend_mobile_app/models/user.dart';
@@ -6,7 +5,6 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'pages/home_screen/home_page.dart';
 import 'pages/onboarding_screen/onboarding_page.dart';
-
 
 void main() async {
   //init everything and user model
@@ -23,11 +21,10 @@ class RootApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  MaterialApp(
-      routes: {
-        'home' : (context) => const HomeLoader()
-      },
-        debugShowCheckedModeBanner: false, home: const AuthWrapper());
+    return MaterialApp(
+        routes: {'home': (context) => const HomeLoader()},
+        debugShowCheckedModeBanner: false,
+        home: const AuthWrapper());
   }
 }
 
@@ -41,13 +38,13 @@ class AuthWrapper extends StatefulWidget {
 class _AuthWrapperState extends State<AuthWrapper> {
   @override
   void initState() {
-    //For hard reset purposes unco
-   // Boxes.getUserBox().delete('mainUser');
-
+    // ! Following will hard sign out only use when necessary
+    // Boxes.getUserBox().delete('mainUser');
 
     super.initState();
   }
 
+  // * Root of the app, refer to ApiService
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -58,6 +55,4 @@ class _AuthWrapperState extends State<AuthWrapper> {
               : const OnboardingPage();
         }));
   }
-  
-
 }
