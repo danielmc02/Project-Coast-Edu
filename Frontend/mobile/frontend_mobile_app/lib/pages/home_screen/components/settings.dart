@@ -6,50 +6,66 @@ import 'package:frontend_mobile_app/pages/home_screen/components/setting_fields/
 import 'dart:io';
 
 import 'package:provider/provider.dart';
+
 class SettingsButton extends StatelessWidget {
   const SettingsButton({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(onPressed: ()async{
-      print("Pressed");
-     await showDialog(context: context, builder: (context) {
-      return AlertDialog(
-        actionsAlignment: MainAxisAlignment.center,
-        title: Text("Settings"),
-        actions: [
-          TextButton(onPressed: ()async{
-            Navigator.pop(context);
-
-            await ApiService.instance!.signout();
-
-          }, child: Text("Sign Out")),
-          TextButton(onPressed: ()async{
+    return IconButton(
+        onPressed: () async {
+          print("Pressed");
+          await showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                actionsAlignment: MainAxisAlignment.center,
+                title: Text("Settings"),
+                actions: [
+                  TextButton(
+                      onPressed: () async {
                         Navigator.pop(context);
 
-                  Platform.isIOS ? await Navigator.push(context, CupertinoPageRoute(builder: (context) =>SettingsPage() ,)): await Navigator.push(context, MaterialPageRoute(builder: (context) => SettingsPage(),));
-          }, child: Text("Edit Profile"))
-        ],
-      );
-      },);
-    }, icon: Icon(Icons.settings));
+                        await ApiService.instance!.signout();
+                      },
+                      child: Text("Sign Out")),
+                  TextButton(
+                      onPressed: () async {
+                        print(Boxes.getUser()!.name);
+                        Navigator.pop(context);
+
+                        Platform.isIOS
+                            ? await Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                  builder: (context) => SettingsPage(),
+                                ))
+                            : await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SettingsPage(),
+                                ));
+                      },
+                      child: Text("Edit Profile"))
+                ],
+              );
+            },
+          );
+        },
+        icon: Icon(Icons.settings));
   }
 }
 
 class SettingsPage extends StatelessWidget {
-   SettingsPage({super.key});
+  SettingsPage({super.key});
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => SettingsPageProvider(),
-      builder: (context, child) =>  Consumer<SettingsPageProvider>(
-        builder: (context, settingsProvider, child) =>  Scaffold(
+      builder: (context, child) => Consumer<SettingsPageProvider>(
+        builder: (context, settingsProvider, child) => Scaffold(
           appBar: AppBar(title: Text("Settings")),
-          body: Column(children: [
-           UpdateNameField(),
-SaveSettingsButton()
-          
-          ]),
+          body: Column(children: [UpdateNameField(), SaveSettingsButton()]),
         ),
       ),
     );
@@ -61,42 +77,46 @@ class SaveSettingsButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<SettingsPageProvider>(builder: (context, settingsProvider, child) => TextButton(onPressed: (){}, child: Text("Save"),style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(settingsProvider.saveColor)),));
+    return Consumer<SettingsPageProvider>(
+        builder: (context, settingsProvider, child) => TextButton(
+              onPressed: () {},
+              child: Text("Save"),
+              style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStatePropertyAll(settingsProvider.saveColor)),
+            ));
   }
 }
 
-class SettingsPageProvider extends ChangeNotifier
-{
-  SettingsPageProvider()
-  {
-
-  }
+class SettingsPageProvider extends ChangeNotifier {
+  SettingsPageProvider() {}
   //initialized immutable reference to compare if name has changed
-  final String userName = Boxes.getUser()!.name!;
   bool hasNewName = false;
-  Future<void> dealWithNewName(String value)async
-  {
-    if(value == userName )
+  MaterialColor saveColor = Colors.grey;
+
+  Future<void> dealWithNewName(bool value) async {
+    hasNewName = value;
+    print("Has new value is $hasNewName");
+    await runCheck();
+  }
+
+  Future<void> runCheck() async {
+    List<bool> stateHolder = [hasNewName];
+    print("{$stateHolder}");
+    if(stateHolder.contains(true))
     {
-      print("Cant change: they are the same");    
-      hasNewName = false;
-      runCheck();
+print("ran in true");
+saveColor = Colors.green;
+    notifyListeners();
+
     }
     else
     {
-      print("New name is $value");
-      hasNewName = true;
-      runCheck();
+      print("Ran in false");
+      saveColor = Colors.grey;
+          notifyListeners();
+
     }
+    //await  ?  : Colors.grey;
   }
-MaterialColor saveColor = Colors.grey;
-  void runCheck()
-  {
-    List<bool> stateHolder = [hasNewName];
-    stateHolder.contains(true) ? saveColor = Colors.green : Colors.grey;
-    notifyListeners();
-
-  }
-
-
 }

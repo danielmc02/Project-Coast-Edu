@@ -23,6 +23,11 @@ CREATE TABLE IF NOT EXISTS public_users
       REFERENCES users(id)
 );
 
+/*
+   Creates a function to be triggered that automatically creates
+   a public interface version of private users that is used for
+   interfacing with others
+*/
 CREATE OR REPLACE FUNCTION create_public_user_instance()
    RETURNS TRIGGER
    LANGUAGE plpgsql
@@ -34,9 +39,32 @@ BEGIN
    END;
 $$;
 
+/*
+   Triggered when a private user is added, their respective
+   public account is also created.
+*/
 CREATE TRIGGER create_public_user_instance
    AFTER INSERT
    ON users
    FOR EACH ROW
    EXECUTE FUNCTION create_public_user_instance();
 
+
+
+/*
+CREATE OR REPLACE FUNCTION delete_public_private_user_instance()
+   RETURNS TRIGGER
+   LANGUAGE plpgsql
+AS $$
+    BEGIN
+   DELETE FROM public
+
+   END;
+   $$;
+
+CREATE TRIGGER delete_public_private_user_instance
+   AFTER DELETE
+   ON public_users
+   FOR EACH ROW
+   EXECUTE FUNCTION delete_public_private_user_instance()
+   */

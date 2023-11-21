@@ -25,9 +25,16 @@ class _UpdateNameFieldState extends State<UpdateNameField> {
         key: nameKey,
         child: TextFormField(
           onChanged: (value) async {
-            print("hello");
-            if (nameKey.currentState!.validate() == true) {
-              await settingsProvider.dealWithNewName(value.trim());
+            //* If is 3 or greater and dosen't equal origninal name 
+            if (nameKey.currentState!.validate() == true && value != Boxes.getUser()!.name) {
+                          
+
+              await settingsProvider.dealWithNewName(true);
+            }
+            else
+            {
+                            await settingsProvider.dealWithNewName(false);
+
             }
           },
 

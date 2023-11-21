@@ -44,57 +44,61 @@ class _InterestsPageState extends State<InterestsPage> {
               textAlign: TextAlign.center,
             ),
             const Spacer(),
-            Wrap(
-                verticalDirection: VerticalDirection.down,
-                runSpacing: 20,
-                spacing: 20,
-                direction: Axis.horizontal,
-                textDirection: TextDirection.ltr,
-                alignment: WrapAlignment.center,
-                crossAxisAlignment: WrapCrossAlignment.center,
-                runAlignment: WrapAlignment.center,
-                children: [
-                  for (var e in algo.possibleMap.entries)
-                    ChoiceChip(
-                        elevation: e.value['isSelected'] ? 3 : 0,
-                        selectedColor: e.value['color'],
-                        label: Text(
-                          e.key,
-                          style: Styles.chipText,
-                        ),
-                        selected: e.value['isSelected'],
-                        onSelected: (value) {
-                          if (algo.chosen.length < 3 &&
-                              e.value['isSelected'] ==
-                                  false) //volume isn't at max
-                          {
-                            debugPrint('1');
-
-                            setState(() {
-                              e.value['isSelected'] = !e.value['isSelected'];
-                              if (e.value['isSelected'] == true) {
-                                algo.chosen.add(e.key);
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Wrap(
+                  verticalDirection: VerticalDirection.down,
+                  runSpacing: 20,
+                  spacing: 20,
+                  direction: Axis.horizontal,
+                  textDirection: TextDirection.ltr,
+                  alignment: WrapAlignment.center,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  runAlignment: WrapAlignment.center,
+                  children: [
+                    for (var e in algo.possibleMap.entries)
+                      ChoiceChip(
+                        backgroundColor: const Color.fromARGB(255, 238, 238, 238),
+                          elevation: e.value['isSelected'] ? 3 : 0,
+                          selectedColor: e.value['color'],
+                          label: Text(
+                            e.key,
+                            style: Styles.chipText,
+                          ),
+                          selected: e.value['isSelected'],
+                          onSelected: (value) {
+                            if (algo.chosen.length < 3 &&
+                                e.value['isSelected'] ==
+                                    false) //volume isn't at max
+                            {
+                              debugPrint('1');
+            
+                              setState(() {
+                                e.value['isSelected'] = !e.value['isSelected'];
+                                if (e.value['isSelected'] == true) {
+                                  algo.chosen.add(e.key);
+                                  algo.checkInterestState();
+                                }
+                              });
+                            } else if (e.value['isSelected'] == true) {
+                              debugPrint('2');
+                              setState(() {
+                                e.value['isSelected'] = false;
+                                algo.chosen.remove(e.key);
                                 algo.checkInterestState();
-                              }
-                            });
-                          } else if (e.value['isSelected'] == true) {
-                            debugPrint('2');
-                            setState(() {
-                              e.value['isSelected'] = false;
-                              algo.chosen.remove(e.key);
-                              algo.checkInterestState();
-                            });
-                          } else {
-                            debugPrint('2.5');
-                            debugPrint(
-                                'Cant select because 3 is already chosen');
-                          }
-                          widget.chosenInterests = algo.chosen;
-
-                          //  e.value.entries.elementAt(1).
-                        },
-                       /*avatar: e.value['icon']*/)
-                ]),
+                              });
+                            } else {
+                              debugPrint('2.5');
+                              debugPrint(
+                                  'Cant select because 3 is already chosen');
+                            }
+                            widget.chosenInterests = algo.chosen;
+            
+                            //  e.value.entries.elementAt(1).
+                          },
+                         /*avatar: e.value['icon']*/)
+                  ]),
+            ),
             const Spacer()
           ],
         ),

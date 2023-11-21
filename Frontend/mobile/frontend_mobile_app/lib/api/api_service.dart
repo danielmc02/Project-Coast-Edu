@@ -23,6 +23,7 @@ class ApiService extends ChangeNotifier {
   // Constructor that's ran first time "instance is called"
   ApiService._init() {
     Boxes.getUser() != null ? signedIn = true : signedIn = false;
+    print("Signed In value from apiservice is: $signedIn");
     debugPrint("Just got inited");
   }
   /*------------------------------*/
