@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:frontend_mobile_app/pages/home_screen/pages/link_page.dart';
-import 'package:frontend_mobile_app/pages/home_screen/pages/profile_page.dart';
-import 'package:frontend_mobile_app/pages/home_screen/pages/school_page.dart';
+import 'package:frontend_mobile_app/pages/home_screens/pages/link_page.dart';
+import 'package:frontend_mobile_app/pages/home_screens/pages/profile_page.dart';
+import 'package:frontend_mobile_app/pages/home_screens/pages/school_page.dart';
 import 'package:frontend_mobile_app/pages/loading.dart';
 
 import 'package:provider/provider.dart';
@@ -91,10 +91,10 @@ void initState() {
               return const Home();
             } else{
               return FutureBuilder(
-                future:   algo.requiresOnboarding(),
+                future:   algo.needsToHandleProperties(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
+                    return SplashLoader();
                   } else if (snapshot.connectionState == ConnectionState.done &&
                       snapshot.hasData) {
                     //if algo.TRIGGERRESET == true ?

@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frontend_mobile_app/api/api_service.dart';
 import 'package:frontend_mobile_app/models/user.dart';
+import 'package:frontend_mobile_app/pages/home/home_provider.dart';
 import 'package:frontend_mobile_app/theme/styles.dart';
 import 'package:provider/provider.dart';
 import 'package:frontend_mobile_app/models/boxes.dart';
-import '../home_screen/home_provider.dart';
 import 'propery_process_prrovider.dart';
 
 class PropertyProcessPage extends StatefulWidget {

@@ -1,6 +1,3 @@
-
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frontend_mobile_app/api/api_service.dart';
@@ -12,18 +9,22 @@ import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class VerifiedStudentPage extends StatefulWidget implements HttpRunable {
-   VerifiedStudentPage({
+  VerifiedStudentPage({
     super.key,
   });
 
   bool verified = false;
-  
-  @override
-  Future<void> runHttp() async{
-    Map updateVerifiedStudentStatus = { 'jwt' : Boxes.getUser()!.shortLifeJwt, 'id' : Boxes.getUser()!.id, 'data' : verified.toString() };
-   await ApiService.instance!.updateVerifiedStudentStatus(updateVerifiedStudentStatus);
-  }
 
+  @override
+  Future<void> runHttp() async {
+    Map updateVerifiedStudentStatus = {
+      'jwt': Boxes.getUser()!.shortLifeJwt,
+      'id': Boxes.getUser()!.id,
+      'data': verified.toString()
+    };
+    await ApiService.instance!
+        .updateVerifiedStudentStatus(updateVerifiedStudentStatus);
+  }
 
   @override
   State<VerifiedStudentPage> createState() => _VerifiedStudentPageState();
@@ -54,7 +55,7 @@ class _VerifiedStudentPageState extends State<VerifiedStudentPage> {
                 ? Form(
                     key: algo.verificationFormKey,
                     child: Scaffold(
-                   //   backgroundColor: Colors.black,
+                      //   backgroundColor: Colors.black,
                       body: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -64,8 +65,8 @@ class _VerifiedStudentPageState extends State<VerifiedStudentPage> {
                             style: Styles.headerText1,
                             textAlign: TextAlign.center,
                           ),
-            const Spacer(),
-                           Center(
+                          const Spacer(),
+                          Center(
                             child: ConstrainedBox(
                               constraints: BoxConstraints(
                                 maxHeight:
@@ -98,7 +99,7 @@ class _VerifiedStudentPageState extends State<VerifiedStudentPage> {
                                         },
                                         child: Container(
                                           decoration: BoxDecoration(
-                                         // image: DecorationImage(image: AssetImage("assets/occ.jpeg")),
+                                            // image: DecorationImage(image: AssetImage("assets/occ.jpeg")),
                                             border:
                                                 Border.all(color: Colors.black),
                                             borderRadius:
@@ -106,22 +107,32 @@ class _VerifiedStudentPageState extends State<VerifiedStudentPage> {
                                             color: schoolData['isSelected']
                                                 ? Colors.white
                                                 : Colors.grey,
-                                                
                                           ),
                                           width: 300,
-                                        //  height: 200,
+                                          //  height: 200,
                                           child: Padding(
                                             padding: const EdgeInsets.all(8.0),
                                             child: ListTile(
-                                              
                                               selectedColor: Colors.white,
                                               //tileColor: Colors.grey,
-                                              selected: schoolData['isSelected'],
-                                              leading: CircleAvatar(backgroundColor: Colors.white,foregroundImage:schoolData['icon'] ,) ,
+                                              selected:
+                                                  schoolData['isSelected'],
+                                              leading: CircleAvatar(
+                                                backgroundColor: Colors.white,
+                                                foregroundImage:
+                                                    schoolData['icon'],
+                                              ),
                                               dense: false,
                                               // subtitle: const Text("Current Users: "),
-                                              title: Text(name,
-                                                  textAlign: TextAlign.center,style: TextStyle(color: schoolData['isSelected'] ? Colors.black : Colors.white60),),
+                                              title: Text(
+                                                name,
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                    color:
+                                                        schoolData['isSelected']
+                                                            ? Colors.black
+                                                            : Colors.white60),
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -135,8 +146,8 @@ class _VerifiedStudentPageState extends State<VerifiedStudentPage> {
                           SizedBox(
                               width: double.infinity,
                               child: TextFormField(
-                                 style: Styles.buttonText,
-                    cursorColor: Colors.black,
+                                style: Styles.buttonText,
+                                cursorColor: Colors.black,
 
                                 controller: emailFieldController,
                                 // key: algo.verificationFormKey,
@@ -154,8 +165,7 @@ class _VerifiedStudentPageState extends State<VerifiedStudentPage> {
                                   FilteringTextInputFormatter.deny(' ')
                                 ],
                                 decoration: const InputDecoration(
-                                                          border: InputBorder.none,
-
+                                    border: InputBorder.none,
                                     hintText: "example@cccd.edu.com",
                                     hintStyle: TextStyle(
                                         color: Color.fromARGB(87, 0, 0, 0))),
@@ -163,12 +173,17 @@ class _VerifiedStudentPageState extends State<VerifiedStudentPage> {
                           TextButton(
                               onPressed: () async {
                                 algo.verificationFormKey.currentState!
-                                        .validate() && algo.chosenSchool.isEmpty == false
-                                    ? algo.verifyStudentEmail(
-                                        emailFieldController.text).then((value) => widget.verified = value)
+                                            .validate() &&
+                                        algo.chosenSchool.isEmpty == false
+                                    ? algo
+                                        .verifyStudentEmail(
+                                            emailFieldController.text)
+                                        .then(
+                                            (value) => widget.verified = value)
                                     : null;
                               },
-                              child: const Text("Verify")),const Spacer()
+                              child: const Text("Verify")),
+                          const Spacer()
                         ],
                       ),
                     ),

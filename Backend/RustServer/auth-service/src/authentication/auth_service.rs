@@ -54,7 +54,6 @@ pub mod auth {
                 match result {
                     Ok(_) => {
                         return shared_login_logic(req, data).await;
-                        //return shared_login_logic(req, data).await;
                     }
                     Err(error) => {
                         println!("{}", error);

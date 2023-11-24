@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:frontend_mobile_app/api/api_service.dart';
+import 'package:frontend_mobile_app/constants/constants.dart';
 import 'package:frontend_mobile_app/models/boxes.dart';
 import 'package:frontend_mobile_app/models/user.dart';
 import 'package:http/http.dart' as http;
@@ -9,13 +10,9 @@ import 'package:http/http.dart' as http;
 import '../../api/endpoints.dart';
 
 class OnboardingProvider extends ChangeNotifier {
-
-
   OnboardingProvider();
 
   /// ******** UI purposes *********
-
-
 
   bool parseEmail(String email) {
     List<String> supportedEmails = [
@@ -192,8 +189,7 @@ class OnboardingProvider extends ChangeNotifier {
     return feedback;
   }
 
-
-/* -------------------------------- */
+  /* -------------------------------- */
 
   //http stuff
   Future<dynamic> registerUser(String email, String password) async {
@@ -207,10 +203,8 @@ class OnboardingProvider extends ChangeNotifier {
           .post(Endpoints.registerUserUri,
               headers: {'Content-Type': 'application/json'},
               body: jsonEncode(body))
-          .timeout(const Duration(seconds: 5));
+          .timeout(AppConstants.HttpDurationTimeout);
 
-      debugPrint(" ahhh ${response.statusCode.toString()}");
-      debugPrint(" ahhh ${response.body.toString()}");
       if (response.statusCode != 200) {
         Map report = {
           'code': response.statusCode.toString(),
@@ -220,8 +214,8 @@ class OnboardingProvider extends ChangeNotifier {
       } else if (response.statusCode == 200) {
         Map rez = jsonDecode(response.body);
 
-      await handleUser(rez);
-       // await ApiService.instance!.handleUser(rez);
+        await handleUserCredentials(rez);
+        // await ApiService.instance!.handleUser(rez);
       }
     } catch (e) {
       debugPrint("error in connection $e");
@@ -231,7 +225,6 @@ class OnboardingProvider extends ChangeNotifier {
   }
 
   Future<dynamic> signInUser(String email, String password) async {
-
     final Map<String, String> body = {
       'email': email,
       'password': password,
@@ -252,8 +245,7 @@ class OnboardingProvider extends ChangeNotifier {
         return report;
       } else if (response.statusCode == 200) {
         Map rez = jsonDecode(response.body);
-      await handleUser(rez);
-       // await ApiService.instance!.handleUser(rez);
+        await handleUserCredentials(rez);
       }
     } catch (e) {
       debugPrint("error in connection $e");
@@ -262,10 +254,12 @@ class OnboardingProvider extends ChangeNotifier {
       //igit6 return "Uh Oh, there was an error in connecting to the db";
     }
   }
-}
 
-
-  Future<void> handleUser(Map res) async {
+  /*
+  Before a user can sign in...
+  the proper credentials previously fetched must be assigned to persisted user model
+  */
+  Future<void> handleUserCredentials(Map res) async {
     try {
       List<String> stringInterests = [];
       List? fromJson = res['interests'];
@@ -275,7 +269,6 @@ class OnboardingProvider extends ChangeNotifier {
         }
       }
 
-      //debugPrint(res.toString());
       var currentUser = User(
           shortLifeJwt: res['jwt'],
           id: res['id'],
@@ -289,3 +282,4 @@ class OnboardingProvider extends ChangeNotifier {
       debugPrint(e.toString());
     }
   }
+}

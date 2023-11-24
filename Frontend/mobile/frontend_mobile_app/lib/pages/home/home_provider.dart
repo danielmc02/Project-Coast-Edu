@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_mobile_app/models/boxes.dart';
 
-
 class HomeProvider extends ChangeNotifier {
-  HomeProvider() ;
+  HomeProvider();
 
   bool needsRebuild = false;
   void trueRebuild() {
@@ -15,15 +14,14 @@ class HomeProvider extends ChangeNotifier {
   /*
   For future feature adds that don't require updates, do NOT put them in here
   */
-  Future<bool> requiresOnboarding() async {
+  Future<bool> needsToHandleProperties() async {
     //List<Widget> preReqs = [];
-print("Running requires onboard\n${Boxes.getUser()!.name}");
-      await Future.delayed(const Duration(seconds: 1));
- 
+    print("Running needsToHandleProperties\n${Boxes.getUser()!.name}");
+    await Future.delayed(const Duration(seconds: 1));
+
     if (Boxes.getUser()!.name == null ||
         Boxes.getUser()!.interests == null ||
         Boxes.getUser()!.verifiedStudent == false) {
-          
       return true;
     } else {
       return false;

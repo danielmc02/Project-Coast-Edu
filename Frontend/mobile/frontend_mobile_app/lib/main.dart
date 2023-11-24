@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:frontend_mobile_app/api/api_service.dart';
 import 'package:frontend_mobile_app/models/boxes.dart';
 import 'package:frontend_mobile_app/models/user.dart';
+import 'package:frontend_mobile_app/pages/home/home_page.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
-import 'pages/home_screen/home_page.dart';
 import 'pages/onboarding_screen/onboarding_page.dart';
 
 void main() async {

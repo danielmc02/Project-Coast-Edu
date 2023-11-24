@@ -16,63 +16,54 @@ class PropertyProcessProvider extends ChangeNotifier {
   NamePage NAMEPAGE = NamePage();
   // ignore: non_constant_identifier_names
   InterestsPage INTERESTSPAGE = InterestsPage();
-    // ignore: non_constant_identifier_names
+  // ignore: non_constant_identifier_names
   VerifiedStudentPage VERIFYSTUDENT = VerifiedStudentPage();
- // NAMEPAGE.runhttp();
+  // NAMEPAGE.runhttp();
 
- late  List<HttpRunable> onboardPages;
- late List<bool> state;
+  late List<HttpRunable> onboardPages;
+  late List<bool> state;
 
+  Future<void> finishAll() async {
+    for (var e in onboardPages) {
+      await e.runHttp();
+    }
 
-
-Future<void> finishAll() async
-{
-  for (var e in onboardPages) 
-  {
-    await e.runHttp();
-  }
-
- /*bool result = onboardPages.every((element)  
+    /*bool result = onboardPages.every((element)  
    {
    await element.runHttp();
     return true;
   }  );
   print("DONE, signing in $result");
   return result; */
-  
-}
-  
+  }
+
   PropertyProcessProvider() {
     //The list of widgets
-  //  snapshot = snap;
+    //  snapshot = snap;
     //Used to refer to a page's state
- //   state = List.filled(snapshot.length, false);
- onboardPages = List.empty(growable: true);
-     Boxes.getUser()!.name == null ? onboardPages.add(NAMEPAGE) : null;
+    //   state = List.filled(snapshot.length, false);
+    onboardPages = List.empty(growable: true);
+    Boxes.getUser()!.name == null ? onboardPages.add(NAMEPAGE) : null;
     Boxes.getUser()!.interests == null ? onboardPages.add(INTERESTSPAGE) : null;
-    Boxes.getUser()!.verifiedStudent == false ? onboardPages.add(VERIFYSTUDENT) : null;
+    Boxes.getUser()!.verifiedStudent == false
+        ? onboardPages.add(VERIFYSTUDENT)
+        : null;
     state = List.filled(onboardPages.length, false);
   }
 
-
-
   //A reference for the current page
   int pageIndex = 0;
-
 
   //Used for verifying name length
   final nameFormKey = GlobalKey<FormState>();
   //Controller for name
   final nameController = TextEditingController();
 
-
   //Used for verifying email signature
   final verificationFormKey = GlobalKey<FormState>();
 
   //Used as a reference for which way the transition should be
   bool reverseTransition = false;
-
-
 
   bool checkNamePage() {
     return nameFormKey.currentState!.validate() ? true : false;
@@ -175,18 +166,13 @@ Future<void> finishAll() async
     var result = await api.httpClient.post(Endpoints.sendVerificationEmailUri,
         body: jsonEncode(body), headers: {'Content-Type': 'applicatoin/json'});
 
-   if ( result.statusCode == 200)
-   {
- await verifyPageController.nextPage(
-            duration: const Duration(seconds: 1), curve: Curves.easeInSine);
-            return true;
-   }
-        
-        else
-        {
-          return false;
-        }
-       
+    if (result.statusCode == 200) {
+      await verifyPageController.nextPage(
+          duration: const Duration(seconds: 1), curve: Curves.easeInSine);
+      return true;
+    } else {
+      return false;
+    }
   }
 
   final verifyPageController = PageController();
@@ -230,7 +216,6 @@ Future<void> finishAll() async
     return result.statusCode;
   }
 
-
   nextPage() {
     int coppiedIndex = pageIndex;
     coppiedIndex += 1;
@@ -253,13 +238,9 @@ Future<void> finishAll() async
     canFinish = state.every((element) => element == true);
     notifyListeners();
   }
-
-
 }
 
 //Abstract class extension for all onboarding pages to implement an http function
-abstract class HttpRunable
-{
-   Future<void> runHttp();
+abstract class HttpRunable {
+  Future<void> runHttp();
 }
-

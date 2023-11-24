@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frontend_mobile_app/models/boxes.dart';
-import 'package:frontend_mobile_app/pages/home_screen/components/settings.dart';
+import 'package:frontend_mobile_app/pages/home_screens/components/settings.dart';
 import 'package:frontend_mobile_app/pages/property_flow/property_flow_page.dart';
 import 'package:frontend_mobile_app/theme/styles.dart';
 import 'package:provider/provider.dart';

@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend_mobile_app/api/api_service.dart';
 import 'package:frontend_mobile_app/models/boxes.dart';
-import 'package:frontend_mobile_app/pages/home_screen/components/setting_fields/update_name_field.dart';
+import 'package:frontend_mobile_app/pages/home_screens/components/setting_fields/update_name_field.dart';
 import 'dart:io';
 
 import 'package:provider/provider.dart';
