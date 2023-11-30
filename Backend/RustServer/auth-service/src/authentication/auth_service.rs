@@ -1,10 +1,6 @@
 pub mod auth {
 
     use super::super::auth_structs::auth_structs::*;
-    use std::{
-        fmt::format,
-        time::{Duration, SystemTime, UNIX_EPOCH},
-    };
     use actix_web::{get, post, web, web::Json, HttpResponse};
     use argon2::{
         password_hash::{
@@ -13,9 +9,12 @@ pub mod auth {
         Argon2,
     };
     use jsonwebtoken::{encode, Algorithm, EncodingKey, Header};
-    use serde::{Serialize, Deserialize};
+    use serde::{Deserialize, Serialize};
     use serde_json::json;
-
+    use std::{
+        fmt::format,
+        time::{Duration, SystemTime, UNIX_EPOCH},
+    };
 
     #[post("/register_user")]
     pub async fn register_user(req: Json<UserForm>, data: web::Data<AppData>) -> HttpResponse {
@@ -33,7 +32,7 @@ pub mod auth {
             }
             Err(_) => {
                 // Email wasn't found, continue to register the given credentials
-      
+
                 let salt = SaltString::generate(&mut OsRng);
 
                 let password_hash = Argon2::default()
@@ -41,7 +40,8 @@ pub mod auth {
                     .unwrap()
                     .to_string();
 
-                let ps = PasswordHash::new(&password_hash).expect("Failed to generate password hash");
+                let ps =
+                    PasswordHash::new(&password_hash).expect("Failed to generate password hash");
 
                 let result =
                     sqlx::query("INSERT INTO users(email,password_hash,salt) VALUES($1, $2, $3);")
@@ -77,7 +77,7 @@ pub mod auth {
         // Fetch user information
         let result = sqlx::query_as::<_, User>(
             "SELECT id::text, email, password_hash, salt FROM users WHERE email = $1",
-        ) 
+        )
         .bind(&user_form.email)
         .fetch_one(&data.db_pool)
         .await;
@@ -85,7 +85,6 @@ pub mod auth {
         match result {
             //an account exists, time to verify the password
             Ok(res) => {
-         
                 let bool = Argon2::default()
                     .verify_password(
                         &user_form.password.as_bytes(),
@@ -103,9 +102,9 @@ pub mod auth {
                     .fetch_one(&data.db_pool)
                     .await
                     .unwrap();
-            
+
                 //cast to json so you can insert jwt from what was once a struct
-                let json_string = serde_json::to_value(&rez).unwrap(); 
+                let json_string = serde_json::to_value(&rez).unwrap();
 
                 let mut modified_json_object = json_string.as_object().unwrap().clone();
                 let jwt: serde_json::Value = json!(create_jwt_token());
@@ -114,13 +113,11 @@ pub mod auth {
                 return HttpResponse::Ok().json(modified_json_object);
             }
             Err(er) => {
-               //No account exists
+                //No account exists
                 return HttpResponse::Conflict().body("This account may not exist");
             }
         }
     }
-
-
 
     fn create_jwt_token() -> String {
         let current_time_duration = SystemTime::now()
@@ -141,32 +138,29 @@ pub mod auth {
             &EncodingKey::from_rsa_pem(include_bytes!("keys/privkey.pem")).unwrap(),
         )
         .expect("ERROR CREATING JWT");
-   // is_valid_jwt(&jwt_res);
+        // is_valid_jwt(&jwt_res);
         return jwt_res;
     }
 
-    fn is_valid_jwt(jwt: &String) -> bool
-    {
-        let pub_rsa_pem=  std::fs::read_to_string("./keys/publickey.pem").expect("Error opening public key");
+    fn is_valid_jwt(jwt: &String) -> bool {
+        let pub_rsa_pem =
+            std::fs::read_to_string("./keys/publickey.pem").expect("Error opening public key");
 
-            let bytes = pub_rsa_pem.as_bytes();
-       let token_data = jsonwebtoken::decode::<Claims>(&jwt, &jsonwebtoken::DecodingKey::from_rsa_pem(bytes).expect("error"), &jsonwebtoken::Validation::new(Algorithm::RS256));
-       match token_data {
-           
-
-           Ok(value)=>{
-            println!("{:?}",value);
-            return true;
-           },
-           Err(err)=>
-
-           {
-            println!("{:?}",err);
-            return false;
-           }
-       }
-     
+        let bytes = pub_rsa_pem.as_bytes();
+        let token_data = jsonwebtoken::decode::<Claims>(
+            &jwt,
+            &jsonwebtoken::DecodingKey::from_rsa_pem(bytes).expect("error"),
+            &jsonwebtoken::Validation::new(Algorithm::RS256),
+        );
+        match token_data {
+            Ok(value) => {
+                println!("{:?}", value);
+                return true;
+            }
+            Err(err) => {
+                println!("{:?}", err);
+                return false;
+            }
+        }
     }
-
-
 }

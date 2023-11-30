@@ -74,7 +74,7 @@ class HomeLoader extends StatefulWidget {
 class _HomeLoaderState extends State<HomeLoader> {
 @override
 void initState() {
-
+  print("Home loader inited");
 
     super.initState();
   }
@@ -86,12 +86,12 @@ void initState() {
       builder: (context, snapshot) => snapshot.connectionState == ConnectionState.waiting ? const SplashLoader(): ChangeNotifierProvider(
         create: (context) => HomeProvider(),
         builder: (context, child) => Consumer<HomeProvider>(
-          builder: (context, algo, child) {
-            if (algo.needsRebuild) {
+          builder: (context, HomeProvider, child) {
+            if (HomeProvider.needsRebuild) {
               return const Home();
             } else{
               return FutureBuilder(
-                future:   algo.needsToHandleProperties(),
+                future:   HomeProvider.needsToHandleProperties(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return SplashLoader();

@@ -2,12 +2,12 @@
 class Endpoints
 {
 
-    static const String endpoint = "192.168.2.195";
-  //static const String endpoint = "localhost";
+   // static const String endpoint = "192.168.2.195";
+  static const String endpoint = "localhost";
 
   static final registerUserUri = Uri.parse('http://$endpoint:80/register_user');
 
-
+  static final updateUserPhoto = Uri.parse('http://$endpoint:80/update_user_photo');
   
   static final logInUri = Uri.parse('http://$endpoint:80/log_in');
 

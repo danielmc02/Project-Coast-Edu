@@ -1,6 +1,6 @@
 pub mod auth_structs {
+    use redis::{Client, RedisError};
     use serde::{Deserialize, Serialize};
-    use redis::{RedisError, Client};
     use sqlx::{FromRow, Pool, Postgres};
     #[derive(Deserialize, Serialize)]
     pub struct UserForm {
@@ -11,9 +11,7 @@ pub mod auth_structs {
     pub struct AppData {
         pub db_pool: Pool<Postgres>,
         //pub redis_connection: redis::Client
-        
     }
-   
 
     #[derive(FromRow, Debug)]
     pub struct User {
@@ -45,7 +43,7 @@ pub mod auth_structs {
      */
 
     //Sent after signing in
-    #[derive(Serialize,FromRow,Debug)]
+    #[derive(Serialize, FromRow, Debug)]
     pub struct SignInResponce {
         //needs a jwt
         //needs their uid
@@ -59,7 +57,5 @@ pub mod auth_structs {
         pub verified_student: bool,
 
         pub friends: Option<serde_json::Value>,
-
-
     }
 }

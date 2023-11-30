@@ -41,7 +41,7 @@ class _AuthWrapperState extends State<AuthWrapper> {
   void initState() {
     // ! Following will hard sign out only use when necessary
     // Boxes.getUserBox().delete('mainUser');
-
+  print("Auth inited");
     super.initState();
   }
 

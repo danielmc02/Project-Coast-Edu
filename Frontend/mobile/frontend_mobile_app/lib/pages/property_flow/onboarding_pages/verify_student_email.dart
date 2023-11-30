@@ -175,7 +175,7 @@ class _VerifiedStudentPageState extends State<VerifiedStudentPage> {
                                 algo.verificationFormKey.currentState!
                                             .validate() &&
                                         algo.chosenSchool.isEmpty == false
-                                    ? algo
+                                    ? await algo
                                         .verifyStudentEmail(
                                             emailFieldController.text)
                                         .then(

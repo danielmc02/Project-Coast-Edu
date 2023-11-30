@@ -15,6 +15,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
   late TextEditingController passwordField;
   @override
   void initState() {
+    print("Onboarding page inited");
     emailField = TextEditingController();
     passwordField = TextEditingController();
     super.initState();

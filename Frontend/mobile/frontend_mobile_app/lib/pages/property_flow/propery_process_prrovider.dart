@@ -171,6 +171,7 @@ class PropertyProcessProvider extends ChangeNotifier {
           duration: const Duration(seconds: 1), curve: Curves.easeInSine);
       return true;
     } else {
+      print("NOT GOOD, ${result.body}");
       return false;
     }
   }
