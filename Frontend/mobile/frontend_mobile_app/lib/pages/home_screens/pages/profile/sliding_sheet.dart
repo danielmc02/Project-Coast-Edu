@@ -2,13 +2,13 @@ import 'package:camera/camera.dart' ;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend_mobile_app/api/api_service.dart';
-import 'package:frontend_mobile_app/pages/home_screens/components/profile_picture.dart';
-import 'package:frontend_mobile_app/pages/home_screens/components/settings.dart';
-import 'package:frontend_mobile_app/pages/home_screens/pages/link_page.dart';
+import 'package:frontend_mobile_app/pages/home_screens/pages/profile/profile_picture.dart';
+import 'package:frontend_mobile_app/pages/home_screens/pages/profile/settings/settings.dart';
+import 'package:frontend_mobile_app/pages/home_screens/pages/link/link_page.dart';
 import 'package:frontend_mobile_app/theme/styles.dart';
 import 'package:provider/provider.dart';
 
-import '../../../models/boxes.dart';
+import '../../../../models/boxes.dart';
 
 class ProfileFooter extends StatefulWidget {
   const ProfileFooter({super.key});

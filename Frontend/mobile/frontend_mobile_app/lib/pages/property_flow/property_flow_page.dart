@@ -269,77 +269,79 @@ class VerifyCode extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<PropertyProcessProvider>(
       builder: (context, algo, child) => Scaffold(
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Row(
-              children: [
-                ConstrainedBox(
-                  constraints: BoxConstraints(
-                      maxWidth: MediaQuery.of(context).size.width / 1.5),
-                  child: RichText(
-                    softWrap: true,
-                    text: const TextSpan(
-                      style: Styles.headerText1,
-                      children: [
-                        TextSpan(text: "We will ", style: Styles.headerText1
-                            // Add any styles you want for the rest of the text here
-                            ),
-                        TextSpan(
-                          text: "NEVER",
-                          style: TextStyle(
-                              fontSize: 44,
-                              color: Colors.black,
-                              fontFamily: "Poppins",
-                              fontStyle: FontStyle.normal,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        TextSpan(
-                            text: " charge for blue checks",
-                            style: Styles.headerText1
-                            // Add any styles you want for the rest of the text here
-                            ),
-                      ],
+        body: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Row(
+                children: [
+                  ConstrainedBox(
+                    constraints: BoxConstraints(
+                        maxWidth: MediaQuery.of(context).size.width / 1.5),
+                    child: RichText(
+                      softWrap: true,
+                      text: const TextSpan(
+                        style: Styles.headerText1,
+                        children: [
+                          TextSpan(text: "We will ", style: Styles.headerText1
+                              // Add any styles you want for the rest of the text here
+                              ),
+                          TextSpan(
+                            text: "NEVER",
+                            style: TextStyle(
+                                fontSize: 44,
+                                color: Colors.black,
+                                fontFamily: "Poppins",
+                                fontStyle: FontStyle.normal,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          TextSpan(
+                              text: " charge for blue checks",
+                              style: Styles.headerText1
+                              // Add any styles you want for the rest of the text here
+                              ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                ConstrainedBox(
-                    constraints: BoxConstraints(
-                        maxWidth: MediaQuery.sizeOf(context).width / 2),
-                    child: const Icon(
-                      Icons.check_circle,
-                      color: Colors.blue,
-                      size: 80,
-                    ))
-              ],
-            ),
-            const Column(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Text(
-                    style: Styles.headerText2,
-                    "But we do email you to make sure you’re real. Enter the 4-digit code that was sent to your student email.")
-              ],
-            ),
-            SizedBox(
-                width: MediaQuery.of(context).size.width / 2,
-                child: TextField(
-                  onChanged: (value) {
-                    algo.givenCode.toString() == value
-                        ? algo.emailValidated()
-                        : null;
-                  },
-                  cursorColor: Colors.black,
-                  maxLength: 4,
-                  textAlign: TextAlign.center,
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                      hintText: "4 digit code",
-                      counterText: "",
-                      border: InputBorder.none),
-                ))
-          ],
+                  ConstrainedBox(
+                      constraints: BoxConstraints(
+                          maxWidth: MediaQuery.sizeOf(context).width / 2),
+                      child: const Icon(
+                        Icons.check_circle,
+                        color: Colors.blue,
+                        size: 80,
+                      ))
+                ],
+              ),
+              const Column(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Text(
+                      style: Styles.headerText2,
+                      "But we do email you to make sure you’re real. Enter the 4-digit code that was sent to your student email.")
+                ],
+              ),
+              SizedBox(
+                  width: MediaQuery.of(context).size.width / 2,
+                  child: TextField(
+                    onChanged: (value) {
+                      algo.givenCode.toString() == value
+                          ? algo.emailValidated()
+                          : null;
+                    },
+                    cursorColor: Colors.black,
+                    maxLength: 4,
+                    textAlign: TextAlign.center,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                        hintText: "4 digit code",
+                        counterText: "",
+                        border: InputBorder.none),
+                  ))
+            ],
+          ),
         ),
       ),
     );

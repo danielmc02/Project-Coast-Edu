@@ -2,7 +2,7 @@
 
 
 import 'package:flutter/material.dart';
-import 'package:frontend_mobile_app/pages/home_screens/components/sliding_sheet.dart';
+import 'package:frontend_mobile_app/pages/home_screens/pages/profile/sliding_sheet.dart';
 import 'package:frontend_mobile_app/theme/styles.dart';
 
 class Profile extends StatelessWidget {

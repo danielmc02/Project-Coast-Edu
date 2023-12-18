@@ -1,5 +1,5 @@
 pub mod auth_structs {
-    use redis::{Client, RedisError};
+
     use serde::{Deserialize, Serialize};
     use sqlx::{FromRow, Pool, Postgres};
     #[derive(Deserialize, Serialize)]

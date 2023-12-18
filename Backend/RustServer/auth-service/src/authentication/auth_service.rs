@@ -1,20 +1,20 @@
 pub mod auth {
 
     use super::super::auth_structs::auth_structs::*;
-    use actix_web::{get, post, web, web::Json, HttpResponse};
+    use actix_web::{get, post, web, web::Json, HttpResponse, HttpRequest};
     use argon2::{
         password_hash::{
             rand_core::OsRng, PasswordHash, PasswordHasher, PasswordVerifier, Salt, SaltString,
         },
         Argon2,
     };
-    use jsonwebtoken::{encode, Algorithm, EncodingKey, Header};
-    use serde::{Deserialize, Serialize};
+    use jsonwebtoken::{encode, Algorithm, EncodingKey, Header,decode, DecodingKey, Validation, TokenData};
     use serde_json::json;
     use std::{
-        fmt::format,
         time::{Duration, SystemTime, UNIX_EPOCH},
     };
+    use super::super::auth_structs::auth_structs::Claims;
+
 
     #[post("/register_user")]
     pub async fn register_user(req: Json<UserForm>, data: web::Data<AppData>) -> HttpResponse {
@@ -124,10 +124,10 @@ pub mod auth {
             .duration_since(UNIX_EPOCH)
             .expect("Error fetching time");
         // Expiration of 30 minutes
-        let expiration_time_duration = current_time_duration + Duration::new(1800, 0);
+        let expiration_time_duration = current_time_duration + Duration::new(1800, 0); //1800 seconds = 30 mins
 
         let expiration_time_unix_timestamp = expiration_time_duration.as_secs() as usize;
-
+       
         let user_claims: Claims = Claims {
             exp: expiration_time_unix_timestamp,
             sub: "user".to_string(),
@@ -142,25 +142,26 @@ pub mod auth {
         return jwt_res;
     }
 
-    fn is_valid_jwt(jwt: &String) -> bool {
-        let pub_rsa_pem =
-            std::fs::read_to_string("./keys/publickey.pem").expect("Error opening public key");
 
-        let bytes = pub_rsa_pem.as_bytes();
-        let token_data = jsonwebtoken::decode::<Claims>(
-            &jwt,
-            &jsonwebtoken::DecodingKey::from_rsa_pem(bytes).expect("error"),
-            &jsonwebtoken::Validation::new(Algorithm::RS256),
-        );
-        match token_data {
-            Ok(value) => {
-                println!("{:?}", value);
-                return true;
-            }
-            Err(err) => {
-                println!("{:?}", err);
-                return false;
-            }
+    #[post("/check_and_update_jwt")]
+    async fn check_and_update_jwt(request: HttpRequest) -> HttpResponse {
+        //verify jwt
+       // decode(token, key, validation)
+        println!("{}", format!("{:?}",request));
+
+        if let Some(jwt) = request.headers().get("Authorization")
+        {
+            println!("{:?}", jwt);
+            let public_key = std::fs::read_to_string("src/authentication/keys/publickey.pem").expect("Couldn't find/access public key").as_bytes().to_owned();
+            let result = decode::<Claims>(jwt.to_str().unwrap(), &DecodingKey::from_rsa_pem(&public_key).unwrap(), &Validation::new(Algorithm::RS256));
+            println!("{:?}",result);
+            return HttpResponse::Ok().body("")
         }
+        else 
+        {
+            return HttpResponse::BadRequest().body("")
+        }
+
+
     }
 }

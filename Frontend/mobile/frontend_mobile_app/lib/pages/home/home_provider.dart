@@ -2,9 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:frontend_mobile_app/models/boxes.dart';
 
 class HomeProvider extends ChangeNotifier {
-  HomeProvider();
-
-  bool needsRebuild = false;
+  HomeProvider()
+  {
+      if (Boxes.getUser()!.name != null ||
+        Boxes.getUser()!.interests != null ||
+        Boxes.getUser()!.verifiedStudent != false) {
+      needsRebuild = true;
+    } else {
+      needsRebuild = false;
+    }
+  }
+ late bool needsRebuild;
+ // bool needsRebuild = false;
   void trueRebuild() {
     needsRebuild = true;
     notifyListeners();
@@ -17,7 +26,6 @@ class HomeProvider extends ChangeNotifier {
   Future<bool> needsToHandleProperties() async {
     //List<Widget> preReqs = [];
     print("Running needsToHandleProperties\n${Boxes.getUser()!.name}");
-    await Future.delayed(const Duration(seconds: 1));
 
     if (Boxes.getUser()!.name == null ||
         Boxes.getUser()!.interests == null ||

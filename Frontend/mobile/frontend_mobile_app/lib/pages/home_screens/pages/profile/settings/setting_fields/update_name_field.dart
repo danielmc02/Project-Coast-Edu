@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frontend_mobile_app/models/boxes.dart';
-import 'package:frontend_mobile_app/pages/home_screens/components/settings.dart';
+import 'package:frontend_mobile_app/pages/home_screens/pages/profile/settings/settings.dart';
 import 'package:frontend_mobile_app/pages/property_flow/property_flow_page.dart';
 import 'package:frontend_mobile_app/theme/styles.dart';
 import 'package:provider/provider.dart';
@@ -25,19 +25,14 @@ class _UpdateNameFieldState extends State<UpdateNameField> {
         key: nameKey,
         child: TextFormField(
           onChanged: (value) async {
-            //* If is 3 or greater and dosen't equal origninal name 
-            if (nameKey.currentState!.validate() == true && value != Boxes.getUser()!.name) {
-                          
-
+            //* If is 3 or greater and dosen't equal origninal name
+            if (nameKey.currentState!.validate() == true &&
+                value != Boxes.getUser()!.name) {
               await settingsProvider.dealWithNewName(true);
-            }
-            else
-            {
-                            await settingsProvider.dealWithNewName(false);
-
+            } else {
+              await settingsProvider.dealWithNewName(false);
             }
           },
-
           autovalidateMode: AutovalidateMode.always,
           cursorColor: Colors.black,
           maxLines: 1,
@@ -55,4 +50,3 @@ class _UpdateNameFieldState extends State<UpdateNameField> {
     );
   }
 }
-

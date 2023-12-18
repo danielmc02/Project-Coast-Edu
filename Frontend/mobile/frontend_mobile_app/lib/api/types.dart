@@ -1,0 +1,6 @@
+enum JwtStatus
+{
+  ExpiredJwt,
+  
+
+}

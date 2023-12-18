@@ -8,6 +8,15 @@
             "name": "local",
             "database": "users",
             "username": "postgres"
+        },
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "database": "users",
+            "name": "test4users",
+            "username": "postgres"
         }
     ]
 }

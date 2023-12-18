@@ -7,7 +7,8 @@ import 'package:frontend_mobile_app/api/api_service.dart';
 import 'package:frontend_mobile_app/api/endpoints.dart';
 import 'package:frontend_mobile_app/constants/app_constants.dart';
 import 'package:frontend_mobile_app/models/boxes.dart';
-import 'package:frontend_mobile_app/pages/home_screens/pages/link_page.dart';
+import 'package:frontend_mobile_app/pages/home_screens/pages/link/link_page.dart';
+import 'package:frontend_mobile_app/pages/home_screens/pages/profile/providers/profile_pic_provider.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
@@ -173,31 +174,4 @@ class _ProfilePictureState extends State<ProfilePicture> {
   }
 }
 
-class ProfilePictureProvider extends ChangeNotifier {
-  ProfilePictureProvider();
 
-  Future<void> uploadProfilePicture(XFile pic) async {
-    try {
-      print(pic.path.toString());
-
-      List<int> imageAsBytes = await pic.readAsBytes();
-
-      MultipartRequest req =
-          await http.MultipartRequest('PUT', Endpoints.updateUserPhoto);
-      req.files.add(MultipartFile.fromBytes(
-        "Chese field",
-        imageAsBytes,
-        filename: "${Boxes.getUser()!.id}.png",
-      ));
-      req.headers['Authorization'] = await Boxes.getUser()!.shortLifeJwt;
-
-      //Send the file to the backend
-      Response responce = await http.Response.fromStream(await req.send())
-          .timeout(AppConstants.HttpDurationTimeout);
-    
-
-    } catch (e) {
-      print("We got a problem\n$e");
-    }
-  }
-}

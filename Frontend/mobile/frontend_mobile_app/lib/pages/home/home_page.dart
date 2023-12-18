@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:frontend_mobile_app/pages/home_screens/pages/link_page.dart';
-import 'package:frontend_mobile_app/pages/home_screens/pages/profile_page.dart';
-import 'package:frontend_mobile_app/pages/home_screens/pages/school_page.dart';
+import 'package:frontend_mobile_app/pages/home_screens/pages/link/link_page.dart';
+import 'package:frontend_mobile_app/pages/home_screens/pages/profile/profile_page.dart';
+import 'package:frontend_mobile_app/pages/home_screens/pages/school/school_page.dart';
 import 'package:frontend_mobile_app/pages/loading.dart';
 
 import 'package:provider/provider.dart';

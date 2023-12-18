@@ -100,12 +100,4 @@ pub mod user_services {
 
         HttpResponse::Ok().json(result)
     }
-    use actix_multipart::Multipart;
-    #[put("/update_user_photo")]
-   pub async fn update_user_photo(mut multipart: Multipart) -> HttpResponse
-    {
-       // println!(format!("{}",multipart));
-        println!("WOOP");
-        HttpResponse::Ok().body("cool")
-    }
 }

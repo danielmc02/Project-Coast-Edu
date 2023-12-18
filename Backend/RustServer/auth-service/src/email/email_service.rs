@@ -9,7 +9,6 @@ pub mod email {
 
     #[post("/send_verification_email")]
     pub async fn send_verification_email(data: Json<VerifyEmailPayload>) -> HttpResponse {
-
         let message = format!("Hello\nYour verification code is {}", data.code);
         let email = Message::builder()
             .from("coastlinkedu@gmail.com".parse().unwrap())

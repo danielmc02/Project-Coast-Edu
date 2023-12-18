@@ -2,10 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend_mobile_app/api/api_service.dart';
 import 'package:frontend_mobile_app/models/boxes.dart';
-import 'package:frontend_mobile_app/pages/home_screens/components/setting_fields/update_name_field.dart';
+import 'package:frontend_mobile_app/pages/home_screens/pages/profile/settings/setting_fields/update_name_field.dart';
+import 'package:frontend_mobile_app/pages/property_flow/propery_process_prrovider.dart';
 import 'dart:io';
 
 import 'package:provider/provider.dart';
+
+
 
 class SettingsButton extends StatelessWidget {
   const SettingsButton({super.key});
@@ -65,7 +68,7 @@ class SettingsPage extends StatelessWidget {
       builder: (context, child) => Consumer<SettingsPageProvider>(
         builder: (context, settingsProvider, child) => Scaffold(
           appBar: AppBar(title: Text("Settings")),
-          body: Column(children: [UpdateNameField(), SaveSettingsButton()]),
+          body: Column(children: [settingsProvider.updatename, settingsProvider.saveButton]),
         ),
       ),
     );
@@ -91,10 +94,17 @@ class SaveSettingsButton extends StatelessWidget {
 class SettingsPageProvider extends ChangeNotifier {
   SettingsPageProvider() {}
   //initialized immutable reference to compare if name has changed
+
+  final UpdateNameField updatename = UpdateNameField();
+  final SaveSettingsButton saveButton = SaveSettingsButton();
+
   bool hasNewName = false;
   MaterialColor saveColor = Colors.grey;
 
+  List<HttpRunable> updatableFields = List.empty(growable: true);
+
   Future<void> dealWithNewName(bool value) async {
+
     hasNewName = value;
     print("Has new value is $hasNewName");
     await runCheck();
@@ -103,19 +113,14 @@ class SettingsPageProvider extends ChangeNotifier {
   Future<void> runCheck() async {
     List<bool> stateHolder = [hasNewName];
     print("{$stateHolder}");
-    if(stateHolder.contains(true))
-    {
-print("ran in true");
-saveColor = Colors.green;
-    notifyListeners();
-
-    }
-    else
-    {
+    if (stateHolder.contains(true)) {
+      print("ran in true");
+      saveColor = Colors.green;
+      notifyListeners();
+    } else {
       print("Ran in false");
       saveColor = Colors.grey;
-          notifyListeners();
-
+      notifyListeners();
     }
     //await  ?  : Colors.grey;
   }

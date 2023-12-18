@@ -57,7 +57,16 @@ class ApiService extends ChangeNotifier {
   }
   /*------------------------------*/
 
-
+  // ! An important function used to update and verify jwt; runs everytime the app is opened to ensure jwt is currently valid
+  Future<void> checkAndUpdateJwt() async {
+    // Sends a request with jwt,
+    var response = await _client.post(body: {"d": "ddd"},
+      Endpoints.checkAndUpdateJwt,
+      headers: {'Authorization': Boxes.getUser()!.shortLifeJwt}
+    );
+    print(response.body);
+    // decodes jwt, if it's within
+  }
 
   Future<void> signout() async {
     await Boxes.getUserBox().delete('mainUser');
@@ -67,6 +76,7 @@ class ApiService extends ChangeNotifier {
 
   Future<void> updateUserName(Map req) async {
     try {
+      print("updating student name");
 
       String reqJson = jsonEncode(req);
 
@@ -78,15 +88,16 @@ class ApiService extends ChangeNotifier {
         headers: {'Content-Type': 'application/json'},
       );
     } catch (e) {
+      print("ERROR TRYING TO UPDATE USERNAME");
       debugPrint(e.toString());
     }
   }
 
   Future<void> updateUserInterests(Map request) async {
     try {
+      print("updating student interest");
 
       String reqJson = jsonEncode(request);
-
 
       await _client.put(
         Endpoints.defaultUriConcatanate("/update_user_interests"),
@@ -94,14 +105,16 @@ class ApiService extends ChangeNotifier {
         headers: {'Content-Type': 'application/json'},
       );
     } catch (e) {
+      print("ERROR TRYING TO UPDATE interests");
+
       debugPrint(e.toString());
     }
   }
 
   Future<void> updateVerifiedStudentStatus(Map req) async {
     try {
+      print("updating student status");
       String reqJson = jsonEncode(req);
-
 
       await _client.put(
         Endpoints.defaultUriConcatanate("/update_verified_student_status"),
@@ -109,16 +122,20 @@ class ApiService extends ChangeNotifier {
         headers: {'Content-Type': 'application/json'},
       );
     } catch (e) {
+      print("ERROR TRYING TO UPDATE verified student");
+
       debugPrint(e.toString());
     }
   }
 
-  Future<bool> updateLocalUserInfo() async
-  {
-    try
-    {
-   var res =   await httpClient.post(Endpoints.getPublicUserInfo, body:jsonEncode( {'id': Boxes.getUser()!.id}),headers: {'Content-Type': 'application/json'},);
-   Map dataRes = jsonDecode(res.body);
+  Future<bool> updateLocalUserInfo() async {
+    try {
+      var res = await httpClient.post(
+        Endpoints.getPublicUserInfo,
+        body: jsonEncode({'id': Boxes.getUser()!.id}),
+        headers: {'Content-Type': 'application/json'},
+      );
+      Map dataRes = jsonDecode(res.body);
 
       List<String> stringInterests = [];
       List? fromJson = dataRes['interests'];
@@ -128,16 +145,17 @@ class ApiService extends ChangeNotifier {
         }
       }
 
-
-
-   Boxes.getUser()!.updateName(dataRes['name']);
-   Boxes.getUser()!.updateInterests(stringInterests);
+      Boxes.getUser()!.updateName(dataRes['name']);
+      Boxes.getUser()!.updateInterests(stringInterests);
       Boxes.getUser()!.updateVerifiedStatus(dataRes['verified_student']);
 
-return true;
-    }
-    catch(e)
-    {
+      await Boxes.getUserBox().put('mainUser', Boxes.getUser()!);
+      print(
+          "NEW local is /n Name: ${Boxes.getUser()!.name}\nInterests: ${Boxes.getUser()!.interests}\nVerified: ${Boxes.getUser()!.verifiedStudent}");
+
+      return true;
+    } catch (e) {
+      print("PROBLEM SAVING USER INFORMATION to user model");
       return false;
     }
   }
